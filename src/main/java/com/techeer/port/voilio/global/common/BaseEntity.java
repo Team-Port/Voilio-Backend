@@ -3,6 +3,7 @@ package com.techeer.port.voilio.global.common;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,5 +31,9 @@ public class BaseEntity {
 
     public boolean getIsDeleted(){
         return this.isDeleted;
+    }
+
+    public void changeDeleted(){
+        this.isDeleted = !this.isDeleted;
     }
 }
