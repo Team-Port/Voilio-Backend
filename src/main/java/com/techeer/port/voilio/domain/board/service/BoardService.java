@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.service;
 
+
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.global.common.NotFoundException;

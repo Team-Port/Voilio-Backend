@@ -13,7 +13,6 @@ import java.net.URL;
 @Getter
 @Builder
 @ToString
-//@SQLDelete(sql="UPDATE board SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Board extends BaseEntity {
