@@ -48,8 +48,11 @@ public class BoardRepositoryTest {
     @Test
     @DisplayName("deleteBoardTest Start")
     public void deleteBoardTest(){
+        //given
         List<Board> boardList = boardRepository.findAll();
         int boardSize = boardList.size();
+        Board board = boardRepository.findById(1).orElseThrow();
+        assertFalse(board.getIsDeleted());
 
         //when
         boardRepository.deleteById(1);
@@ -57,7 +60,8 @@ public class BoardRepositoryTest {
         //then
         boardList = boardRepository.findAll();
         assertEquals(boardList.size(),boardSize);
-        Board board = boardRepository.findById(1).orElseThrow();
+        board = boardRepository.findById(1).orElseThrow();
         assertTrue(board.getIsDeleted());
+
     }
 }
