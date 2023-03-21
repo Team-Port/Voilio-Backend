@@ -36,12 +36,6 @@ public class Board {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @Builder
     public Board(Integer board_id, String title, String content, List<Integer> category, String video_url,
         String thumbnail_url, boolean isPublic, boolean isDeleted) {
