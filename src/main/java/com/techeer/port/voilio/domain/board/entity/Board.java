@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.net.URL;
@@ -12,6 +13,7 @@ import java.net.URL;
 @Getter
 @Builder
 @ToString
+@SQLDelete(sql="UPDATE board SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Board extends BaseEntity {
