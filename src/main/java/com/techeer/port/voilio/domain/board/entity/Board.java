@@ -5,6 +5,7 @@ import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.net.URL;
@@ -15,7 +16,7 @@ import java.net.URL;
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Board extends BaseEntity {
+public class Board extends BaseEntity,RepresentationModel<Board> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
