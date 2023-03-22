@@ -26,7 +26,7 @@ public class BaseEntity {
 
     @Column
     @NotNull
-    @ColumnDefault("true")
+    @ColumnDefault("false")
     private boolean isDeleted;
 
     public boolean getIsDeleted(){
