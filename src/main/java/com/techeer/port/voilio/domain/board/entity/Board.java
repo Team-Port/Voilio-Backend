@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "boards")
 public class Board extends BaseEntity {
