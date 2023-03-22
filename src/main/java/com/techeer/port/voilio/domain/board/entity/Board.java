@@ -18,11 +18,11 @@ import java.net.URL;
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long boardId;
 
     @NotNull
     @Column
-    private int userId;
+    private Long userId;
 
     @NotNull
     @Column

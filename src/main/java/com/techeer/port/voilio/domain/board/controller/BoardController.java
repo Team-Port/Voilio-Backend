@@ -16,7 +16,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PatchMapping("/{boardId}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable int boardId){
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId){
         boardService.deleteBoard(boardId);
         return ResponseEntity.noContent().build();
     }

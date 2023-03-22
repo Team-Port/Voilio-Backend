@@ -35,12 +35,14 @@ public class BoardControllerTest {
 
     @Test
     public void softDeleteBoard() throws Exception{
+        Long boardId = 1L;
+
         //given,when
-        doNothing().when(boardService).deleteBoard(1);
+        doNothing().when(boardService).deleteBoard(boardId);
 
         //then
-        mockMvc.perform(patch("/boards/{boardId}",1))
+        mockMvc.perform(patch("/boards/{boardId}",boardId))
                 .andExpect(status().isNoContent());
-        verify(boardService,times(1)).deleteBoard(1);
+        verify(boardService,times(1)).deleteBoard(boardId);
     }
 }

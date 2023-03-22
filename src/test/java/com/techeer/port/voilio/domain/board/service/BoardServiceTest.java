@@ -36,18 +36,20 @@ public class BoardServiceTest {
     @Test
     @DisplayName("mockito service test")
     void softDeleteBoard_whenBoardExists_shouldDeleteBoard(){
+        Long boardId = 1L;
+
         //given
         Board board1 = Board.builder()
-                .userId(1)
+                .userId(1L)
                 .title("testTitle")
                 .content("testContent")
                 .video("https://www.naver.com/")
                 .thumbnail("https://www.naver.com")
                 .build();
-        given(boardRepository.findById(1)).willReturn(Optional.of(board1));
+        given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
 
         //when
-        boardService.deleteBoard(1);
+        boardService.deleteBoard(boardId);
 
         //then
         verify(boardRepository,times(1)).save(board1);
@@ -56,10 +58,12 @@ public class BoardServiceTest {
 
     @Test
     public void deleteBoard_whenBoardNotFound_shouldThrowNotFoundException(){
+        Long boardId = 1L;
+
         //given
-        given(boardRepository.findById(1)).willReturn(Optional.empty());
+        given(boardRepository.findById(boardId)).willReturn(Optional.empty());
 
         //when, then
-        assertThrows(NotFoundException.class,() ->boardService.deleteBoard(1));
+        assertThrows(NotFoundException.class,() ->boardService.deleteBoard(boardId));
     }
 }

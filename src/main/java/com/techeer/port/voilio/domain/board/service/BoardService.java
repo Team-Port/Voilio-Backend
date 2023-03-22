@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    public void deleteBoard(int boardId) {
+    public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()-> new NotFoundException("Board not found"));
         board.changeDeleted();
         boardRepository.save(board);
