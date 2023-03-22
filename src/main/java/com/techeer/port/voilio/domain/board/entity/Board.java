@@ -12,7 +12,7 @@ import java.net.URL;
 @Entity
 @Getter
 @Builder
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Board extends BaseEntity {
