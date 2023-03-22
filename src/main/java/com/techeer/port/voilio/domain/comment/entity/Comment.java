@@ -3,8 +3,8 @@ package com.techeer.port.voilio.domain.comment.entity;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
-import lombok.*;
 import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
