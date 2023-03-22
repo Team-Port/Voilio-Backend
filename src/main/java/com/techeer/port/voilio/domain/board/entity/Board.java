@@ -16,43 +16,49 @@ import lombok.ToString;
 @Table(name = "boards")
 public class Board extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "board_id")
+  private Long id;
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Column(nullable = false)
-    private String content;
+  @Column(nullable = false)
+  private String content;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category1;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private Category category1;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category2;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private Category category2;
 
-    @Column(nullable = false)
-    private String video_url;
+  @Column(nullable = false)
+  private String video_url;
 
-    @Column(nullable = false)
-    private String thumbnail_url;
+  @Column(nullable = false)
+  private String thumbnail_url;
 
-    @Column(nullable = false)
-    private Boolean isPublic;
+  @Column(nullable = false)
+  private Boolean isPublic;
 
-    @Builder
-    public Board(String title, String content, Category category1, Category category2,
-        String video_url, String thumbnail_url, boolean isPublic) {
-        this.title = title;
-        this.category1 = category1;
-        this.category2 = category2;
-        this.content = content;
-        this.video_url = video_url;
-        this.thumbnail_url = thumbnail_url;
-        this.isPublic = isPublic;
-    }
+  @Builder
+  public Board(
+      String title,
+      String content,
+      Category category1,
+      Category category2,
+      String video_url,
+      String thumbnail_url,
+      boolean isPublic) {
+    this.title = title;
+    this.category1 = category1;
+    this.category2 = category2;
+    this.content = content;
+    this.video_url = video_url;
+    this.thumbnail_url = thumbnail_url;
+    this.isPublic = isPublic;
+  }
 }
