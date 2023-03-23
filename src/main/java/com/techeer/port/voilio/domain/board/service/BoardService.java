@@ -20,4 +20,9 @@ public class BoardService {
     board.changeDeleted();
     boardRepository.save(board);
   }
+
+  public Board findBoardById(Long boardId) {
+    Board board = boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId).orElseThrow(()-> new NotFoundException("Board not found"));
+    return board;
+  }
 }

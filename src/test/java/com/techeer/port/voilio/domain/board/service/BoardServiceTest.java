@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.NotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -57,5 +58,35 @@ public class BoardServiceTest {
 
     // when, then
     assertThrows(NotFoundException.class, () -> boardService.deleteBoard(boardId));
+  }
+
+  @Test
+  @DisplayName("getBoard_when success")
+  public void getBoard_whenBoardExist_shouldGetBoard(){
+    Long boardId = 1L;
+
+    //given
+    Board board =Board.builder()
+            .id(boardId)
+            .userId(1L)
+            .category1(Category.IT)
+            .thumbnail("https://www.youtube.com/watch?v=PMV-q3eX4hk")
+            .content("testContent")
+            .video("https://www.youtube.com/watch?v=PMV-q3eX4hk")
+            .title("testTitle")
+            .isPublic(true)
+            .build();
+
+    given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)).willReturn(Optional.of(board));
+
+    //when
+    Board actual = boardService.findBoardById(board.getId());
+
+    assertEquals(actual.getId(),boardId);
+    assertEquals(actual.getUserId(),board.getUserId());
+    assertTrue(actual.getIsPublic());
+    assertFalse(actual.getIsDeleted());
+
+
   }
 }
