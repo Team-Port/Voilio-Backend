@@ -1,18 +1,19 @@
 package com.techeer.port.voilio.global.common;
 
-public class NotFoundException extends RuntimeException{
-    public NotFoundException(){
-        super();
-    }
-    public NotFoundException(String message) {
-        super(message);
-    }
+public class NotFoundException extends RuntimeException {
+  public NotFoundException() {
+    super();
+  }
 
-    public NotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public NotFoundException(String message) {
+    super(message);
+  }
 
-    public NotFoundException(Throwable cause) {
-        super(cause);
-    }
+  public NotFoundException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public NotFoundException(Throwable cause) {
+    super(cause);
+  }
 }
