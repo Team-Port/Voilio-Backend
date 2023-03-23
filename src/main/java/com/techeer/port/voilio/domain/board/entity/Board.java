@@ -7,6 +7,7 @@ import com.techeer.port.voilio.global.common.Category;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,27 +26,34 @@ public class Board extends BaseEntity {
   @Column(name = "board_id")
   private Long id;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   private String title;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   private String content;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   @Enumerated(EnumType.STRING)
   private Category category1;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   @Enumerated(EnumType.STRING)
   private Category category2;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   private String video_url;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   private String thumbnail_url;
 
-  @Column(nullable = false)
+  @Column
+  @NotNull
   private Boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
