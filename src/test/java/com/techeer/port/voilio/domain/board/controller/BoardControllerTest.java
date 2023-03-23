@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -16,10 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BoardController Test Start")
@@ -45,17 +42,16 @@ public class BoardControllerTest {
     doNothing().when(boardService).deleteBoard(boardId);
 
     // then
-    mockMvc.perform(patch(BASE_PATH+"/{boardId}", boardId))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
+    mockMvc
+        .perform(patch(BASE_PATH + "/{boardId}", boardId))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
     verify(boardService, times(1)).deleteBoard(boardId);
   }
 
   @Test
-  public void findBoardById(){
+  public void findBoardById() {
     Long boardId = 1L;
-
-
   }
 }

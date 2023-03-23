@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.board.repository;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.Category;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,43 +13,41 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.internal.matchers.text.ValuePrinter.print;
-
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @DataJpaTest
 public class BoardRepositoryTest {
-      @Autowired
-      private BoardRepository boardRepository;
+  @Autowired private BoardRepository boardRepository;
 
-      private Board board1;
-      private Board board2;
+  private Board board1;
+  private Board board2;
 
-      @BeforeEach
-      public void setUp(){
-          board1 = Board.builder()
-                  .userId(1L)
-                  .title("testTitle1")
-                  .content("testContent1")
-                  .isPublic(true)
-                  .category1(Category.IT)
-                  .video("https://www.naver.com/")
-                  .thumbnail("https://www.naver.com")
-          .build();
-          board2 = Board.builder()
-                  .userId(1L)
-                  .title("testTitle2")
-                  .category1(Category.IT)
-                  .content("testContent2")
-                  .isPublic(false)
-                  .video("https://www.naver.com/")
-                  .thumbnail("https://www.naver.com")
-                  .build();
+  @BeforeEach
+  public void setUp() {
+    board1 =
+        Board.builder()
+            .userId(1L)
+            .title("testTitle1")
+            .content("testContent1")
+            .isPublic(true)
+            .category1(Category.IT)
+            .video("https://www.naver.com/")
+            .thumbnail("https://www.naver.com")
+            .build();
+    board2 =
+        Board.builder()
+            .userId(1L)
+            .title("testTitle2")
+            .category1(Category.IT)
+            .content("testContent2")
+            .isPublic(false)
+            .video("https://www.naver.com/")
+            .thumbnail("https://www.naver.com")
+            .build();
 
-          board1 = boardRepository.save(board1);
-          board2 = boardRepository.save(board2);
-      }
+    board1 = boardRepository.save(board1);
+    board2 = boardRepository.save(board2);
+  }
   //
   //    @Test
   //    @DisplayName("deleteBoardTest Start")
@@ -69,24 +69,25 @@ public class BoardRepositoryTest {
   //
   //    }
 
-     @Test
-     @DisplayName("testFindBoardByBoardId_when_existedBoard")
-     public void testFindBoardByBoardId(){
-          //given
-          Board existedBoard = board1;
-          Board existedBoard2 = board2;
+  @Test
+  @DisplayName("testFindBoardByBoardId_when_existedBoard")
+  public void testFindBoardByBoardId() {
+    // given
+    Board existedBoard = board1;
+    Board existedBoard2 = board2;
 
-          //when
-         Board foundBoard1 = boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId()).orElseThrow();
-//         Board foundBoard2 = boardRepository.fin
+    // when
+    Board foundBoard1 =
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+            .orElseThrow();
+    //         Board foundBoard2 = boardRepository.fin
 
-         //         System.out.println(foundBoard);
+    //         System.out.println(foundBoard);
 
-         //then
-         assertEquals(foundBoard1.getId(),existedBoard.getId());
-         assertTrue(foundBoard1.getIsPublic());
-         assertFalse(foundBoard1.getIsDeleted());
-
-     }
-
+    // then
+    assertEquals(foundBoard1.getId(), existedBoard.getId());
+    assertTrue(foundBoard1.getIsPublic());
+    assertFalse(foundBoard1.getIsDeleted());
+  }
 }

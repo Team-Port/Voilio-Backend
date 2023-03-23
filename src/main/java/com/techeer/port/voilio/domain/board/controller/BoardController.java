@@ -7,7 +7,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.global.common.ResponseFormat;
-import com.techeer.port.voilio.global.common.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -24,16 +23,26 @@ public class BoardController {
   public ResponseEntity<EntityModel<ResponseFormat<?>>> deleteBoard(@PathVariable Long board_id) {
     boardService.deleteBoard(board_id);
     ResponseFormat<?> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS);
-//    EntityModel<ResponseFormat<?>> entityModel = new EntityModel<>(responseFormat);
+    //    EntityModel<ResponseFormat<?>> entityModel = new EntityModel<>(responseFormat);
 
-//    responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
-    return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(responseFormat,linkTo(methodOn(BoardController.class).deleteBoard(board_id)).withSelfRel()));
+    //
+    // responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).deleteBoard(board_id)).withSelfRel()));
   }
 
   @GetMapping("/{board_id}")
-  public ResponseEntity<EntityModel<ResponseFormat<Board>>> findBoardById(@PathVariable Long board_id){
+  public ResponseEntity<EntityModel<ResponseFormat<Board>>> findBoardById(
+      @PathVariable Long board_id) {
     Board board = boardService.findBoardById(board_id);
-    ResponseFormat<Board> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS,board);
-    return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(responseFormat,linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
+    ResponseFormat<Board> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS, board);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
 }

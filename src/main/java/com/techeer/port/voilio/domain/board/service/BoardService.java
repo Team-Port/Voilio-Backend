@@ -22,7 +22,10 @@ public class BoardService {
   }
 
   public Board findBoardById(Long boardId) {
-    Board board = boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId).orElseThrow(()-> new NotFoundException("Board not found"));
+    Board board =
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
+            .orElseThrow(() -> new NotFoundException("Board not found"));
     return board;
   }
 }

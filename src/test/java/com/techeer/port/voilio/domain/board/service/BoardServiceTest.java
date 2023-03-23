@@ -62,11 +62,12 @@ public class BoardServiceTest {
 
   @Test
   @DisplayName("getBoard_when success")
-  public void getBoard_whenBoardExist_shouldGetBoard(){
+  public void getBoard_whenBoardExist_shouldGetBoard() {
     Long boardId = 1L;
 
-    //given
-    Board board =Board.builder()
+    // given
+    Board board =
+        Board.builder()
             .id(boardId)
             .userId(1L)
             .category1(Category.IT)
@@ -77,16 +78,15 @@ public class BoardServiceTest {
             .isPublic(true)
             .build();
 
-    given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)).willReturn(Optional.of(board));
+    given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId))
+        .willReturn(Optional.of(board));
 
-    //when
+    // when
     Board actual = boardService.findBoardById(board.getId());
 
-    assertEquals(actual.getId(),boardId);
-    assertEquals(actual.getUserId(),board.getUserId());
+    assertEquals(actual.getId(), boardId);
+    assertEquals(actual.getUserId(), board.getUserId());
     assertTrue(actual.getIsPublic());
     assertFalse(actual.getIsDeleted());
-
-
   }
 }
