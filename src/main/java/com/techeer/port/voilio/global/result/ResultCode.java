@@ -10,11 +10,12 @@ public enum ResultCode {
 
   // 도메인 별로 나눠서 관리(ex: User 도메인)
   // user
-  USER_REGISTRATION_SUCCESS("U001", "사용자 등록 성공"),
+  USER_REGISTRATION_SUCCESS("U001", "200", "사용자 등록 성공"),
 
-  BOARD_CREATED_SUCCESS("200", "게시물 생성 성공"),
+  BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
   ;
 
+  private final String code;
   private final String status;
   private final String message;
 }
