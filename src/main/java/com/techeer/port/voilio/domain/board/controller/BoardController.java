@@ -15,18 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.techeer.port.voilio.global.common.ResponseStatus.FETCH_BOARD_SUCCESS;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/boards")
+@RequestMapping("api/v1/boards")
 public class BoardController {
     private final BoardService boardService;
 
     @PatchMapping("/{boardId}")
-    public EntityModel<ResponseFormat> deleteBoard(@PathVariable Long boardId){
+    public ResponseEntity<ResponseFormat<?>> deleteBoard(@PathVariable Long boardId){
         boardService.deleteBoard(boardId);
-
-        ResponseFormat responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS);
-        return EntityModel.status(HttpStatus.OK).headers(create);
+        ResponseFormat<?> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS);
+        responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
+        return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
     }
 }

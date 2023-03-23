@@ -42,7 +42,7 @@ public class BoardControllerTest {
 
         //then
         mockMvc.perform(patch("/boards/{boardId}",boardId))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
         verify(boardService,times(1)).deleteBoard(boardId);
     }
 }
