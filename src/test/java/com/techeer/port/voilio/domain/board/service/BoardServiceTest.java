@@ -32,7 +32,7 @@ public class BoardServiceTest {
     // given
     Board board1 =
         Board.builder()
-            .userId(1L)
+            .user(1L)
             .title("testTitle")
             .content("testContent")
             .video("https://www.naver.com/")
