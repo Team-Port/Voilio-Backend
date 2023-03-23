@@ -6,6 +6,9 @@ import static org.mockito.Mockito.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.NotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DisplayName("Board Service")
 public class BoardServiceTest {
   @Mock private BoardRepository boardRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private BoardService boardService;
 
@@ -29,15 +33,24 @@ public class BoardServiceTest {
   void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
     Long boardId = 1L;
 
+    User user = User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
     // given
     Board board1 =
         Board.builder()
-            .user(1L)
+            .user(user)
             .title("testTitle")
             .content("testContent")
-            .video("https://www.naver.com/")
-            .thumbnail("https://www.naver.com")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
             .build();
+
+//    given(userRepository)
     given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
 
     // when

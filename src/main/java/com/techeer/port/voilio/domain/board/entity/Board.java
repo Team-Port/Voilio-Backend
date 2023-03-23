@@ -62,14 +62,14 @@ public class Board extends BaseEntity {
           Category category2,
           String video_url,
           String thumbnail_url,
-          boolean isPublic, User user) {
+          User user) {
     this.title = title;
     this.category1 = category1;
     this.category2 = category2;
     this.content = content;
     this.video_url = video_url;
     this.thumbnail_url = thumbnail_url;
-    this.isPublic = isPublic;
+    this.isPublic = true;
     this.user = user;
   }
 
