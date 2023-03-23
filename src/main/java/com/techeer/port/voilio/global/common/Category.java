@@ -9,5 +9,4 @@ public enum Category {
   IT(1);
 
   private final int value;
-
 }
