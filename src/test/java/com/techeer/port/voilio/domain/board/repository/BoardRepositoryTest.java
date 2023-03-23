@@ -3,7 +3,6 @@ package com.techeer.port.voilio.domain.board.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
@@ -27,7 +26,6 @@ public class BoardRepositoryTest {
   private User user1;
   private Board board1;
   private Board board2;
-
 
   @BeforeEach
   public void saveTest() {
@@ -115,9 +113,9 @@ public class BoardRepositoryTest {
 
     // when
     Board foundBoard1 =
-            boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
-                    .orElseThrow();
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+            .orElseThrow();
 
     // then
     assertEquals(foundBoard1.getId(), existedBoard.getId());

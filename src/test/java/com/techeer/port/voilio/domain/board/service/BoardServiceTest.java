@@ -80,23 +80,23 @@ public class BoardServiceTest {
 
     // given
     User user =
-            User.builder()
-                    .email("tester1@example.com")
-                    .password("testPassword")
-                    .nickname("tester1")
-                    .build();
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
 
     Board board =
-            Board.builder()
-                    .id(boardId)
-                    .user(user)
-                    .title("testTitle")
-                    .content("testContent")
-                    .category1(Category.IT)
-                    .category2(Category.IT)
-                    .video_url("https://www.naver.com/")
-                    .thumbnail_url("https://www.naver.com")
-                    .build();
+        Board.builder()
+            .id(boardId)
+            .user(user)
+            .title("testTitle")
+            .content("testContent")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
 
     given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId))
         .willReturn(Optional.of(board));
