@@ -1,7 +1,11 @@
 package com.techeer.port.voilio.domain.board.entity;
 
+import com.techeer.port.voilio.domain.comment.entity.Comment;
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +47,13 @@ public class Board extends BaseEntity {
 
   @Column(nullable = false)
   private Boolean isPublic;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> comments = new ArrayList<>();
 
   @Builder
   public Board(
