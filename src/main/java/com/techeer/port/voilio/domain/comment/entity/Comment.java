@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -18,15 +19,16 @@ public class Comment extends BaseEntity {
   @Column(name = "comment_id")
   private Long id;
 
-  @Column(nullable = false)
-  private String content;
+  @Column @NotNull private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "board_id", nullable = false)
+  @JoinColumn(name = "board_id")
+  @NotNull
   private Board board;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id")
+  @NotNull
   private User user;
 
   @Builder
