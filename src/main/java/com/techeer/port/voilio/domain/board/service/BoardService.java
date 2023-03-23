@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+  private final BoardRepository boardRepository;
 
-    public ResultResponse createBoard(BoardRequest request) {
-        Board createdBoard = boardRepository.save(request.toEntity());
-        return new ResultResponse(ResultCode.BOARD_CREATED_SUCCESS);
-    }
+  public ResultResponse createBoard(BoardRequest request) {
+    Board createdBoard = boardRepository.save(request.toEntity());
+    return new ResultResponse(ResultCode.BOARD_CREATED_SUCCESS);
+  }
 }

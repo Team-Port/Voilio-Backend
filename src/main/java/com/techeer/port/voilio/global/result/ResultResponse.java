@@ -11,7 +11,6 @@ public class ResultResponse<T> extends RepresentationModel<ResultResponse<T>> {
   private final String message;
   private T data;
 
-
   @JsonCreator
   public ResultResponse(ResultCode resultCode) {
     this.status = resultCode.getStatus();

@@ -15,7 +15,6 @@ public enum ResultCode {
   BOARD_CREATED_SUCCESS("200", "게시물 생성 성공"),
   ;
 
-
   private final String status;
   private final String message;
 }
