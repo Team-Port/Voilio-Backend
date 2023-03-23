@@ -44,7 +44,9 @@ public class Board extends BaseEntity {
 
   @Column @NotNull private String thumbnail_url;
 
-  @Column @NotNull private Boolean isPublic;
+  @Column(columnDefinition = "boolean default true")
+  @NotNull
+  private Boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
@@ -62,7 +64,8 @@ public class Board extends BaseEntity {
       Category category2,
       String video_url,
       String thumbnail_url,
-      boolean isPublic) {
+      boolean isPublic,
+      User user) {
     this.title = title;
     this.category1 = category1;
     this.category2 = category2;
@@ -70,5 +73,6 @@ public class Board extends BaseEntity {
     this.video_url = video_url;
     this.thumbnail_url = thumbnail_url;
     this.isPublic = isPublic;
+    this.user = user;
   }
 }
