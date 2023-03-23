@@ -33,7 +33,8 @@ public class BoardServiceTest {
   void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
     Long boardId = 1L;
 
-    User user = User.builder()
+    User user =
+        User.builder()
             .email("tester1@example.com")
             .password("testPassword")
             .nickname("tester1")
@@ -50,7 +51,7 @@ public class BoardServiceTest {
             .thumbnail_url("https://www.naver.com")
             .build();
 
-//    given(userRepository)
+    //    given(userRepository)
     given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
 
     // when

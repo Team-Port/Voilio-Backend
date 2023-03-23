@@ -56,13 +56,13 @@ public class Board extends BaseEntity {
 
   @Builder
   public Board(
-          String title,
-          String content,
-          Category category1,
-          Category category2,
-          String video_url,
-          String thumbnail_url,
-          User user) {
+      String title,
+      String content,
+      Category category1,
+      Category category2,
+      String video_url,
+      String thumbnail_url,
+      User user) {
     this.title = title;
     this.category1 = category1;
     this.category2 = category2;
@@ -72,5 +72,4 @@ public class Board extends BaseEntity {
     this.isPublic = true;
     this.user = user;
   }
-
 }
