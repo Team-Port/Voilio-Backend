@@ -11,7 +11,7 @@ public class ResponseFormat<T> extends RepresentationModel<ResponseFormat<T>> {
 
   private final String message;
 
-  private T result;
+  private T data;
 
   @JsonCreator
   public ResponseFormat(ResponseStatus status) {
@@ -20,9 +20,9 @@ public class ResponseFormat<T> extends RepresentationModel<ResponseFormat<T>> {
   }
 
   @JsonCreator
-  public ResponseFormat(ResponseStatus status, T result) {
+  public ResponseFormat(ResponseStatus status, T data) {
     this.status = status.getStatus();
     this.message = status.getMessage();
-    this.result = result;
+    this.data = data;
   }
 }
