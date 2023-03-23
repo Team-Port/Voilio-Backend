@@ -57,7 +57,8 @@ public class Board extends BaseEntity {
   private Boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id")
+  @NotNull
   private User user;
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
