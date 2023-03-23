@@ -1,24 +1,25 @@
 package com.techeer.port.voilio.global.result;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
-public class ResultResponse {
+public class ResultResponse<T> extends RepresentationModel<ResultResponse<T>> {
 
-  private String code;
-  private String message;
-  private Object data;
+  private final String status;
+  private final String message;
+  private T data;
 
-  public static ResultResponse of(ResultCode resultCode, Object data) {
-    return new ResultResponse(resultCode, data);
+  @JsonCreator
+  public ResultResponse(ResultCode resultCode) {
+    this.status = resultCode.getStatus();
+    this.message = resultCode.getMessage();
   }
 
-  public static ResultResponse of(ResultCode resultCode) {
-    return new ResultResponse(resultCode, "");
-  }
-
-  public ResultResponse(ResultCode resultCode, Object data) {
-    this.code = resultCode.getCode();
+  @JsonCreator
+  public ResultResponse(ResultCode resultCode, T data) {
+    this.status = resultCode.getStatus();
     this.message = resultCode.getMessage();
     this.data = data;
   }

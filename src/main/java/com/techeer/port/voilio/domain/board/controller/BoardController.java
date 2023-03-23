@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.controller;
 
+
 import static com.techeer.port.voilio.global.common.ResponseStatus.FETCH_BOARD_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -26,5 +27,12 @@ public class BoardController {
     ResponseFormat<?> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS);
     responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+
+  @PostMapping("/create")
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardRequest request) {
+    ResultResponse resultResponse = boardService.createBoard(request);
+    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+
   }
 }

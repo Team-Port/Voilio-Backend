@@ -35,6 +35,7 @@ public class Board extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Category category1;
 
+  @Column
   @NotNull
   @Enumerated(EnumType.STRING)
   private Category category2;
@@ -43,12 +44,14 @@ public class Board extends BaseEntity {
 
   @Column @NotNull private String thumbnail_url;
 
+
   @Column(columnDefinition = "boolean default true")
   @NotNull
   private Boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id")
+  @NotNull
   private User user;
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
