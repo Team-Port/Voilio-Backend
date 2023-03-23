@@ -5,6 +5,7 @@ import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -15,7 +16,7 @@ import lombok.*;
 public class Board extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long boardId;
+  private Long id;
 
   @NotNull @Column private Long userId;
 
@@ -35,5 +36,10 @@ public class Board extends BaseEntity {
 
   @Column private String thumbnail;
 
-  @Column private boolean isPublic;
+  @Column(columnDefinition = "boolean default true")
+  private boolean isPublic;
+
+  public boolean getIsPublic() {
+    return this.isPublic;
+  }
 }
