@@ -1,7 +1,5 @@
 package com.techeer.port.voilio.domain.board.repository;
 
-
-
 import static org.junit.jupiter.api.Assertions.*;
 
 // @ExtendWith(SpringExtension.class)
