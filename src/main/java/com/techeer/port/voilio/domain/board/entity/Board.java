@@ -44,7 +44,6 @@ public class Board extends BaseEntity {
 
   @Column @NotNull private String thumbnail_url;
 
-
   @Column(columnDefinition = "boolean default true")
   @NotNull
   private Boolean isPublic;
