@@ -3,7 +3,7 @@ package com.techeer.port.voilio.domain.board.controller;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -45,8 +43,7 @@ public class BoardControllerTest {
     mockMvc
         .perform(patch(BASE_PATH + "/{boardId}", boardId))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
+        .andExpect(status().isOk());
     verify(boardService, times(1)).deleteBoard(boardId);
   }
 

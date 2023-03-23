@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.Category;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,56 +22,89 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @DataJpaTest
 public class BoardRepositoryTest {
   @Autowired private BoardRepository boardRepository;
+  @Autowired private UserRepository userRepository;
 
+  private User user1;
   private Board board1;
   private Board board2;
 
-  @BeforeEach
-  public void setUp() {
-    board1 =
-        Board.builder()
-            .userId(1L)
-            .title("testTitle1")
-            .content("testContent1")
-            .isPublic(true)
-            .category1(Category.IT)
-            .video("https://www.naver.com/")
-            .thumbnail("https://www.naver.com")
-            .build();
-    board2 =
-        Board.builder()
-            .userId(1L)
-            .title("testTitle2")
-            .category1(Category.IT)
-            .content("testContent2")
-            .isPublic(false)
-            .video("https://www.naver.com/")
-            .thumbnail("https://www.naver.com")
-            .build();
 
-    board1 = boardRepository.save(board1);
-    board2 = boardRepository.save(board2);
+  @BeforeEach
+  public void saveTest() {
+    user1 =
+        userRepository.save(
+            User.builder()
+                .email("tester1@example.com")
+                .password("testPassword")
+                .nickname("tester1")
+                .build());
+
+    User user2 =
+        userRepository.save(
+            User.builder()
+                .email("tester2@example.com")
+                .password("testPassword")
+                .nickname("tester2")
+                .build());
+
+    board1 =
+        boardRepository.save(
+            Board.builder()
+                .user(user1)
+                .title("testTitle")
+                .content("testContent")
+                .category1(Category.IT)
+                .category2(Category.IT)
+                .video_url("https://www.naver.com/")
+                .thumbnail_url("https://www.naver.com")
+                .build());
+
+    board2 =
+        boardRepository.save(
+            Board.builder()
+                .user(user1)
+                .title("testTitle2")
+                .content("testContent2")
+                .category1(Category.IT)
+                .category2(Category.IT)
+                .video_url("https://www.naver.com/")
+                .thumbnail_url("https://www.naver.com")
+                .build());
+
+    Board board3 =
+        boardRepository.save(
+            Board.builder()
+                .user(user1)
+                .title("testTitle3")
+                .content("testContent3")
+                .category2(Category.IT)
+                .category1(Category.IT)
+                .video_url("https://www.naver.com/")
+                .thumbnail_url("https://www.naver.com")
+                .build());
   }
-  //
-  //    @Test
-  //    @DisplayName("deleteBoardTest Start")
-  //    public void deleteBoardTest(){
-  //        //given
-  //        List<Board> boardList = boardRepository.findAll();
-  //        int boardSize = boardList.size();
-  //        Board board = boardRepository.findById(1).orElseThrow();
-  //        assertFalse(board.getIsDeleted());
-  //
-  //        //when
-  //        boardRepository.deleteById(1);
-  //
-  //        //then
-  //        boardList = boardRepository.findAll();
-  //        assertEquals(boardList.size(),boardSize);
-  //        board = boardRepository.findById(1).orElseThrow();
-  //        assertTrue(board.getIsDeleted());
-  //
-  //    }
+
+  @Test
+  @DisplayName("deleteBoardTest Start")
+  public void deleteBoardTest() {
+    Long boardId = 1L;
+
+    // given
+    List<Board> boardList = boardRepository.findAll();
+    int boardSize = boardList.size();
+    Board board = boardRepository.findById(boardId).orElseThrow();
+    assertFalse(board.getIsDeleted());
+
+    // when
+    board.changeDeleted();
+    boardRepository.save(board);
+
+    // then
+    boardList = boardRepository.findAll();
+    assertEquals(boardList.size(), boardSize);
+    board = boardRepository.findById(boardId).orElseThrow();
+    assertTrue(board.getIsDeleted());
+  }
 
   @Test
   @DisplayName("testFindBoardByBoardId_when_existedBoard")
@@ -78,12 +115,9 @@ public class BoardRepositoryTest {
 
     // when
     Board foundBoard1 =
-        boardRepository
-            .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
-            .orElseThrow();
-    //         Board foundBoard2 = boardRepository.fin
-
-    //         System.out.println(foundBoard);
+            boardRepository
+                    .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+                    .orElseThrow();
 
     // then
     assertEquals(foundBoard1.getId(), existedBoard.getId());

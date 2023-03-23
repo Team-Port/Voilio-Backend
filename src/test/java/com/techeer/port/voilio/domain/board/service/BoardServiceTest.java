@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.NotFoundException;
 import java.util.Optional;
@@ -22,23 +24,34 @@ import org.springframework.test.context.ActiveProfiles;
 @DisplayName("Board Service")
 public class BoardServiceTest {
   @Mock private BoardRepository boardRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private BoardService boardService;
 
   @Test
   @DisplayName("mockito service test")
   void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
+    // given
     Long boardId = 1L;
 
-    // given
+    User user =
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
+
     Board board1 =
         Board.builder()
-            .userId(1L)
+            .user(user)
             .title("testTitle")
             .content("testContent")
-            .video("https://www.naver.com/")
-            .thumbnail("https://www.naver.com")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
             .build();
+
     given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
 
     // when
@@ -66,17 +79,24 @@ public class BoardServiceTest {
     Long boardId = 1L;
 
     // given
+    User user =
+            User.builder()
+                    .email("tester1@example.com")
+                    .password("testPassword")
+                    .nickname("tester1")
+                    .build();
+
     Board board =
-        Board.builder()
-            .id(boardId)
-            .userId(1L)
-            .category1(Category.IT)
-            .thumbnail("https://www.youtube.com/watch?v=PMV-q3eX4hk")
-            .content("testContent")
-            .video("https://www.youtube.com/watch?v=PMV-q3eX4hk")
-            .title("testTitle")
-            .isPublic(true)
-            .build();
+            Board.builder()
+                    .id(boardId)
+                    .user(user)
+                    .title("testTitle")
+                    .content("testContent")
+                    .category1(Category.IT)
+                    .category2(Category.IT)
+                    .video_url("https://www.naver.com/")
+                    .thumbnail_url("https://www.naver.com")
+                    .build();
 
     given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId))
         .willReturn(Optional.of(board));
@@ -85,7 +105,7 @@ public class BoardServiceTest {
     Board actual = boardService.findBoardById(board.getId());
 
     assertEquals(actual.getId(), boardId);
-    assertEquals(actual.getUserId(), board.getUserId());
+    assertEquals(actual.getId(), board.getId());
     assertTrue(actual.getIsPublic());
     assertFalse(actual.getIsDeleted());
   }

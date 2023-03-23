@@ -23,10 +23,6 @@ public class BoardController {
   public ResponseEntity<EntityModel<ResponseFormat<?>>> deleteBoard(@PathVariable Long board_id) {
     boardService.deleteBoard(board_id);
     ResponseFormat<?> responseFormat = new ResponseFormat<>(FETCH_BOARD_SUCCESS);
-    //    EntityModel<ResponseFormat<?>> entityModel = new EntityModel<>(responseFormat);
-
-    //
-    // responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK)
         .body(
             EntityModel.of(
