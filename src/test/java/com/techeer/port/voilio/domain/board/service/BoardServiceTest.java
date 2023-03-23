@@ -5,11 +5,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.NotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,6 +70,6 @@ public class BoardServiceTest {
     given(boardRepository.findById(boardId)).willReturn(Optional.empty());
 
     // when, then
-    assertThrows(NotFoundException.class, () -> boardService.deleteBoard(boardId));
+    assertThrows(NotFoundBoard.class, () -> boardService.deleteBoard(boardId));
   }
 }

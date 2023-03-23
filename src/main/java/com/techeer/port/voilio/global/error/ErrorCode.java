@@ -15,6 +15,9 @@ public enum ErrorCode {
   // User 도메인
   INVALID_PASSWORD(400, "U001", "잘못된 비밀번호"),
   USER_NOT_FOUND_ERROR(400, "U002", "사용자를 찾을 수 없음"),
+
+  //board
+  BOARD_NOT_FOUND_ERROR(400,"B001","게시글을 찾을 수 없음"),
   ;
 
   private final int status;

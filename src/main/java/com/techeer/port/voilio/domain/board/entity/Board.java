@@ -65,6 +65,7 @@ public class Board extends BaseEntity {
       Category category2,
       String video_url,
       String thumbnail_url,
+      boolean isPublic,
       User user) {
     this.title = title;
     this.category1 = category1;
@@ -72,7 +73,7 @@ public class Board extends BaseEntity {
     this.content = content;
     this.video_url = video_url;
     this.thumbnail_url = thumbnail_url;
-    this.isPublic = true;
+    this.isPublic = isPublic;
     this.user = user;
   }
 }
