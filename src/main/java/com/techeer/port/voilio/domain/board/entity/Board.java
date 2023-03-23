@@ -26,13 +26,9 @@ public class Board extends BaseEntity {
   @Column(name = "board_id")
   private Long id;
 
-  @Column
-  @NotNull
-  private String title;
+  @Column @NotNull private String title;
 
-  @Column
-  @NotNull
-  private String content;
+  @Column @NotNull private String content;
 
   @Column
   @NotNull
@@ -44,17 +40,11 @@ public class Board extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Category category2;
 
-  @Column
-  @NotNull
-  private String video_url;
+  @Column @NotNull private String video_url;
 
-  @Column
-  @NotNull
-  private String thumbnail_url;
+  @Column @NotNull private String thumbnail_url;
 
-  @Column
-  @NotNull
-  private Boolean isPublic;
+  @Column @NotNull private Boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
