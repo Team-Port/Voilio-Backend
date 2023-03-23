@@ -1,8 +1,10 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BoardController Test Start")
@@ -23,6 +29,8 @@ public class BoardControllerTest {
 
   @InjectMocks private BoardController boardController;
   private MockMvc mockMvc;
+
+  private static String BASE_PATH = "http://localhost/api/v1/boards";
 
   @BeforeEach
   public void setUp() {
@@ -37,7 +45,17 @@ public class BoardControllerTest {
     doNothing().when(boardService).deleteBoard(boardId);
 
     // then
-    mockMvc.perform(patch("/boards/{boardId}", boardId)).andExpect(status().isOk());
+    mockMvc.perform(patch(BASE_PATH+"/{boardId}", boardId))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
     verify(boardService, times(1)).deleteBoard(boardId);
+  }
+
+  @Test
+  public void findBoardById(){
+    Long boardId = 1L;
+
+
   }
 }
