@@ -10,7 +10,6 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class BoardServiceTest {
   @Test
   @DisplayName("mockito service test")
   void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
-    //given
+    // given
     Long boardId = 1L;
 
     User user =
@@ -81,29 +80,30 @@ public class BoardServiceTest {
   public void findBoardByKeyword() {
     String keyword = "test";
 
-    //given
+    // given
     User user =
-            User.builder()
-                    .email("tester1@example.com")
-                    .password("testPassword")
-                    .nickname("tester1")
-                    .build();
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
     Board board =
-            Board.builder()
-                    .user(user)
-                    .title("testTitle")
-                    .content("testContent")
-                    .category1(Category.IT)
-                    .category2(Category.IT)
-                    .video_url("https://www.naver.com/")
-                    .thumbnail_url("https://www.naver.com")
-                    .build();
+        Board.builder()
+            .user(user)
+            .title("testTitle")
+            .content("testContent")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
     List<Board> boards = new ArrayList<Board>();
     boards.add(board);
 
-    given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword)).willReturn(boards);
+    given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword))
+        .willReturn(boards);
 
-    //when
+    // when
     List<Board> foundBoards = boardService.findBoardByKeyword(keyword);
 
     // then

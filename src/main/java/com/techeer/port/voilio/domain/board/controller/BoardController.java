@@ -9,15 +9,14 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -54,17 +53,23 @@ public class BoardController {
   }
 
   @GetMapping
-  public ResponseEntity<ResultResponse<List<EntityModel<Board>>>> findBoardByKeyword(@RequestParam("search") String search){
-    List<EntityModel<Board>> boards = boardService.findBoardByKeyword(search).stream()
-            .map(board -> EntityModel.of(board,
-                    linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel()
-                    ))
+  public ResponseEntity<ResultResponse<List<EntityModel<Board>>>> findBoardByKeyword(
+      @RequestParam("search") String search) {
+    List<EntityModel<Board>> boards =
+        boardService.findBoardByKeyword(search).stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        board,
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
             .collect(Collectors.toList());
 
+    ResultResponse<List<EntityModel<Board>>> resultResponse =
+        new ResultResponse<>(USER_REGISTRATION_SUCCESS, boards);
 
-    ResultResponse<List<EntityModel<Board>>> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS,boards);
-
-    resultResponse.add(linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
