@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -53,9 +54,15 @@ public class BoardController {
   }
 
   @GetMapping
-  public ResponseEntity<ResultResponse<List<Board>>> findBoardByKeyword(@RequestParam("search") String search){
-    List<Board> boards = boardService.findBoardByKeyword(search);
-    ResultResponse<List<Board>> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS,boards);
+  public ResponseEntity<ResultResponse<List<EntityModel<Board>>>> findBoardByKeyword(@RequestParam("search") String search){
+    List<EntityModel<Board>> boards = boardService.findBoardByKeyword(search).stream()
+            .map(board -> EntityModel.of(board,
+                    linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel()
+                    ))
+            .collect(Collectors.toList());
+
+
+    ResultResponse<List<EntityModel<Board>>> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS,boards);
 
     resultResponse.add(linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
