@@ -1,11 +1,11 @@
 package com.techeer.port.voilio.domain.board.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
+import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -53,9 +53,9 @@ public class BoardController {
   }
 
   @GetMapping
-  public ResponseEntity<ResultResponse<List<EntityModel<Board>>>> findBoardByKeyword(
+  public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
       @RequestParam("search") String search) {
-    List<EntityModel<Board>> boards =
+    List<EntityModel<BoardResponse>> boards =
         boardService.findBoardByKeyword(search).stream()
             .map(
                 board ->
@@ -65,8 +65,8 @@ public class BoardController {
                             .withSelfRel()))
             .collect(Collectors.toList());
 
-    ResultResponse<List<EntityModel<Board>>> resultResponse =
-        new ResultResponse<>(USER_REGISTRATION_SUCCESS, boards);
+    ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
 
     resultResponse.add(
         linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());

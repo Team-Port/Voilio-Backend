@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
@@ -104,7 +105,7 @@ public class BoardServiceTest {
         .willReturn(boards);
 
     // when
-    List<Board> foundBoards = boardService.findBoardByKeyword(keyword);
+    List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
 
     // then
     assertEquals(boards.size(), foundBoards.size());
