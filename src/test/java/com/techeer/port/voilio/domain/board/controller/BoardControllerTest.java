@@ -51,14 +51,14 @@ public class BoardControllerTest {
   public void findBoardById() throws Exception {
     Long boardId = 1L;
 
-//     given,when
+    //     given,when
     doNothing().when(boardService).findBoardById(boardId);
 
     mockMvc
-        .perform(get(BASE_PATH+"/{boardId}",boardId))
+        .perform(get(BASE_PATH + "/{boardId}", boardId))
         .andDo(print())
         .andExpect(status().isOk());
 
-    verify(boardService,times(1)).findBoardById(boardId);
+    verify(boardService, times(1)).findBoardById(boardId);
   }
 }

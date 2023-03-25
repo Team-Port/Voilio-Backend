@@ -23,11 +23,12 @@ public class BoardService {
 
   public Board findBoardById(Long boardId) {
     Board board =
-            boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
-                    .orElseThrow(NotFoundBoard::new);
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
+            .orElseThrow(NotFoundBoard::new);
     return board;
   }
+
   public void createBoard(BoardRequest request) {
     Board createdBoard = boardRepository.save(request.toEntity());
   }
