@@ -22,18 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
   private final BoardService boardService;
 
-
   @GetMapping("/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
     Board board = boardService.findBoardById(board_id);
     ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
-            .body(
-                    EntityModel.of(
-                            responseFormat,
-                            linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
+
   @DeleteMapping("/{boardId}")
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
