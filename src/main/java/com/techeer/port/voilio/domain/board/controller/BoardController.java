@@ -36,4 +36,12 @@ public class BoardController {
     resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+  @PatchMapping("/{boardId}")
+  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId){
+    boardService.hideBoard(boardId);
+    ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 }

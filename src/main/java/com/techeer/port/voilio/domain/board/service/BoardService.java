@@ -24,4 +24,10 @@ public class BoardService {
   public void createBoard(BoardRequest request) {
     Board createdBoard = boardRepository.save(request.toEntity());
   }
+
+  public void hideBoard(Long boardId) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    board.changePublic();
+    boardRepository.save(board);
+  }
 }
