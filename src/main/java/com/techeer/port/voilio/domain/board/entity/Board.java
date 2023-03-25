@@ -21,74 +21,66 @@ import lombok.ToString;
 @Table(name = "boards")
 public class Board extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "board_id")
+  private Long id;
 
-    @Column
-    @NotNull
-    private String title;
+  @Column @NotNull private String title;
 
-    @Column
-    @NotNull
-    private String content;
+  @Column @NotNull private String content;
 
-    @Column
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Category category1;
+  @Column
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private Category category1;
 
-    @Column
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Category category2;
+  @Column
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private Category category2;
 
-    @Column
-    @NotNull
-    private String video_url;
+  @Column @NotNull private String video_url;
 
-    @Column
-    @NotNull
-    private String thumbnail_url;
+  @Column @NotNull private String thumbnail_url;
 
-    @Column(columnDefinition = "boolean default true")
-    @NotNull
-    private Boolean isPublic;
+  @Column(columnDefinition = "boolean default true")
+  @NotNull
+  private Boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> comments = new ArrayList<>();
 
-    @Builder
-    public Board(
-        String title,
-        String content,
-        Category category1,
-        Category category2,
-        String video_url,
-        String thumbnail_url,
-        boolean isPublic,
-        User user) {
-        this.title = title;
-        this.category1 = category1;
-        this.category2 = category2;
-        this.content = content;
-        this.video_url = video_url;
-        this.thumbnail_url = thumbnail_url;
-        this.isPublic = isPublic;
-        this.user = user;
-    }
+  @Builder
+  public Board(
+      String title,
+      String content,
+      Category category1,
+      Category category2,
+      String video_url,
+      String thumbnail_url,
+      boolean isPublic,
+      User user) {
+    this.title = title;
+    this.category1 = category1;
+    this.category2 = category2;
+    this.content = content;
+    this.video_url = video_url;
+    this.thumbnail_url = thumbnail_url;
+    this.isPublic = isPublic;
+    this.user = user;
+  }
 
-    public void setBoard(String title, String content, Category category1, Category category2,
-        String thumbnail_url) {
-        this.title = title;
-        this.content = content;
-        this.category1 = category1;
-        this.category2 = category2;
-        this.thumbnail_url = thumbnail_url;
-    }
+  public void setBoard(
+      String title, String content, Category category1, Category category2, String thumbnail_url) {
+    this.title = title;
+    this.content = content;
+    this.category1 = category1;
+    this.category2 = category2;
+    this.thumbnail_url = thumbnail_url;
+  }
 }

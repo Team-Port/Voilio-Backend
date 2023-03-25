@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
+  Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
 }
