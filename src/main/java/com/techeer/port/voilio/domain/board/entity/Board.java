@@ -58,7 +58,6 @@ public class Board extends BaseEntity {
 
   @Builder
   public Board(
-      Long id,
       String title,
       String content,
       Category category1,
@@ -67,7 +66,6 @@ public class Board extends BaseEntity {
       String thumbnail_url,
       boolean isPublic,
       User user) {
-    this.id = id;
     this.title = title;
     this.category1 = category1;
     this.category2 = category2;

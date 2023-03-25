@@ -88,7 +88,6 @@ public class BoardServiceTest {
 
     Board board =
         Board.builder()
-            .id(boardId)
             .user(user)
             .title("testTitle")
             .content("testContent")
