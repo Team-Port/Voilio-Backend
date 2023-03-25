@@ -20,40 +20,48 @@ import lombok.ToString;
 @Table(name = "boards")
 public class Board extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "board_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_id")
+    private Long id;
 
-  @Column @NotNull private String title;
+    @Column
+    @NotNull
+    private String title;
 
-  @Column @NotNull private String content;
+    @Column
+    @NotNull
+    private String content;
 
-  @Column
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private Category category1;
+    @Column
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Category category1;
 
-  @Column
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private Category category2;
+    @Column
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Category category2;
 
-  @Column @NotNull private String video_url;
+    @Column
+    @NotNull
+    private String video_url;
 
-  @Column @NotNull private String thumbnail_url;
+    @Column
+    @NotNull
+    private String thumbnail_url;
 
-  @Column(columnDefinition = "boolean default true")
-  @NotNull
-  private Boolean isPublic;
+    @Column(columnDefinition = "boolean default true")
+    @NotNull
+    private Boolean isPublic;
 
   //  @ManyToOne(fetch = FetchType.LAZY)
   //  @JoinColumn(name = "user_id")
   //  @NotNull
   //  private User user;
 
-  @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
   @Builder
   public Board(
