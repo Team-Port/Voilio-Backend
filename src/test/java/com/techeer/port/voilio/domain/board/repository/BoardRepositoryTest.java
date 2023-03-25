@@ -24,11 +24,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @DataJpaTest
 public class BoardRepositoryTest {
   @Autowired private BoardRepository boardRepository;
-
   @Autowired private UserRepository userRepository;
 
   private Board board1,board2,board3;
   private User user1,user2;
+
 
   @BeforeEach
   public void saveTest() {
@@ -112,20 +112,20 @@ public class BoardRepositoryTest {
 
   @Test
   @DisplayName("findBoardBykeyword")
-  public void findBoardByKeyword(){
-    String keyword = "test",keyword2 = "different", keyword3 = "",keyword4 = "nothing",keyword5 = "differentTitle2";
+  public void findBoardByKeyword() {
+    String keyword = "test", keyword2 = "different", keyword3 = "", keyword4 = "nothing", keyword5 = "differentTitle2";
 
     //given
     Board tempBoard = boardRepository.save(Board.builder()
-                    .user(user2)
-                    .title("differentTitle")
-                    .content("differentContent")
-                    .category2(Category.IT)
-                    .category1(Category.IT)
-                    .isPublic(true)
-                    .video_url("https://www.naver.com/")
-                    .thumbnail_url("https://www.naver.com")
-                    .build());
+            .user(user2)
+            .title("differentTitle")
+            .content("differentContent")
+            .category2(Category.IT)
+            .category1(Category.IT)
+            .isPublic(true)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build());
 
     Board tempBoard2 = boardRepository.save(Board.builder()
             .user(user2)
@@ -138,7 +138,7 @@ public class BoardRepositoryTest {
             .thumbnail_url("https://www.naver.com")
             .build());
 
-    assertEquals(boardRepository.findAll().size(),5);
+    assertEquals(boardRepository.findAll().size(), 5);
 
     List<Board> expectBoards = new ArrayList<>();
     expectBoards.add(board1);
@@ -161,11 +161,31 @@ public class BoardRepositoryTest {
 
 
     //then
-    assertEquals(expectBoards.size(),actualBoards.size());
-    assertEquals(expectBoards2.size(),actualBoards2.size());
-    assertEquals(4,actualBoards3.size());
-    assertEquals(expectBoards4,actualBoards4);
-    assertEquals(expectBoards5,actualBoards5);
+    assertEquals(expectBoards.size(), actualBoards.size());
+    assertEquals(expectBoards2.size(), actualBoards2.size());
+    assertEquals(4, actualBoards3.size());
+    assertEquals(expectBoards4, actualBoards4);
+    assertEquals(expectBoards5, actualBoards5);
+
+  }
+
+  @Test
+  @DisplayName("testFindBoardByBoardId_when_existedBoard")
+  public void testFindBoardByBoardId() {
+    // given
+    Board existedBoard = board1;
+    Board existedBoard2 = board2;
+
+    // when
+    Board foundBoard1 =
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+            .orElseThrow();
+
+    // then
+    assertEquals(foundBoard1.getId(), existedBoard.getId());
+    assertTrue(foundBoard1.getIsPublic());
+    assertFalse(foundBoard1.getIsDeleted());
 
   }
 }

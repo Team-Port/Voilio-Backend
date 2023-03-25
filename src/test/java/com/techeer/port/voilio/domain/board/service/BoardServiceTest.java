@@ -43,7 +43,7 @@ public class BoardServiceTest {
             .password("testPassword")
             .nickname("tester1")
             .build();
-    // given
+
     Board board1 =
         Board.builder()
             .user(user)
@@ -78,7 +78,7 @@ public class BoardServiceTest {
 
   @Test
   @DisplayName("findBoardByKeyword")
-  public void findBoardByKeyword(){
+  public void findBoardByKeyword() {
     String keyword = "test";
 
     //given
@@ -107,6 +107,42 @@ public class BoardServiceTest {
     List<Board> foundBoards = boardService.findBoardByKeyword(keyword);
 
     // then
-    assertEquals(boards.size(),foundBoards.size());
+    assertEquals(boards.size(), foundBoards.size());
+  }
+
+  @Test
+  @DisplayName("getBoard_when success")
+  public void getBoard_whenBoardExist_shouldGetBoard() {
+    Long boardId = 1L;
+
+    // given
+    User user =
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
+
+    Board board =
+        Board.builder()
+            .user(user)
+            .title("testTitle")
+            .content("testContent")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
+
+    given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId))
+        .willReturn(Optional.of(board));
+
+    // when
+    Board actual = boardService.findBoardById(board.getId());
+
+    assertEquals(actual.getId(), boardId);
+    assertEquals(actual.getId(), board.getId());
+    assertTrue(actual.getIsPublic());
+    assertFalse(actual.getIsDeleted());
   }
 }
