@@ -46,4 +46,9 @@ public class BoardControllerTest {
         .andExpect(status().isOk());
     verify(boardService, times(1)).deleteBoard(boardId);
   }
+
+//  @Test
+//  public void findBoardByKeyword(){
+//    String
+//  }
 }

@@ -1,13 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/boards
+    url: jdbc:mysql://localhost:3306/voilio?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password:
 
   jpa:
     hibernate:
-      ddl-auto : create #update
+      ddl-auto : update
     properties:
       hibernate:
         format_sql: true

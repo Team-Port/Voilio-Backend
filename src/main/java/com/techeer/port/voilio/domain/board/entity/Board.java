@@ -48,7 +48,7 @@ public class Board extends BaseEntity {
   @NotNull
   private Boolean isPublic;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   @NotNull
   private User user;
