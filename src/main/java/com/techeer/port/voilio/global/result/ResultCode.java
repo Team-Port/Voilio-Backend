@@ -14,7 +14,7 @@ public enum ResultCode {
 
   BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
 
-  BOARD_FIND_SUCCESS("B003","200","게시물을 정상적으로 가져왔습니다."),
+  BOARD_FIND_SUCCESS("B003", "200", "게시물을 정상적으로 가져왔습니다."),
   ;
 
   private final String code;

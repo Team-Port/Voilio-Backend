@@ -1,15 +1,13 @@
 package com.techeer.port.voilio.domain.board.dto.response;
 
 import com.techeer.port.voilio.global.common.Category;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Builder
 public class BoardResponse {
-  @Getter
-  private Long id;
+  @Getter private Long id;
   private String title;
   private String content;
   private Category category1;
