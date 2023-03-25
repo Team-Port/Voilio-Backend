@@ -39,11 +39,13 @@ public class BoardController {
   }
 
   @PutMapping("/update/{boardId}")
-  public ResponseEntity<ResultResponse> updateBoard(@PathVariable Long boardId, @RequestBody BoardRequest request) {
+  public ResponseEntity<ResultResponse> updateBoard(
+      @PathVariable Long boardId, @RequestBody BoardRequest request) {
     Board updatedBoard = request.toEntity();
     boardService.updateBoard(boardId, updatedBoard);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
-    resultResponse.add(linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
