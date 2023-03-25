@@ -38,7 +38,7 @@ public class BoardController {
   }
 
   @PatchMapping("/{boardId}")
-  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId){
+  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
     boardService.hideBoard(boardId);
     ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
     resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
