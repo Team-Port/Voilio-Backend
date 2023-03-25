@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,5 +25,10 @@ public class BoardService {
 
   public void createBoard(BoardRequest request) {
     Board createdBoard = boardRepository.save(request.toEntity());
+  }
+
+  public List<Board> findBoardByKeyword(String keyword){
+    List<Board> boards = boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+    return boards;
   }
 }
