@@ -46,7 +46,7 @@ public class Board extends BaseEntity {
 
   @Column(columnDefinition = "boolean default true")
   @NotNull
-  private Boolean isPublic;
+  private boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
