@@ -34,7 +34,7 @@ public class BoardController {
                             responseFormat,
                             linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
-  @PatchMapping("/{boardId}")
+  @DeleteMapping("/{boardId}")
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);

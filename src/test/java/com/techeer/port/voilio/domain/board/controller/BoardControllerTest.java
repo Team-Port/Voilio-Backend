@@ -1,7 +1,7 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,14 +41,24 @@ public class BoardControllerTest {
 
     // then
     mockMvc
-        .perform(patch(BASE_PATH + "/{boardId}", boardId))
+        .perform(delete(BASE_PATH + "/{boardId}", boardId))
         .andDo(print())
         .andExpect(status().isOk());
     verify(boardService, times(1)).deleteBoard(boardId);
   }
 
   @Test
-  public void findBoardById() {
+  public void findBoardById() throws Exception {
     Long boardId = 1L;
+
+//     given,when
+    doNothing().when(boardService).findBoardById(boardId);
+
+    mockMvc
+        .perform(get(BASE_PATH+"/{boardId}",boardId))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verify(boardService,times(1)).findBoardById(boardId);
   }
 }
