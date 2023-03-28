@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
+  List<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic);
 
   List<Board> findAllByTitleContaining(String keyword);
 
