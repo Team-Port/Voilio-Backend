@@ -8,9 +8,7 @@ import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
-import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
@@ -62,18 +60,8 @@ public class BoardController {
     resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(board)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
-
-  @GetMapping("/{board_id}")
-  public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
-      @PathVariable Long board_id) {
-    Board board = boardService.findBoardById(board_id);
-    ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(
-            EntityModel.of(
-                responseFormat,
-                linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
+}
 
   @GetMapping("/list")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
