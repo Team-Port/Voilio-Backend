@@ -57,7 +57,8 @@ public class BoardController {
                         board.getCategory2(),
                         board.getThumbnail_url()))
             .collect(Collectors.toList());
-    ResultResponse<List<BoardResponse.BoardData>> response = new ResultResponse<>(BOARD_FINDALL_SUCCESS, boardDataList);
+    ResultResponse<List<BoardResponse.BoardData>> response =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, boardDataList);
     response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
     return response;
   }
