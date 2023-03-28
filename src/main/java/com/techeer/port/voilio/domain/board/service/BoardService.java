@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,5 +40,9 @@ public class BoardService {
         updatedBoard.getCategory2(),
         updatedBoard.getThumbnail_url());
     return boardRepository.save(entity);
+  }
+
+  public List<Board> findAllBoard() {
+    return boardRepository.findAllByIsDeletedAndIsPublic(false, true);
   }
 }
