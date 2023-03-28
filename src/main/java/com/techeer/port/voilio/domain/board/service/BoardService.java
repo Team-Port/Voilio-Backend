@@ -62,4 +62,8 @@ public class BoardService {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
     return boardRepository.save(request.toEntity(board));
   }
+
+  public List<Board> findAllBoard() {
+    return boardRepository.findAllByIsDeletedAndIsPublic(false, true);
+  }
 }
