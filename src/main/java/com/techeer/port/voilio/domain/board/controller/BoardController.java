@@ -4,6 +4,7 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_UPDATED_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
