@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/boards")
 public class BoardController {
 
-    private final BoardService boardService;
+  private final BoardService boardService;
 
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
@@ -45,27 +45,31 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ResultResponse> createBoard(
-        @Validated @RequestBody BoardRequest request) {
-        boardService.createBoard(request);
-        ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+  @PostMapping("/create")
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardRequest request) {
+    boardService.createBoard(request);
+    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
-
-    @GetMapping("/list")
-    public BoardResponse getAllBoards() {
-        List<Board> boardList = boardService.findAllBoard();
-        List<BoardResponse.BoardData> boardDataList = boardList.stream()
-            .map(board -> new BoardResponse.BoardData(board.getId(), board.getTitle(),
-                board.getContent(),
-                board.getCategory1(), board.getCategory2(), board.getThumbnail_url()))
+  @GetMapping("/list")
+  public BoardResponse getAllBoards() {
+    List<Board> boardList = boardService.findAllBoard();
+    List<BoardResponse.BoardData> boardDataList =
+        boardList.stream()
+            .map(
+                board ->
+                    new BoardResponse.BoardData(
+                        board.getId(),
+                        board.getTitle(),
+                        board.getContent(),
+                        board.getCategory1(),
+                        board.getCategory2(),
+                        board.getThumbnail_url()))
             .collect(Collectors.toList());
-        BoardResponse response = new BoardResponse(boardDataList);
-        response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
-        return response;
-    }
+    BoardResponse response = new BoardResponse(boardDataList);
+    response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
+    return response;
+  }
 }
