@@ -23,6 +23,3 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
   Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(Boolean isDeleted, Boolean isPublic, Pageable pageable);
 }
-public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic);
-}
