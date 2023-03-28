@@ -1,11 +1,16 @@
 package com.techeer.port.voilio.domain.comment.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.COMMENT_CREATED_SUCCESS;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
 import com.techeer.port.voilio.domain.comment.service.CommentService;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,10 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.validation.Valid;
-import static com.techeer.port.voilio.global.result.ResultCode.COMMENT_CREATED_SUCCESS;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Comment", description = "Comment API Document")
 @RequestMapping("/api/v1/comments")
