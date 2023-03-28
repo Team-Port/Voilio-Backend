@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -56,7 +57,7 @@ public class BoardController {
                         board.getCategory2(),
                         board.getThumbnail_url()))
             .collect(Collectors.toList());
-    BoardResponse response = new BoardResponse(boardDataList);
+    ResultResponse<List<BoardResponse.BoardData>> response = new ResultResponse<>(BOARD_FINDALL_SUCCESS, boardDataList);
     response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
     return response;
   }
