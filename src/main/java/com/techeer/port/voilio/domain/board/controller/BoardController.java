@@ -77,11 +77,6 @@ public class BoardController {
                         linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
                             .withSelfRel()))
             .collect(Collectors.toList());
-        BoardResponse response = new BoardResponse(boardDataList);
-        response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
-        return response;
-    }
-}
 
     Pagination<EntityModel<BoardResponse>> result =
         new Pagination<>(
