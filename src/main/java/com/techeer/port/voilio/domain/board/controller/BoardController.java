@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/boards")
 public class BoardController {
-  private final BoardService boardService;
 
   @GetMapping("/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
@@ -95,4 +94,16 @@ public class BoardController {
         linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+    @GetMapping("/list")
+        List<Board> boardList = boardService.findAllBoard();
+    public BoardResponse getAllBoards() {
+        List<BoardResponse.BoardData> boardDataList = boardList.stream()
+            .map(board -> new BoardResponse.BoardData(board.getId(), board.getTitle(),
+                board.getContent(),
+                board.getCategory1(), board.getCategory2(), board.getThumbnail_url()))
+            .collect(Collectors.toList());
+        BoardResponse response = new BoardResponse(boardDataList);
+        return response;
+        response.add(linkTo(methodOn(BoardController.class).getAllBoards()).withSelfRel());
+    }
 }
