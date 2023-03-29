@@ -26,3 +26,16 @@ public class BoardMapper {
     return boards.stream().map(this::toDto).collect(Collectors.toList());
   }
 }
+
+    public Board toEntity(Board board) {
+        return Board.builder()
+            .title(board.getTitle())
+            .content(board.getContent())
+            .category1(board.getCategory1())
+            .category2(board.getCategory2())
+            .video_url(board.getVideo_url())
+            .thumbnail_url(board.getThumbnail_url())
+            .build();
+            .isPublic(board.getIsPublic())
+    }
+}
