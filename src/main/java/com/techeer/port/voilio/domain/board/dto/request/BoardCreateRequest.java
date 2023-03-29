@@ -1,8 +1,11 @@
 package com.techeer.port.voilio.domain.board.dto.request;
 
 <<<<<<< develop:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardCreateRequest.java
+<<<<<<< develop:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardCreateRequest.java
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
+=======
+>>>>>>> [#23]Fix: Mapper추가로 인한 Response에 있던 toEntity삭제:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardRequest.java
 =======
 >>>>>>> [#23]Fix: Mapper추가로 인한 Response에 있던 toEntity삭제:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardRequest.java
 import com.techeer.port.voilio.global.common.BaseEntity;
@@ -28,6 +31,7 @@ public class BoardCreateRequest extends BaseEntity {
   @URL @NotBlank private String video_url;
 
 <<<<<<< develop:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardCreateRequest.java
+<<<<<<< develop:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardCreateRequest.java
   @URL @NotBlank private String thumbnail_url;
 
   public Board toEntity(User user) {
@@ -42,6 +46,9 @@ public class BoardCreateRequest extends BaseEntity {
         .user(user)
         .build();
   }
+=======
+  @Column private boolean isPublic;
+>>>>>>> [#23]Fix: Mapper추가로 인한 Response에 있던 toEntity삭제:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardRequest.java
 =======
   @Column private boolean isPublic;
 >>>>>>> [#23]Fix: Mapper추가로 인한 Response에 있던 toEntity삭제:src/main/java/com/techeer/port/voilio/domain/board/dto/request/BoardRequest.java
