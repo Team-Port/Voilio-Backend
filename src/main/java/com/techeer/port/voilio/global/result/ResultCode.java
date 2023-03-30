@@ -13,6 +13,8 @@ public enum ResultCode {
   USER_REGISTRATION_SUCCESS("U001", "200", "사용자 등록 성공"),
 
   BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
+
+  COMMENT_CREATED_SUCCESS("C001", "301", "댓글이 정상적으로 등록되었습니다."),
   ;
 
   private final String code;
