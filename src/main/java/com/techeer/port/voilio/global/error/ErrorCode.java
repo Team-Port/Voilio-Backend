@@ -18,6 +18,8 @@ public enum ErrorCode {
 
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),
+  // comment
+  COMMENT_NOT_FOUND_EXCEPTION(400, "C001", "댓글을 찾을 수 없음"),
   ;
 
   private final int status;
