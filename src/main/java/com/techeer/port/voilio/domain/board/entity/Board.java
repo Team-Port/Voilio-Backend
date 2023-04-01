@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.board.entity;
 
 import com.techeer.port.voilio.domain.comment.entity.Comment;
-import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import java.util.ArrayList;
@@ -48,9 +47,10 @@ public class Board extends BaseEntity {
   @NotNull
   private boolean isPublic;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+  //  @ManyToOne(fetch = FetchType.LAZY)
+  //  @JoinColumn(name = "user_id")
+  //  @NotNull
+  //  private User user;
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
@@ -63,8 +63,7 @@ public class Board extends BaseEntity {
       Category category2,
       String video_url,
       String thumbnail_url,
-      boolean isPublic,
-      User user) {
+      boolean isPublic) {
     this.title = title;
     this.category1 = category1;
     this.category2 = category2;
@@ -72,7 +71,7 @@ public class Board extends BaseEntity {
     this.video_url = video_url;
     this.thumbnail_url = thumbnail_url;
     this.isPublic = isPublic;
-    this.user = user;
+    //    this.user = user;
   }
 
   public void setBoard(
