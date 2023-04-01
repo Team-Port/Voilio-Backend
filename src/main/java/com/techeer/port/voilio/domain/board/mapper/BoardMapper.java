@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.board.mapper;
 
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +16,7 @@ public class BoardMapper {
             .category2(board.getCategory2())
             .video_url(board.getVideo_url())
             .thumbnail_url(board.getThumbnail_url())
-            .created_at(board.getCreateAt())
+            .created_at(LocalDate.from(board.getCreateAt()))
             .build();
     }
 
