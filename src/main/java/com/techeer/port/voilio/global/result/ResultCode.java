@@ -15,8 +15,7 @@ public enum ResultCode {
   BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
   BOARD_UPDATED_SUCCESS("B002", "200", "게시물이 정상적으로 수정되었습니다."),
 
-  COMMENT_CREATED_SUCCESS("C001", "301", "댓글이 정상적으로 등록되었습니다.")
-  ;
+  COMMENT_CREATED_SUCCESS("C001", "301", "댓글이 정상적으로 등록되었습니다.");
 
   private final String code;
   private final String status;
