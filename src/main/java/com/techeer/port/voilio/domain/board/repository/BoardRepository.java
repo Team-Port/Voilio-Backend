@@ -14,5 +14,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
   List<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic);
   Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
-  Page<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic, Pageable pageable);
+  Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(Boolean isDeleted, Boolean isPublic, Pageable pageable);
 }
