@@ -32,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/boards")
 public class BoardController {
 
+  private final BoardService boardService;
+  private final BoardMapper boardMapper;
+
   @GetMapping("/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
@@ -53,43 +56,38 @@ public class BoardController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardRequest request) {
-    boardService.createBoard(request);
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody Board board) {
+    boardService.createBoard(board);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(board)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+  @GetMapping("/list")
+  public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
+    List<EntityModel<BoardResponse>> boardModels =
+        boardPage.getContent().stream()
+                board ->
+                        boardMapper.toDto(board),
+            .map(
+                    EntityModel.of(
+                            .withSelfRel()))
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+            .collect(Collectors.toList());
 
-    @GetMapping("/list")
-    public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "30") int size
-    ) {
-        Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
-        List<EntityModel<BoardResponse>> boardModels = boardPage.getContent().stream()
-            .map(board -> EntityModel.of(
-                boardMapper.toDto(board),
-                linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel()))
-
-        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(
-            boardPage.getSize(),
-            boardPage.getTotalElements(),
-            boardPage.getTotalPages());
-        PagedModel<EntityModel<BoardResponse>> result = PagedModel.of(
-            boardModels, metadata,
+    PagedModel.PageMetadata metadata =
+        new PagedModel.PageMetadata(
+            boardPage.getSize(), boardPage.getTotalElements(), boardPage.getTotalPages());
+    PagedModel<EntityModel<BoardResponse>> result =
+        PagedModel.of(
+            boardModels,
+            metadata,
             linkTo(methodOn(BoardController.class).findAllBoard(page, size)).withSelfRel());
 
-        ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse = new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-        resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
-        return ResponseEntity.ok().body(result);
-    }
-  @PutMapping("/update/{boardId}")
-  public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody BoardUpdateRequest request) {
-    boardService.updateBoard(boardId, request);
-    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
+    return ResponseEntity.ok().body(result);
   }
+    ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse =
 }
