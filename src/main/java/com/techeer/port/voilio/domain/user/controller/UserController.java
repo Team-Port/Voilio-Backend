@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping("/create")
     @Operation(summary = "회원 생성", description = "회원 생성 메서드입니다.")
-    public ResponseEntity<ResultResponse> createUser( @Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<ResultResponse> createUser( @Valid @RequestBody UserRequest userRequest) throws Exception {
         userService.registerUser(userRequest);
         ResultResponse<User> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
         resultResponse.add(
