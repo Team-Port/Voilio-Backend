@@ -5,7 +5,8 @@ import static com.techeer.port.voilio.global.result.ResultCode.UPDATE_COMMENT_SU
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.techeer.port.voilio.domain.comment.dto.request.CommentInfo;import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
+import com.techeer.port.voilio.domain.comment.dto.request.CommentInfo;
+import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
 import com.techeer.port.voilio.domain.comment.service.CommentService;
@@ -33,7 +34,8 @@ public class CommentController {
 
     CommentInfo commentInfo = commentService.registerComment(commentRequest);
 
-    ResultResponse<Comment> resultResponse = new ResultResponse<>(COMMENT_CREATED_SUCCESS, commentInfo);
+    ResultResponse<Comment> resultResponse =
+        new ResultResponse<>(COMMENT_CREATED_SUCCESS, commentInfo);
     resultResponse.add(
         linkTo(methodOn(CommentController.class).createComment(commentRequest)).withSelfRel());
 
@@ -47,7 +49,8 @@ public class CommentController {
 
     CommentInfo commentInfo = commentService.updateComment(commentUpdateRequest, commentId);
 
-    ResultResponse<Comment> resultResponse = new ResultResponse<>(UPDATE_COMMENT_SUCCESS, commentInfo);
+    ResultResponse<Comment> resultResponse =
+        new ResultResponse<>(UPDATE_COMMENT_SUCCESS, commentInfo);
     resultResponse.add(
         linkTo(methodOn(CommentController.class).updateComment(commentUpdateRequest, commentId))
             .withSelfRel());
