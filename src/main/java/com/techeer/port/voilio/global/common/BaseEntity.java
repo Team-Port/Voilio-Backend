@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.global.common;
 
 import com.sun.istack.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;

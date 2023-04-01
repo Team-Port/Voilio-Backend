@@ -28,63 +28,63 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/boards")
 public class BoardController {
 
-    private final BoardService boardService;
-    private final BoardMapper boardMapper;
+  private final BoardService boardService;
+  private final BoardMapper boardMapper;
 
-    @PatchMapping("/{boardId}")
-    public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
-        ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-        responseFormat.add(
-            linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
-        return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
-    }
+  @PatchMapping("/{boardId}")
+  public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
+    boardService.deleteBoard(boardId);
+    ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+  }
 
-    @PostMapping("/create")
-    public ResponseEntity<ResultResponse> createBoard(
-        @Validated @RequestBody Board board) {
-        boardService.createBoard(board);
-        ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(BoardController.class).createBoard(board)).withSelfRel());
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+  @PostMapping("/create")
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody Board board) {
+    boardService.createBoard(board);
+    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(board)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
-    @GetMapping("/{board_id}")
-    public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
-        @PathVariable Long board_id) {
-        Board board = boardService.findBoardById(board_id);
-        ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS,
-            board);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(
-                EntityModel.of(
-                    responseFormat,
-                    linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
-    }
+  @GetMapping("/{board_id}")
+  public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
+      @PathVariable Long board_id) {
+    Board board = boardService.findBoardById(board_id);
+    ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
+  }
 
-    @GetMapping("/list")
-    public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "30") int size
-    ) {
-        Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
-        List<EntityModel<BoardResponse>> boardModels = boardPage.getContent().stream()
-            .map(board -> EntityModel.of(
-                boardMapper.toDto(board),
-                linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel()))
+  @GetMapping("/list")
+  public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
+    List<EntityModel<BoardResponse>> boardModels =
+        boardPage.getContent().stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        boardMapper.toDto(board),
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
             .collect(Collectors.toList());
 
-        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(
-            boardPage.getSize(),
-            boardPage.getTotalElements(),
-            boardPage.getTotalPages());
-        PagedModel<EntityModel<BoardResponse>> result = PagedModel.of(
-            boardModels, metadata,
+    PagedModel.PageMetadata metadata =
+        new PagedModel.PageMetadata(
+            boardPage.getSize(), boardPage.getTotalElements(), boardPage.getTotalPages());
+    PagedModel<EntityModel<BoardResponse>> result =
+        PagedModel.of(
+            boardModels,
+            metadata,
             linkTo(methodOn(BoardController.class).findAllBoard(page, size)).withSelfRel());
 
-        ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse = new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-        resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
-        return ResponseEntity.ok().body(result);
-    }
+    ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
+    return ResponseEntity.ok().body(result);
+  }
 }

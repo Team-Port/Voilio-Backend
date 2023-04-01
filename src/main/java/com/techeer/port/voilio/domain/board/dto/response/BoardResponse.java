@@ -8,12 +8,12 @@ import lombok.Getter;
 @Builder
 @Getter
 public class BoardResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private Category category1;
-    private Category category2;
-    private String video_url;
-    private String thumbnail_url;
-    private LocalDate created_at;
+  private Long id;
+  private String title;
+  private String content;
+  private Category category1;
+  private Category category2;
+  private String video_url;
+  private String thumbnail_url;
+  private LocalDate created_at;
 }
