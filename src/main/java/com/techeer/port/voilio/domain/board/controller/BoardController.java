@@ -77,7 +77,7 @@ public class BoardController {
     @GetMapping("/list")
     public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "30") int size
     ) {
         Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
         List<EntityModel<BoardResponse>> boardModels = boardPage.getContent().stream()
@@ -97,7 +97,5 @@ public class BoardController {
         ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse = new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
         resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
         return ResponseEntity.ok().body(result);
-
-
     }
 }
