@@ -24,4 +24,20 @@ public class BoardService {
   public void createBoard(BoardRequest request) {
     Board createdBoard = boardRepository.save(request.toEntity());
   }
+
+  public Board findEntity(Long boardId) {
+    return boardRepository.findByIdAndIsDeleted(boardId, false).orElseThrow(NotFoundBoard::new);
+  }
+
+  @Transactional
+  public Board updateBoard(Long boardId, Board updatedBoard) {
+    Board entity = findEntity(boardId);
+    entity.setBoard(
+        updatedBoard.getTitle(),
+        updatedBoard.getContent(),
+        updatedBoard.getCategory1(),
+        updatedBoard.getCategory2(),
+        updatedBoard.getThumbnail_url());
+    return boardRepository.save(entity);
+  }
 }
