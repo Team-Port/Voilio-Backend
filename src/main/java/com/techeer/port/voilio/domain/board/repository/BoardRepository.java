@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
   Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
-  Page<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic, Pageable pageable);
+  Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(Boolean isDeleted, Boolean isPublic, Pageable pageable);
 }
