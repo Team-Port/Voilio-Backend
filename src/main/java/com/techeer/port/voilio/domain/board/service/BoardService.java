@@ -70,6 +70,6 @@ public class BoardService {
   }
 
   public Page<Board> findAllBoard(Pageable pageable) {
-    return boardRepository.findAllByIsDeletedAndIsPublic(false, true, pageable);
+    return boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
   }
 }
