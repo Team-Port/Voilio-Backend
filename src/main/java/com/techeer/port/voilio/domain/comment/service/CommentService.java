@@ -35,6 +35,12 @@ public class CommentService {
     return commentEntityToCommentInfo(savedComment);
   }
 
+  public void deleteComment(Long id) {
+    Comment foundComment = findCommentById(id);
+    foundComment.deleteComment();
+    commentRepository.save(foundComment);
+  }
+
   private CommentInfo commentEntityToCommentInfo(Comment savedComment) {
     return CommentInfo.builder()
         .content(savedComment.getContent())

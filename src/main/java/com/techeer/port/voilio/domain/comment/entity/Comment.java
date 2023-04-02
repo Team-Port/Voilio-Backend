@@ -42,4 +42,8 @@ public class Comment extends BaseEntity {
   public void updateComment(CommentUpdateRequest commentUpdateRequest) {
     this.content = commentUpdateRequest.getContent();
   }
+
+  public void deleteComment() {
+    this.changeDeleted();
+  }
 }

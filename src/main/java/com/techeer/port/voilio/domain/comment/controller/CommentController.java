@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.comment.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.COMMENT_CREATED_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.UPDATE_COMMENT_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -54,6 +53,17 @@ public class CommentController {
     resultResponse.add(
         linkTo(methodOn(CommentController.class).updateComment(commentUpdateRequest, commentId))
             .withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @Operation(summary = "댓글 삭제", description = "댓글 삭제 메서드입니다.")
+  @PatchMapping("/{commentId}")
+  public ResponseEntity<ResultResponse> deleteComment(@PathVariable Long commentId) {
+    commentService.deleteComment(commentId);
+    ResultResponse<Comment> resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(CommentController.class).deleteComment(commentId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
