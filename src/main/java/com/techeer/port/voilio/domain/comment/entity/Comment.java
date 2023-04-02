@@ -43,7 +43,7 @@ public class Comment extends BaseEntity {
     this.content = commentUpdateRequest.getContent();
   }
 
-  public void deleteComment(){
+  public void deleteComment() {
     this.changeDeleted();
-}
+  }
 }
