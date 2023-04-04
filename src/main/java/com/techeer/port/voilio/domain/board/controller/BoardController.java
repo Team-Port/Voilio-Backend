@@ -85,6 +85,13 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+  @PatchMapping("{boardId}/hide")
+  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
+    boardService.hideBoard(boardId);
+    ResultResponse<?> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
   @PostMapping("/create")
   public ResponseEntity<ResultResponse> createBoard(
       @Validated @RequestBody BoardCreateRequest boardCreateRequest) {
