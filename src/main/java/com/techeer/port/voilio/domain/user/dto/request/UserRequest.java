@@ -9,16 +9,16 @@ import lombok.*;
 @Getter
 public class UserRequest {
 
-    private String email;
-    private String password;
-    private String nickname;
+  private String email;
+  private String password;
+  private String nickname;
 
-    public User toEntity() {
+  public User toEntity() {
 
-        return User.builder().email(email).password(password).nickname(nickname).build();
-    }
+    return User.builder().email(email).password(password).nickname(nickname).build();
+  }
 
-    public void setUserPassword(String encodedPassword) {
-        this.password = encodedPassword;
-    }
+  public void setUserPassword(String encodedPassword) {
+    this.password = encodedPassword;
+  }
 }

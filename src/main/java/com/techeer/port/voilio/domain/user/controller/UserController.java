@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @PostMapping("/create")
-    @Operation(summary = "회원 생성", description = "회원 생성 메서드입니다.")
-    public ResponseEntity<ResultResponse> createUser(@Valid @RequestBody UserRequest userRequest)
-            throws Exception {
-        userService.registerUser(userRequest);
-        ResultResponse<User> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-        resultResponse.add(
-                linkTo(methodOn(UserController.class).createUser(userRequest)).withSelfRel());
+  @PostMapping("/create")
+  @Operation(summary = "회원 생성", description = "회원 생성 메서드입니다.")
+  public ResponseEntity<ResultResponse> createUser(@Valid @RequestBody UserRequest userRequest)
+      throws Exception {
+    userService.registerUser(userRequest);
+    ResultResponse<User> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(UserController.class).createUser(userRequest)).withSelfRel());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 }
