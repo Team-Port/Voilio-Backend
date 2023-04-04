@@ -10,6 +10,7 @@ import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
+import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -58,12 +58,12 @@ public class BoardController {
                 responseFormat,
                 linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
-
+  
   @GetMapping("/list")
-  public ResponseEntity<PagedModel<EntityModel<BoardResponse>>> findAllBoard(
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
-    List<EntityModel<BoardResponse>> boardModels =
+    List<EntityModel<BoardResponse>> boardLists =
         boardPage.getContent().stream()
             .map(
                 board ->
@@ -73,18 +73,18 @@ public class BoardController {
                             .withSelfRel()))
             .collect(Collectors.toList());
 
-    PagedModel.PageMetadata metadata =
-        new PagedModel.PageMetadata(
-            boardPage.getSize(), boardPage.getTotalElements(), boardPage.getTotalPages());
-    PagedModel<EntityModel<BoardResponse>> result =
-        PagedModel.of(
-            boardModels,
-            metadata,
+    Pagination<EntityModel<BoardResponse>> result =
+        new Pagination<>(
+            boardLists,
+            boardPage.getNumber(),
+            boardPage.getSize(),
+            boardPage.getTotalElements(),
+            boardPage.getTotalPages(),
             linkTo(methodOn(BoardController.class).findAllBoard(page, size)).withSelfRel());
 
-    ResultResponse<PagedModel<EntityModel<BoardResponse>>> resultResponse =
+    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-    resultResponse.add(linkTo(BoardController.class).slash("list").withSelfRel());
-    return ResponseEntity.ok().body(result);
+    return ResponseEntity.ok().body(resultResponse);
   }
+
 }
