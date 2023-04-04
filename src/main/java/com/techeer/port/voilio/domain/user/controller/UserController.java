@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.user.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.GET_ALL_USER_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +44,21 @@ public class UserController {
 
   @GetMapping("/list")
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
-  public CollectionModel<EntityModel<User>> getUserList() {
+  public ResponseEntity<ResultResponse<List<EntityModel<User>>>> getUserList() {
     List<EntityModel<User>> users =
-        userService.getUserList().stream()
-            .map(
-                user ->
-                    EntityModel.of(
-                        user, linkTo(methodOn(UserController.class).getUserList()).withSelfRel()))
-            .collect(Collectors.toList());
-    return CollectionModel.of(
-        users, linkTo(methodOn(UserController.class).getUserList()).withSelfRel());
+            userService.getUserList().stream()
+                    .map(
+                            user ->
+                                    EntityModel.of(
+                                            user, linkTo(methodOn(UserController.class).getUserList()).withSelfRel()))
+                    .collect(Collectors.toList());
+
+    ResultResponse<List<EntityModel<User>>> resultResponse = new ResultResponse<>(GET_ALL_USER_SUCCESS, users);
+    resultResponse.add(
+            linkTo(methodOn(UserController.class).getUserList()).withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+
 }
