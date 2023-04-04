@@ -37,11 +37,20 @@ public class BoardService {
     Board createdBoard = boardRepository.save(request.toEntity());
   }
 
+
+
+  public void hideBoard(Long boardId) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    board.changePublic();
+    boardRepository.save(board);
+  }
+  
   public List<BoardResponse> findBoardByKeyword(String keyword) {
     List<Board> boards =
             boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
     return boardMapper.toDto(boards);
   }
+
 
   public Board findEntity(Long boardId) {
     return boardRepository.findByIdAndIsDeleted(boardId, false).orElseThrow(NotFoundBoard::new);

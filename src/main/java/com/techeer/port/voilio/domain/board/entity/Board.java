@@ -89,4 +89,8 @@ public class Board extends BaseEntity {
     this.category2 = category2;
     this.thumbnail_url = thumbnail_url;
   }
+
+  public void changePublic() {
+    this.isPublic = false;
+  }
 }

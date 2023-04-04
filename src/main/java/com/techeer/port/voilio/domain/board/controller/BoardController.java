@@ -55,6 +55,14 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+  @PatchMapping("{boardId}/hide")
+  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
+    boardService.hideBoard(boardId);
+    ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
+  return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
   @GetMapping
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
       @RequestParam("search") String search) {
@@ -75,6 +83,7 @@ public class BoardController {
             linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
       @PathVariable Long boardId, @RequestBody BoardRequest request) {
