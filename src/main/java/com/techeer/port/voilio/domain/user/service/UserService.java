@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -21,4 +24,9 @@ public class UserService {
     User user = userRequest.toEntity();
     userRepository.save(user);
   }
+
+  public List<User> getUserList() {
+    return new ArrayList<User>(userRepository.findAll());
+  }
+
 }
