@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.board.mappter;
+package com.techeer.port.voilio.domain.board.mapper;
 
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
