@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
@@ -46,9 +47,10 @@ public class Board extends BaseEntity {
 
   @Column @URL @NotBlank private String thumbnail_url;
 
-  @Column(columnDefinition = "boolean default true")
+  @Column
   @NotNull
-  private Boolean isPublic;
+  @ColumnDefault("true")
+  private boolean isPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")

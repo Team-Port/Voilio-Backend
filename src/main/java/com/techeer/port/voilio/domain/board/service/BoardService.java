@@ -12,6 +12,8 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,5 +63,13 @@ public class BoardService {
   public Board updateBoard(Long boardId, BoardUpdateRequest request) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
     return boardRepository.save(request.toEntity(board));
+  }
+
+  public List<Board> findAllBoard() {
+    return boardRepository.findAllByIsDeletedAndIsPublic(false, true);
+  }
+
+  public Page<Board> findAllBoard(Pageable pageable) {
+    return boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
   }
 }
