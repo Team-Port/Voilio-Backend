@@ -1,20 +1,18 @@
 package com.techeer.port.voilio.domain.board.dto.request;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 @Getter
-@Setter
-@NoArgsConstructor
-public class BoardRequest extends BaseEntity {
+public class BoardCreateRequest extends BaseEntity {
+
+  @NotNull private Long user_id;
 
   @NotBlank private String title;
 
@@ -23,13 +21,12 @@ public class BoardRequest extends BaseEntity {
   @NotNull private Category category1;
 
   @NotNull private Category category2;
-  @URL private String video_url;
 
-  @URL private String thumbnail_url;
+  @URL @NotBlank private String video_url;
 
-  @Column private boolean isPublic;
+  @URL @NotBlank private String thumbnail_url;
 
-  public Board toEntity() {
+  public Board toEntity(User user) {
     return Board.builder()
         .title(this.title)
         .content(this.content)
@@ -37,7 +34,8 @@ public class BoardRequest extends BaseEntity {
         .category2(this.category2)
         .video_url(this.video_url)
         .thumbnail_url(this.thumbnail_url)
-        .isPublic(this.isPublic)
+        .isPublic(true)
+        .user(user)
         .build();
   }
 }

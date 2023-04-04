@@ -1,7 +1,7 @@
 package com.techeer.port.voilio.global.common;
 
 import com.sun.istack.NotNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -15,9 +15,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 public class BaseEntity {
-  @CreatedDate private LocalDate createAt;
+  @CreatedDate private LocalDateTime createAt;
 
-  @LastModifiedDate private LocalDate updateAt;
+  @LastModifiedDate private LocalDateTime updateAt;
 
   @Column
   @NotNull
