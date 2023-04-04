@@ -9,6 +9,8 @@ import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
@@ -49,12 +51,11 @@ public class BoardController {
   @DeleteMapping("/{boardId}")
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody Board board) {
-    Board updatedBoard = boardMapper.toEntity(board);
-    boardService.updateBoard(boardId, updatedBoard);
+      @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest) {
+    boardService.updateBoard(boardId, boardUpdateRequest);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(BoardController.class).updateBoard(boardId, board)).withSelfRel());
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
@@ -65,13 +66,12 @@ public class BoardController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody Board board) {
-    boardService.createBoard(board);
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardCreateRequest boardCreateRequest) {
+    boardService.createBoard(boardCreateRequest);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(board)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(boardCreateRequest)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
-  }
 
   @GetMapping("/list")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
@@ -100,34 +100,4 @@ public class BoardController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
   }
-}
-
-  @GetMapping("/list")
-  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
-    List<EntityModel<BoardResponse>> boardLists =
-        boardPage.getContent().stream()
-            .map(
-                board ->
-                    EntityModel.of(
-                        boardMapper.toDto(board),
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                            .withSelfRel()))
-            .collect(Collectors.toList());
-
-    Pagination<EntityModel<BoardResponse>> result =
-        new Pagination<>(
-            boardLists,
-            boardPage.getNumber(),
-            boardPage.getSize(),
-            boardPage.getTotalElements(),
-            boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findAllBoard(page, size)).withSelfRel());
-
-    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-    return ResponseEntity.ok().body(resultResponse);
-  }
-  
 }   
