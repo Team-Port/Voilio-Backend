@@ -4,7 +4,6 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_UPDATED_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -55,9 +54,11 @@ public class BoardController {
     boardService.updateBoard(boardId, boardUpdateRequest);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest)).withSelfRel());
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest))
+            .withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
@@ -66,10 +67,12 @@ public class BoardController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardCreateRequest boardCreateRequest) {
+  public ResponseEntity<ResultResponse> createBoard(
+      @Validated @RequestBody BoardCreateRequest boardCreateRequest) {
     boardService.createBoard(boardCreateRequest);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-    resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(boardCreateRequest)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(BoardController.class).createBoard(boardCreateRequest)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
@@ -100,4 +103,4 @@ public class BoardController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
   }
-}   
+}
