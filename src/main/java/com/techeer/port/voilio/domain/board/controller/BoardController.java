@@ -42,14 +42,14 @@ public class BoardController {
         linkTo(methodOn(BoardController.class).updateBoard(boardId, board)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
   @PatchMapping("/{boardId}")
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-    responseFormat.add(
-        linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
+    responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
-    }
+  }
 
   @PostMapping("/create")
   public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody Board board) {

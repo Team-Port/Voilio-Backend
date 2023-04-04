@@ -20,8 +20,7 @@ public enum ResultCode {
 
   UPDATE_COMMENT_SUCCESS("C002", "302", "댓글이 정상적으로 수정되었습니다."),
 
-  DELETE_COMMENT_SUCCESS("C003", "303", "댓글이 정상적으로 삭제되었씁니다.")
-  ;
+  DELETE_COMMENT_SUCCESS("C003", "303", "댓글이 정상적으로 삭제되었씁니다.");
 
   private final String code;
   private final String status;

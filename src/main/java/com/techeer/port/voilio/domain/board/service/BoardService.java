@@ -48,6 +48,7 @@ public class BoardService {
   public List<Board> findAllBoard() {
     return boardRepository.findAllByIsDeletedAndIsPublic(false, true);
   }
+
   public Board findBoardById(Long boardId) {
     Board board =
         boardRepository
