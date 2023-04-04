@@ -47,7 +47,6 @@ public class BoardController {
                 linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
 
-  @DeleteMapping("/{boardId}")
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
       @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest) {
@@ -59,6 +58,7 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+  @DeleteMapping("/{boardId}")
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
