@@ -25,7 +25,6 @@ public class BoardMapper {
   public List<BoardResponse> toDto(List<Board> boards) {
     return boards.stream().map(this::toDto).collect(Collectors.toList());
   }
-}
 
     public Board toEntity(Board board) {
         return Board.builder()
@@ -36,6 +35,5 @@ public class BoardMapper {
             .video_url(board.getVideo_url())
             .thumbnail_url(board.getThumbnail_url())
             .build();
-            .isPublic(board.getIsPublic())
     }
 }
