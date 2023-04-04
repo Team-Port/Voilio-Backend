@@ -16,5 +16,4 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
 
   Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
-
 }

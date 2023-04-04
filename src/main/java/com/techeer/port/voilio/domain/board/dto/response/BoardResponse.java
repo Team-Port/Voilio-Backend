@@ -1,19 +1,20 @@
 package com.techeer.port.voilio.domain.board.dto.response;
 
 import com.techeer.port.voilio.global.common.Category;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
+@Getter
 public class BoardResponse {
-  @Getter private Long id;
+  private Long id;
   private String title;
   private String content;
   private Category category1;
   private Category category2;
   private String video_url;
   private String thumbnail_url;
-  private LocalDate updated_at;
-  private LocalDate created_at;
+  private LocalDateTime updated_at;
+  private LocalDateTime created_at;
 }
