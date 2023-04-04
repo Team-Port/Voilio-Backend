@@ -74,7 +74,7 @@ public class BoardController {
                 responseFormat,
                 linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
-  
+
   @GetMapping("/list")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
