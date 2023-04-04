@@ -47,10 +47,17 @@ public class Board extends BaseEntity {
   @NotNull
   private boolean isPublic;
 
+<<<<<<< HEAD
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id")
+  @NotNull
+  private User user;
+=======
   //  @ManyToOne(fetch = FetchType.LAZY)
   //  @JoinColumn(name = "user_id")
   //  @NotNull
   //  private User user;
+>>>>>>> d66ed0574e9ca9b12e4741faeb784f456daf71dc
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
