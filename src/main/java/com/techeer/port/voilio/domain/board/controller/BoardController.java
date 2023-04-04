@@ -37,7 +37,7 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @PatchMapping("/{boardId}")
+  @PatchMapping("{boardId}/hide")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
     boardService.hideBoard(boardId);
     ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);

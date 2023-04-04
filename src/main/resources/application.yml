@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/boards
-    username: root
-    password:
+    url: jdbc:mysql://localhost:3306/voilio
+    username: voilio
+    password: password
 
   jpa:
     hibernate:
