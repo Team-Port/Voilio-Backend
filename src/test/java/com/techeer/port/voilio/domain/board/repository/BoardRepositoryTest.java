@@ -1,8 +1,6 @@
 package com.techeer.port.voilio.domain.board.repository;
 
-import static com.techeer.port.voilio.global.error.ErrorCode.BOARD_NOT_FOUND_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.internal.matchers.text.ValuePrinter.print;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
@@ -90,7 +88,7 @@ public class BoardRepositoryTest {
   }
 
   @Nested
-  class deleteBoardTest{
+  class deleteBoardTest {
     @Test
     @DisplayName("deleteBoardTest_whenExistBoard")
     public void deleteBoardTest_whenExistBoard() {
@@ -115,7 +113,7 @@ public class BoardRepositoryTest {
 
     @Test
     @DisplayName("deleteBoardTest_whenHidenBoard")
-    public void deleteBoardTest_whenHidenBoard(){
+    public void deleteBoardTest_whenHidenBoard() {
       long boardId = board1.getId();
       board1.changePublic();
       boardRepository.save(board1);
@@ -128,42 +126,42 @@ public class BoardRepositoryTest {
   }
 
   @Nested
-  class findBoardByKeyword{
+  class findBoardByKeyword {
     @Test
     @DisplayName("findBoardBykeyword")
     public void findBoardByKeyword() {
       String keyword = "test",
-              keyword2 = "different",
-              keyword3 = "",
-              keyword4 = "nothing",
-              keyword5 = "differentTitle2";
+          keyword2 = "different",
+          keyword3 = "",
+          keyword4 = "nothing",
+          keyword5 = "differentTitle2";
 
       // given
       Board tempBoard =
-              boardRepository.save(
-                      Board.builder()
-                              .user(user2)
-                              .title("differentTitle")
-                              .content("differentContent")
-                              .category2(Category.IT)
-                              .category1(Category.IT)
-                              .isPublic(true)
-                              .video_url("https://www.naver.com/")
-                              .thumbnail_url("https://www.naver.com")
-                              .build());
+          boardRepository.save(
+              Board.builder()
+                  .user(user2)
+                  .title("differentTitle")
+                  .content("differentContent")
+                  .category2(Category.IT)
+                  .category1(Category.IT)
+                  .isPublic(true)
+                  .video_url("https://www.naver.com/")
+                  .thumbnail_url("https://www.naver.com")
+                  .build());
 
       Board tempBoard2 =
-              boardRepository.save(
-                      Board.builder()
-                              .user(user2)
-                              .title("differentTitle2")
-                              .content("differentContent2")
-                              .category2(Category.IT)
-                              .category1(Category.IT)
-                              .isPublic(false)
-                              .video_url("https://www.naver.com/")
-                              .thumbnail_url("https://www.naver.com")
-                              .build());
+          boardRepository.save(
+              Board.builder()
+                  .user(user2)
+                  .title("differentTitle2")
+                  .content("differentContent2")
+                  .category2(Category.IT)
+                  .category1(Category.IT)
+                  .isPublic(false)
+                  .video_url("https://www.naver.com/")
+                  .thumbnail_url("https://www.naver.com")
+                  .build());
 
       assertEquals(boardRepository.findAll().size(), 5);
 
@@ -180,15 +178,15 @@ public class BoardRepositoryTest {
 
       // when
       List<Board> actualBoards =
-              boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
       List<Board> actualBoards2 =
-              boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword2);
+          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword2);
       List<Board> actualBoards3 =
-              boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword3);
+          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword3);
       List<Board> actualBoards4 =
-              boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword4);
+          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword4);
       List<Board> actualBoards5 =
-              boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword5);
+          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword5);
 
       // then
       assertEquals(expectBoards.size(), actualBoards.size());
@@ -199,9 +197,8 @@ public class BoardRepositoryTest {
     }
   }
 
-
   @Nested
-  class testFindBoardByBoardId{
+  class testFindBoardByBoardId {
     @Test
     @DisplayName("testFindBoardByBoardId_when_existedBoard")
     public void testFindBoardByBoardId() {
@@ -211,9 +208,9 @@ public class BoardRepositoryTest {
 
       // when
       Board foundBoard1 =
-              boardRepository
-                      .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
-                      .orElseThrow();
+          boardRepository
+              .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+              .orElseThrow();
 
       // then
       assertEquals(foundBoard1.getId(), existedBoard.getId());
@@ -224,57 +221,72 @@ public class BoardRepositoryTest {
     @Test
     @DisplayName("testFindBoardByBoardId_when_not_exitedBoard")
     public void testFindBoardByBoardId_when_not_exitedBoard() {
-      //given
+      // given
       long boardId = board3.getId();
 
-      //when, then
-      Throwable exception = assertThrows(NotFoundBoard.class,() -> {
-        boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId+1).orElseThrow(NotFoundBoard::new);
-      });
+      // when, then
+      Throwable exception =
+          assertThrows(
+              NotFoundBoard.class,
+              () -> {
+                boardRepository
+                    .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId + 1)
+                    .orElseThrow(NotFoundBoard::new);
+              });
 
-      assertEquals("게시글을 찾을 수 없음",exception.getMessage());
+      assertEquals("게시글을 찾을 수 없음", exception.getMessage());
     }
 
     @Test
     @DisplayName("testFindBoardByBoardId_when_hidenBoard")
-    public void testFindBoardByBoardId_when_hidenBoard(){
-      //given
+    public void testFindBoardByBoardId_when_hidenBoard() {
+      // given
       board1.changePublic();
       boardRepository.save(board1);
 
-      //when,then
-      Throwable exception = assertThrows(NotFoundBoard.class,() -> {
-        boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId()).orElseThrow(NotFoundBoard::new);
-      });
+      // when,then
+      Throwable exception =
+          assertThrows(
+              NotFoundBoard.class,
+              () -> {
+                boardRepository
+                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
+                    .orElseThrow(NotFoundBoard::new);
+              });
 
-      assertEquals("게시글을 찾을 수 없음",exception.getMessage());
+      assertEquals("게시글을 찾을 수 없음", exception.getMessage());
     }
 
     @Test
     @DisplayName("testFindBoardByBoardId_when_deletedBoard")
-    public void testFindBoardByBoardId_when_deletedBoard(){
-      //given
+    public void testFindBoardByBoardId_when_deletedBoard() {
+      // given
       board1.changeDeleted();
       boardRepository.save(board1);
 
-      //when, then
-      Throwable exception = assertThrows(NotFoundBoard.class,() -> {
-        boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId()).orElseThrow(NotFoundBoard::new);
-      });
+      // when, then
+      Throwable exception =
+          assertThrows(
+              NotFoundBoard.class,
+              () -> {
+                boardRepository
+                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
+                    .orElseThrow(NotFoundBoard::new);
+              });
 
-      assertEquals("게시글을 찾을 수 없음",exception.getMessage());
+      assertEquals("게시글을 찾을 수 없음", exception.getMessage());
     }
   }
 
   @Nested
-  class hideBoardTest{
+  class hideBoardTest {
     @Test
-    public void testHideBoard_whenExistBoard(){
-      //given
+    public void testHideBoard_whenExistBoard() {
+      // given
       board1.changePublic();
       boardRepository.save(board1);
 
-      //when,then
+      // when,then
     }
   }
 }

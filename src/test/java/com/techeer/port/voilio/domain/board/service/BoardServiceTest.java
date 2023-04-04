@@ -12,11 +12,9 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,52 +29,51 @@ import org.springframework.test.context.ActiveProfiles;
 public class BoardServiceTest {
   @Mock private BoardRepository boardRepository;
   @Mock private UserRepository userRepository;
-  @Spy
-  private BoardMapper boardMapper;
+  @Spy private BoardMapper boardMapper;
 
   @InjectMocks private BoardService boardService;
 
   private User user1;
-  private Board board1,board2;
+  private Board board1, board2;
 
   @BeforeEach
-  public void setUp(){
+  public void setUp() {
     user1 =
-            User.builder()
-                    .email("tester1@example.com")
-                    .password("testPassword")
-                    .nickname("tester1")
-                    .build();
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
 
     board1 =
-            Board.builder()
-                    .user(user1)
-                    .title("testTitle")
-                    .content("testContent")
-                    .category1(Category.IT)
-                    .category2(Category.IT)
-                    .video_url("https://www.naver.com/")
-                    .thumbnail_url("https://www.naver.com")
-                    .build();
+        Board.builder()
+            .user(user1)
+            .title("testTitle")
+            .content("testContent")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
 
     board2 =
-            Board.builder()
-                    .user(user1)
-                    .title("testTitle2")
-                    .content("testContent2")
-                    .category1(Category.IT)
-                    .category2(Category.IT)
-                    .video_url("https://www.naver.com/")
-                    .thumbnail_url("https://www.naver.com")
-                    .build();
+        Board.builder()
+            .user(user1)
+            .title("testTitle2")
+            .content("testContent2")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
   }
 
   @Nested
-  class softDeleteBoard{
+  class softDeleteBoard {
     @Test
     @DisplayName("mockito service test")
     void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
-      //given
+      // given
       Long boardId = board1.getId();
       given(boardRepository.findById(board1.getId())).willReturn(Optional.of(board1));
 
@@ -85,7 +82,7 @@ public class BoardServiceTest {
 
       // then
       verify(boardRepository, times(1)).save(board1);
-      verify(boardRepository,times(1)).findById(boardId);
+      verify(boardRepository, times(1)).findById(boardId);
     }
 
     @Test
@@ -100,7 +97,6 @@ public class BoardServiceTest {
     }
   }
 
-
   @Nested
   class findBoardByKeyword {
     @Test
@@ -114,7 +110,7 @@ public class BoardServiceTest {
       boards.add(board2);
 
       given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword))
-              .willReturn(boards);
+          .willReturn(boards);
 
       // when
       List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
@@ -124,27 +120,29 @@ public class BoardServiceTest {
       for (int i = 0; i < boards.size(); i++) {
         assertEquals(boards.get(i).getTitle(), foundBoards.get(i).getTitle());
       }
-      verify(boardRepository,times(1)).findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+      verify(boardRepository, times(1))
+          .findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
     }
 
     @Test
     @DisplayName("findBoardByKeyword_whenNotExistBoard")
-    public void findBoardByKeyword_whenNotExistBoard(){
-      //given
+    public void findBoardByKeyword_whenNotExistBoard() {
+      // given
       String keyword = "no";
-      given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword)).willReturn(new ArrayList<>());
+      given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword))
+          .willReturn(new ArrayList<>());
 
-      //when
+      // when
       List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
 
-      //then
-      verify(boardRepository,times(1)).findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+      // then
+      verify(boardRepository, times(1))
+          .findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
     }
-
   }
 
   @Nested
-  class getBoardById{
+  class getBoardById {
 
     @Test
     @DisplayName("getBoard_when success")
@@ -153,12 +151,12 @@ public class BoardServiceTest {
 
       // given
       given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(boardId))
-              .willReturn(Optional.of(board1));
+          .willReturn(Optional.of(board1));
 
       // when
       BoardResponse actual = boardService.findBoardById(boardId);
 
-      assertEquals(boardId,actual.getId());
+      assertEquals(boardId, actual.getId());
     }
 
     @Test
@@ -166,14 +164,15 @@ public class BoardServiceTest {
     public void getBoard_whenHidenBoard_souldNotFoundBoard() {
       Long boardId = board1.getId();
       // given
-      given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(any())).willThrow(NotFoundBoard.class);
+      given(boardRepository.findByIdAndIsDeletedFalseAndIsPublicTrue(any()))
+          .willThrow(NotFoundBoard.class);
 
-      //when,then
-      assertThrows(NotFoundBoard.class,() -> {
-        boardService.findBoardById(boardId);
-      });
+      // when,then
+      assertThrows(
+          NotFoundBoard.class,
+          () -> {
+            boardService.findBoardById(boardId);
+          });
     }
   }
-
-
 }
