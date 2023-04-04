@@ -39,7 +39,7 @@ public class BoardController {
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
     BoardResponse board = boardService.findBoardById(board_id);
-    ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
+    ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
         .body(
             EntityModel.of(
