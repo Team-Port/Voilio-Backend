@@ -25,9 +25,26 @@ public class BoardService {
     Board createdBoard = boardRepository.save(request.toEntity());
   }
 
+
   public void hideBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
     board.changePublic();
     boardRepository.save(board);
+  }
+  
+  public Board findEntity(Long boardId) {
+    return boardRepository.findByIdAndIsDeleted(boardId, false).orElseThrow(NotFoundBoard::new);
+  }
+
+  @Transactional
+  public Board updateBoard(Long boardId, Board updatedBoard) {
+    Board entity = findEntity(boardId);
+    entity.setBoard(
+        updatedBoard.getTitle(),
+        updatedBoard.getContent(),
+        updatedBoard.getCategory1(),
+        updatedBoard.getCategory2(),
+        updatedBoard.getThumbnail_url());
+    return boardRepository.save(entity);
   }
 }

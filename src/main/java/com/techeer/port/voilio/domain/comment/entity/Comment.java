@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.comment.entity;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class Comment extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
-  @NotNull
+  //  @NotNull
   private User user;
 
   @Builder
@@ -36,5 +37,13 @@ public class Comment extends BaseEntity {
     this.content = content;
     this.board = board;
     this.user = user;
+  }
+
+  public void updateComment(CommentUpdateRequest commentUpdateRequest) {
+    this.content = commentUpdateRequest.getContent();
+  }
+
+  public void deleteComment() {
+    this.changeDeleted();
   }
 }

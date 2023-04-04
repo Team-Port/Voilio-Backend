@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.BOARD_UPDATED_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -37,11 +38,21 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+
   @PatchMapping("{boardId}/hide")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
     boardService.hideBoard(boardId);
     ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
     resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
+
+  @PutMapping("/update/{boardId}")
+  public ResponseEntity<ResultResponse> updateBoard(
+      @PathVariable Long boardId, @RequestBody BoardRequest request) {
+    Board updatedBoard = request.toEntity();
+    boardService.updateBoard(boardId, updatedBoard);
+    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
