@@ -28,7 +28,6 @@ public class BoardMapper {
         .category2(board.getCategory2())
         .video_url(board.getVideo_url())
         .thumbnail_url(board.getThumbnail_url())
-        .isPublic(board.getIsPublic())
         .build();
   }
 }
