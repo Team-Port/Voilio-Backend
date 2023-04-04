@@ -1,12 +1,9 @@
 package com.techeer.port.voilio.domain.board.mapper;
 
-import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.techeer.port.voilio.domain.user.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,5 +25,4 @@ public class BoardMapper {
   public List<BoardResponse> toDto(List<Board> boards) {
     return boards.stream().map(this::toDto).collect(Collectors.toList());
   }
-
 }

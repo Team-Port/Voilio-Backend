@@ -28,13 +28,9 @@ public class Board extends BaseEntity {
   @Column(name = "board_id")
   private Long id;
 
-  @Column
-  @NotBlank
-  private String title;
+  @Column @NotBlank private String title;
 
-  @Column
-  @NotBlank
-  private String content;
+  @Column @NotBlank private String content;
 
   @Column
   @NotNull
@@ -46,15 +42,9 @@ public class Board extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Category category2;
 
-  @Column
-  @URL
-  @NotBlank
-  private String video_url;
+  @Column @URL @NotBlank private String video_url;
 
-  @Column
-  @URL
-  @NotBlank
-  private String thumbnail_url;
+  @Column @URL @NotBlank private String thumbnail_url;
 
   @Column(columnDefinition = "boolean default true")
   @NotNull
@@ -64,7 +54,6 @@ public class Board extends BaseEntity {
   @JoinColumn(name = "user_id")
   @NotNull
   private User user;
-
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();

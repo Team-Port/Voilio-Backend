@@ -143,7 +143,7 @@ public class BoardServiceTest {
 
     assertEquals(actual.getId(), boardId);
     assertEquals(actual.getId(), board.getId());
-//    assertTrue(actual.getIsPublic());
-//    assertFalse(actual.getIsDeleted());
+    //    assertTrue(actual.getIsPublic());
+    //    assertFalse(actual.getIsDeleted());
   }
 }

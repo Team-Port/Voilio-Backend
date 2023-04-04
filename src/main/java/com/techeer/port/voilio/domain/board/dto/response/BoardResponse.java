@@ -1,9 +1,7 @@
 package com.techeer.port.voilio.domain.board.dto.response;
 
 import com.techeer.port.voilio.global.common.Category;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
 

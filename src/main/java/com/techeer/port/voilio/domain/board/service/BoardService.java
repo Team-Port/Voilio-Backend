@@ -8,10 +8,9 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
-import java.util.List;
-
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,21 +40,20 @@ public class BoardService {
 
   @Transactional
   public void createBoard(BoardCreateRequest boardCreateRequest) {
-    User user = userRepository.findById(boardCreateRequest.getUser_id()).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository.findById(boardCreateRequest.getUser_id()).orElseThrow(NotFoundUser::new);
     boardRepository.save(boardCreateRequest.toEntity(user));
   }
-
-
 
   public void hideBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
     board.changePublic();
     boardRepository.save(board);
   }
-  
+
   public List<BoardResponse> findBoardByKeyword(String keyword) {
     List<Board> boards =
-            boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
     return boardMapper.toDto(boards);
   }
 
