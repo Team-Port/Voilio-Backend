@@ -1,12 +1,17 @@
 package com.techeer.port.voilio.domain.board.service;
 
-import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
+import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import java.util.List;
+
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
   private final BoardRepository boardRepository;
+  private final UserRepository userRepository;
   private final BoardMapper boardMapper;
 
   public void deleteBoard(Long boardId) {
@@ -25,16 +31,18 @@ public class BoardService {
     boardRepository.save(board);
   }
 
-  public Board findBoardById(Long boardId) {
+  public BoardResponse findBoardById(Long boardId) {
     Board board =
         boardRepository
             .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
             .orElseThrow(NotFoundBoard::new);
-    return board;
+    return boardMapper.toDto(board);
   }
 
-  public void createBoard(BoardRequest request) {
-    Board createdBoard = boardRepository.save(request.toEntity());
+  @Transactional
+  public void createBoard(BoardCreateRequest boardCreateRequest) {
+    User user = userRepository.findById(boardCreateRequest.getUser_id()).orElseThrow(NotFoundUser::new);
+    boardRepository.save(boardCreateRequest.toEntity(user));
   }
 
 
@@ -51,20 +59,9 @@ public class BoardService {
     return boardMapper.toDto(boards);
   }
 
-
-  public Board findEntity(Long boardId) {
-    return boardRepository.findByIdAndIsDeleted(boardId, false).orElseThrow(NotFoundBoard::new);
-  }
-
   @Transactional
-  public Board updateBoard(Long boardId, Board updatedBoard) {
-    Board entity = findEntity(boardId);
-    entity.setBoard(
-        updatedBoard.getTitle(),
-        updatedBoard.getContent(),
-        updatedBoard.getCategory1(),
-        updatedBoard.getCategory2(),
-        updatedBoard.getThumbnail_url());
-    return boardRepository.save(entity);
+  public Board updateBoard(Long boardId, BoardUpdateRequest request) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    return boardRepository.save(request.toEntity(board));
   }
 }

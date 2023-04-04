@@ -7,7 +7,8 @@ import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.techeer.port.voilio.domain.board.dto.request.BoardRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.service.BoardService;
@@ -30,7 +31,7 @@ public class BoardController {
   @GetMapping("/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
-    Board board = boardService.findBoardById(board_id);
+    BoardResponse board = boardService.findBoardById(board_id);
     ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
         .body(
@@ -48,7 +49,7 @@ public class BoardController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardRequest request) {
+  public ResponseEntity<ResultResponse> createBoard(@Validated @RequestBody BoardCreateRequest request) {
     boardService.createBoard(request);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
     resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
@@ -58,7 +59,7 @@ public class BoardController {
   @PatchMapping("{boardId}/hide")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
     boardService.hideBoard(boardId);
-    ResultResponse<?> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    ResultResponse<?> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
   return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
@@ -86,9 +87,8 @@ public class BoardController {
 
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody BoardRequest request) {
-    Board updatedBoard = request.toEntity();
-    boardService.updateBoard(boardId, updatedBoard);
+      @PathVariable Long boardId, @RequestBody BoardUpdateRequest request) {
+    boardService.updateBoard(boardId, request);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
