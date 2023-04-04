@@ -6,6 +6,7 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,9 +24,8 @@ public class BoardRepositoryTest {
   @Autowired private BoardRepository boardRepository;
   @Autowired private UserRepository userRepository;
 
-  private User user1;
-  private Board board1;
-  private Board board2;
+  private Board board1, board2, board3;
+  private User user1, user2;
 
   @BeforeEach
   public void saveTest() {
@@ -37,7 +37,7 @@ public class BoardRepositoryTest {
                 .nickname("tester1")
                 .build());
 
-    User user2 =
+    user2 =
         userRepository.save(
             User.builder()
                 .email("tester2@example.com")
@@ -53,6 +53,7 @@ public class BoardRepositoryTest {
                 .content("testContent")
                 .category1(Category.IT)
                 .category2(Category.IT)
+                .isPublic(true)
                 .video_url("https://www.naver.com/")
                 .thumbnail_url("https://www.naver.com")
                 .build());
@@ -65,11 +66,12 @@ public class BoardRepositoryTest {
                 .content("testContent2")
                 .category1(Category.IT)
                 .category2(Category.IT)
+                .isPublic(true)
                 .video_url("https://www.naver.com/")
                 .thumbnail_url("https://www.naver.com")
                 .build());
 
-    Board board3 =
+    board3 =
         boardRepository.save(
             Board.builder()
                 .user(user1)
@@ -77,6 +79,7 @@ public class BoardRepositoryTest {
                 .content("testContent3")
                 .category2(Category.IT)
                 .category1(Category.IT)
+                .isPublic(true)
                 .video_url("https://www.naver.com/")
                 .thumbnail_url("https://www.naver.com")
                 .build());
@@ -102,6 +105,75 @@ public class BoardRepositoryTest {
     assertEquals(boardList.size(), boardSize);
     board = boardRepository.findById(boardId).orElseThrow();
     assertTrue(board.getIsDeleted());
+  }
+
+  @Test
+  @DisplayName("findBoardBykeyword")
+  public void findBoardByKeyword() {
+    String keyword = "test",
+        keyword2 = "different",
+        keyword3 = "",
+        keyword4 = "nothing",
+        keyword5 = "differentTitle2";
+
+    // given
+    Board tempBoard =
+        boardRepository.save(
+            Board.builder()
+                .user(user2)
+                .title("differentTitle")
+                .content("differentContent")
+                .category2(Category.IT)
+                .category1(Category.IT)
+                .isPublic(true)
+                .video_url("https://www.naver.com/")
+                .thumbnail_url("https://www.naver.com")
+                .build());
+
+    Board tempBoard2 =
+        boardRepository.save(
+            Board.builder()
+                .user(user2)
+                .title("differentTitle2")
+                .content("differentContent2")
+                .category2(Category.IT)
+                .category1(Category.IT)
+                .isPublic(false)
+                .video_url("https://www.naver.com/")
+                .thumbnail_url("https://www.naver.com")
+                .build());
+
+    assertEquals(boardRepository.findAll().size(), 5);
+
+    List<Board> expectBoards = new ArrayList<>();
+    expectBoards.add(board1);
+    expectBoards.add(board2);
+    expectBoards.add(board3);
+
+    List<Board> expectBoards2 = new ArrayList<>();
+    expectBoards2.add(tempBoard);
+
+    List<Board> expectBoards4 = new ArrayList<>();
+    List<Board> expectBoards5 = expectBoards4;
+
+    // when
+    List<Board> actualBoards =
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+    List<Board> actualBoards2 =
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword2);
+    List<Board> actualBoards3 =
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword3);
+    List<Board> actualBoards4 =
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword4);
+    List<Board> actualBoards5 =
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword5);
+
+    // then
+    assertEquals(expectBoards.size(), actualBoards.size());
+    assertEquals(expectBoards2.size(), actualBoards2.size());
+    assertEquals(4, actualBoards3.size());
+    assertEquals(expectBoards4, actualBoards4);
+    assertEquals(expectBoards5, actualBoards5);
   }
 
   @Test

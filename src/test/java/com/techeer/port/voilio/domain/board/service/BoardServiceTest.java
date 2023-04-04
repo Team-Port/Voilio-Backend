@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,6 +74,41 @@ public class BoardServiceTest {
 
     // when, then
     assertThrows(NotFoundBoard.class, () -> boardService.deleteBoard(boardId));
+  }
+
+  @Test
+  @DisplayName("findBoardByKeyword")
+  public void findBoardByKeyword() {
+    String keyword = "test";
+
+    // given
+    User user =
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
+    Board board =
+        Board.builder()
+            .user(user)
+            .title("testTitle")
+            .content("testContent")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com")
+            .build();
+    List<Board> boards = new ArrayList<Board>();
+    boards.add(board);
+
+    given(boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword))
+        .willReturn(boards);
+
+    // when
+    List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
+
+    // then
+    assertEquals(boards.size(), foundBoards.size());
   }
 
   @Test

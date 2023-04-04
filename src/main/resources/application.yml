@@ -1,15 +1,25 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+<<<<<<< HEAD
+    url: jdbc:mysql://localhost:3306/voilio?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password:
+=======
     url: jdbc:mysql://localhost:3306/voilio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: port
     password: port0429
+>>>>>>> d66ed0574e9ca9b12e4741faeb784f456daf71dc
 
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
+<<<<<<< HEAD
+      ddl-auto : update
+=======
       ddl-auto: create #update
+>>>>>>> d66ed0574e9ca9b12e4741faeb784f456daf71dc
     properties:
       hibernate:
         format_sql: true
