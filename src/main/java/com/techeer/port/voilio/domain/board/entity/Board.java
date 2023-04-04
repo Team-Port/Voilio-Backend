@@ -90,6 +90,6 @@ public class Board extends BaseEntity {
   }
 
   public void changePublic() {
-    this.isPublic = false;
+    this.isPublic = !this.isPublic;
   }
 }

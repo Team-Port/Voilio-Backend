@@ -39,7 +39,7 @@ public class BoardController {
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
     BoardResponse board = boardService.findBoardById(board_id);
-    ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
+    ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
         .body(
             EntityModel.of(
@@ -64,6 +64,33 @@ public class BoardController {
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
     responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+  }
+
+  @GetMapping
+  public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
+      @RequestParam("search") String search) {
+    List<EntityModel<BoardResponse>> boards =
+        boardService.findBoardByKeyword(search).stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        board,
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
+    ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
+    resultResponse.add(
+        linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @PatchMapping("{boardId}/hide")
+  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
+    boardService.hideBoard(boardId);
+    ResultResponse<?> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
+    resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
   @PostMapping("/create")
