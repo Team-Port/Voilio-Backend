@@ -3,12 +3,11 @@ package com.techeer.port.voilio.domain.user.service;
 import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +27,4 @@ public class UserService {
   public List<User> getUserList() {
     return new ArrayList<User>(userRepository.findAll());
   }
-
 }
