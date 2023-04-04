@@ -68,20 +68,20 @@ public class BoardController {
 
   @GetMapping
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
-          @RequestParam("search") String search) {
+      @RequestParam("search") String search) {
     List<EntityModel<BoardResponse>> boards =
-            boardService.findBoardByKeyword(search).stream()
-                    .map(
-                            board ->
-                                    EntityModel.of(
-                                            board,
-                                            linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                                                    .withSelfRel()))
-                    .collect(Collectors.toList());
+        boardService.findBoardByKeyword(search).stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        board,
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
     ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
-            new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
+        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
     resultResponse.add(
-            linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
+        linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
@@ -92,6 +92,7 @@ public class BoardController {
     resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
   @PostMapping("/create")
   public ResponseEntity<ResultResponse> createBoard(
       @Validated @RequestBody BoardCreateRequest boardCreateRequest) {
