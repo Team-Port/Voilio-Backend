@@ -39,4 +39,20 @@ public class BoardService {
   public Page<Board> findAllBoard(Pageable pageable) {
     return boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
   }
+
+  public Board findEntity(Long boardId) {
+    return boardRepository.findByIdAndIsDeleted(boardId, false).orElseThrow(NotFoundBoard::new);
+  }
+
+  @Transactional
+  public Board updateBoard(Long boardId, Board updatedBoard) {
+    Board entity = findEntity(boardId);
+    entity.setBoard(
+        updatedBoard.getTitle(),
+        updatedBoard.getContent(),
+        updatedBoard.getCategory1(),
+        updatedBoard.getCategory2(),
+        updatedBoard.getThumbnail_url());
+    return boardRepository.save(entity);
+  }
 }

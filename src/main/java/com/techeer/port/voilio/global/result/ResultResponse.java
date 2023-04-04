@@ -9,7 +9,7 @@ public class ResultResponse<T> extends RepresentationModel<ResultResponse<T>> {
 
   private final String status;
   private final String message;
-  private T data;
+  private Object data;
 
   @JsonCreator
   public ResultResponse(ResultCode resultCode) {
@@ -18,7 +18,7 @@ public class ResultResponse<T> extends RepresentationModel<ResultResponse<T>> {
   }
 
   @JsonCreator
-  public ResultResponse(ResultCode resultCode, T data) {
+  public ResultResponse(ResultCode resultCode, Object data) {
     this.status = resultCode.getStatus();
     this.message = resultCode.getMessage();
     this.data = data;

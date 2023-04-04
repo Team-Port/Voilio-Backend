@@ -46,7 +46,6 @@ public class Board extends BaseEntity {
 
   @Column
   @NotNull
-  @ColumnDefault("true")
   private boolean isPublic;
 
   //  @ManyToOne(fetch = FetchType.LAZY)
@@ -74,5 +73,14 @@ public class Board extends BaseEntity {
     this.thumbnail_url = thumbnail_url;
     this.isPublic = isPublic;
     //    this.user = user;
+  }
+
+  public void setBoard(
+      String title, String content, Category category1, Category category2, String thumbnail_url) {
+    this.title = title;
+    this.content = content;
+    this.category1 = category1;
+    this.category2 = category2;
+    this.thumbnail_url = thumbnail_url;
   }
 }
