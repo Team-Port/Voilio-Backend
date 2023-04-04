@@ -47,11 +47,6 @@ public class BoardControllerTest {
     verify(boardService, times(1)).deleteBoard(boardId);
   }
 
-  //  @Test
-  //  public void findBoardByKeyword(){
-  //    String
-  //  }
-
   @Test
   public void findBoardById() throws Exception {
     Long boardId = 1L;
