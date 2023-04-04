@@ -34,21 +34,21 @@ public class BoardController {
 
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody BoardRequest request) {
-    Board updatedBoard = request.toEntity();
+      @PathVariable Long boardId, @RequestBody Board board) {
+    Board updatedBoard = boardMapper.toEntity(board);
     boardService.updateBoard(boardId, updatedBoard);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, board)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
-    @PatchMapping("/{boardId}")
-    public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
-        ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-        responseFormat.add(
-            linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
-        return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+  @PatchMapping("/{boardId}")
+  public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
+    boardService.deleteBoard(boardId);
+    ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
+    responseFormat.add(
+        linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
+    return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
     }
 
   @PostMapping("/create")
@@ -98,5 +98,4 @@ public class BoardController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
   }
-
 }

@@ -71,7 +71,7 @@ public class Board extends BaseEntity {
     this.content = content;
     this.video_url = video_url;
     this.thumbnail_url = thumbnail_url;
-    this.isPublic = isPublic;
+    this.isPublic = true;
     //    this.user = user;
   }
 
