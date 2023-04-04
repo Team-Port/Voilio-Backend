@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-  public void registerUser(UserRequest userRequest) throws Exception {
-    String password = userRequest.getPassword();
-    String encodePassword = passwordEncoder.encode(password);
-    userRequest.setUserPassword(encodePassword);
+    public void registerUser(UserRequest userRequest) throws Exception {
+        String password = userRequest.getPassword();
+        String encodePassword = passwordEncoder.encode(password);
+        userRequest.setUserPassword(encodePassword);
 
-    User user = userRequest.toEntity();
-    userRepository.save(user);
-  }
+        User user = userRequest.toEntity();
+        userRepository.save(user);
+    }
 }
