@@ -50,7 +50,7 @@ public class UserController {
             .map(
                 user ->
                     EntityModel.of(
-                        user, linkTo(methodOn(UserController.class).getUserList()).withSelfRel()))
+                        user, linkTo(methodOn(UserController.class).getUserById(user.getId())).withSelfRel()))
             .collect(Collectors.toList());
 
     ResultResponse<List<EntityModel<User>>> resultResponse =
