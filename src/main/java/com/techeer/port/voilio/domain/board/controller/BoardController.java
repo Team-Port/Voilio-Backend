@@ -137,11 +137,7 @@ public class BoardController {
       @RequestParam("category") String category) {
     Category category1 = Category.valueOf(category.toUpperCase());
     List<EntityModel<BoardResponse>> boards =
-        boardService.findBoardByCategory().stream()
-            .filter(
-                board ->
-                    board.getCategory1().equals(category1)
-                        || board.getCategory2().equals(category1))
+        boardService.findBoardByCategory(category1).stream()
             .map(
                 board ->
                     EntityModel.of(
