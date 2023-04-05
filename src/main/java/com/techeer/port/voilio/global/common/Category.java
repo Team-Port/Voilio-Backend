@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Category {
-  IT(1);
+  IT(1),
+  BACKEND(2);
 
   private final int value;
 }
