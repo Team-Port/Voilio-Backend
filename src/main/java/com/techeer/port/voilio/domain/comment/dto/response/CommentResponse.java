@@ -1,10 +1,9 @@
 package com.techeer.port.voilio.domain.comment.dto.response;
 
-import com.techeer.port.voilio.domain.user.entity.User;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
