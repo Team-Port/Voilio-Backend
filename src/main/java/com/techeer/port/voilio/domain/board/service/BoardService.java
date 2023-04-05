@@ -32,16 +32,16 @@ public class BoardService {
 
   public BoardResponse findBoardById(Long boardId) {
     Board board =
-            boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
-                    .orElseThrow(NotFoundBoard::new);
+        boardRepository
+            .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId)
+            .orElseThrow(NotFoundBoard::new);
     return boardMapper.toDto(board);
   }
 
   @Transactional
   public void createBoard(BoardCreateRequest boardCreateRequest) {
     User user =
-            userRepository.findById(boardCreateRequest.getUser_id()).orElseThrow(NotFoundUser::new);
+        userRepository.findById(boardCreateRequest.getUser_id()).orElseThrow(NotFoundUser::new);
     boardRepository.save(boardCreateRequest.toEntity(user));
   }
 
@@ -53,7 +53,7 @@ public class BoardService {
 
   public List<BoardResponse> findBoardByKeyword(String keyword) {
     List<Board> boards =
-            boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+        boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
     return boardMapper.toDto(boards);
   }
 

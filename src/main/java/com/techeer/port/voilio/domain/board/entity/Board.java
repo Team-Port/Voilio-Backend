@@ -60,14 +60,14 @@ public class Board extends BaseEntity {
 
   @Builder
   public Board(
-          String title,
-          String content,
-          Category category1,
-          Category category2,
-          String video_url,
-          String thumbnail_url,
-          User user,
-          boolean isPublic) {
+      String title,
+      String content,
+      Category category1,
+      Category category2,
+      String video_url,
+      String thumbnail_url,
+      User user,
+      boolean isPublic) {
     this.title = title;
     this.content = content;
     this.category1 = category1;
@@ -79,7 +79,7 @@ public class Board extends BaseEntity {
   }
 
   public void setBoard(
-          String title, String content, Category category1, Category category2, String thumbnail_url) {
+      String title, String content, Category category1, Category category2, String thumbnail_url) {
     this.title = title;
     this.content = content;
     this.category1 = category1;

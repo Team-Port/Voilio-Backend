@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    List<Board> findAllByTitleContaining(String keyword);
+  List<Board> findAllByTitleContaining(String keyword);
 
-    List<Board> findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(String keyword);
+  List<Board> findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(String keyword);
 
-    Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
+  Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
 
-    Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
+  Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
 }

@@ -30,14 +30,14 @@ public class BoardController {
 
   @GetMapping("/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
-          @PathVariable Long board_id) {
+      @PathVariable Long board_id) {
     BoardResponse board = boardService.findBoardById(board_id);
     ResultResponse<Board> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
-            .body(
-                    EntityModel.of(
-                            responseFormat,
-                            linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
 
   @DeleteMapping("/{boardId}")
@@ -50,7 +50,7 @@ public class BoardController {
 
   @PostMapping("/create")
   public ResponseEntity<ResultResponse> createBoard(
-          @Validated @RequestBody BoardCreateRequest request) {
+      @Validated @RequestBody BoardCreateRequest request) {
     boardService.createBoard(request);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
     resultResponse.add(linkTo(methodOn(BoardController.class).createBoard(request)).withSelfRel());
@@ -67,32 +67,32 @@ public class BoardController {
 
   @GetMapping
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
-          @RequestParam("search") String search) {
+      @RequestParam("search") String search) {
     List<EntityModel<BoardResponse>> boards =
-            boardService.findBoardByKeyword(search).stream()
-                    .map(
-                            board ->
-                                    EntityModel.of(
-                                            board,
-                                            linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                                                    .withSelfRel()))
-                    .collect(Collectors.toList());
+        boardService.findBoardByKeyword(search).stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        board,
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
 
     ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
-            new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
+        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
 
     resultResponse.add(
-            linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
+        linkTo(methodOn(BoardController.class).findBoardByKeyword(search)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
   @PutMapping("/update/{boardId}")
   public ResponseEntity<ResultResponse> updateBoard(
-          @PathVariable Long boardId, @RequestBody BoardUpdateRequest request) {
+      @PathVariable Long boardId, @RequestBody BoardUpdateRequest request) {
     boardService.updateBoard(boardId, request);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
     resultResponse.add(
-            linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
+        linkTo(methodOn(BoardController.class).updateBoard(boardId, request)).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
