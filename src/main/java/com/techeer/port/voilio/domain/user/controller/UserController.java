@@ -1,10 +1,12 @@
 package com.techeer.port.voilio.domain.user.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.GET_ALL_USER_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.techeer.port.voilio.domain.board.controller.BoardController;
+import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -57,4 +59,15 @@ public class UserController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+  @GetMapping("/{user_id}")
+  @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
+  public ResponseEntity<ResultResponse> getUserById (@PathVariable Long user_id) {
+    User user = userService.getUserById(user_id);
+    ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
+    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
 }
