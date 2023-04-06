@@ -51,7 +51,6 @@ public class UserController {
                         linkTo(methodOn(UserController.class).getUserById(user.getId()))
                             .withSelfRel()))
             .collect(Collectors.toList());
-
     ResultResponse<List<EntityModel<User>>> resultResponse =
         new ResultResponse<>(GET_ALL_USER_SUCCESS, users);
     resultResponse.add(linkTo(methodOn(UserController.class).getUserList()).withSelfRel());
@@ -61,10 +60,10 @@ public class UserController {
 
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
-  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long user_id) {
-    User user = userService.getUserById(user_id);
+  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long userId) {
+    User user = userService.getUserById(userId);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
-    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
