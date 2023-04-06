@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,17 +44,14 @@ public class UserController {
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<List<EntityModel<User>>>> getUserList() {
     List<EntityModel<User>> users =
-        userService.getUserList().stream()
-            .map(
-                user ->
-                    EntityModel.of(
-                        user,
-                        linkTo(methodOn(UserController.class).getUserById(user.getId()))
-                            .withSelfRel()))
-            .collect(Collectors.toList());
-
+            userService.getUserList().stream()
+                    .map(
+                            user ->
+                                    EntityModel.of(
+                                            user, linkTo(methodOn(UserController.class).getUserById(user.getId())).withSelfRel()))
+                    .collect(Collectors.toList());
     ResultResponse<List<EntityModel<User>>> resultResponse =
-        new ResultResponse<>(GET_ALL_USER_SUCCESS, users);
+            new ResultResponse<>(GET_ALL_USER_SUCCESS, users);
     resultResponse.add(linkTo(methodOn(UserController.class).getUserList()).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
@@ -61,10 +59,10 @@ public class UserController {
 
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
-  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long user_id) {
-    User user = userService.getUserById(user_id);
+  public ResponseEntity<ResultResponse> getUserById (@PathVariable Long userId) {
+    User user = userService.getUserById(userId);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
-    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
