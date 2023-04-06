@@ -135,7 +135,8 @@ public class BoardController {
   @GetMapping("/lists/category")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByCategory(
       @RequestParam("category") String category,
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size) {
     Category category1 = Category.valueOf(category.toUpperCase());
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
@@ -159,7 +160,8 @@ public class BoardController {
             boardPage.getSize(),
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findBoardByCategory(category, page, size)).withSelfRel());
+            linkTo(methodOn(BoardController.class).findBoardByCategory(category, page, size))
+                .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FIND_SUCCESS, result);
