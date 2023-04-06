@@ -10,6 +10,7 @@ import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.Category;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -67,5 +68,9 @@ public class BoardService {
 
   public Page<Board> findAllBoard(Pageable pageable) {
     return boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
+  }
+
+  public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
+    return boardRepository.findAllByIsDeletedAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(false, true, category, category, pageable);
   }
 }
