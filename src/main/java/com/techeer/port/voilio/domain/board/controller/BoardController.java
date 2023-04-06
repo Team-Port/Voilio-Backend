@@ -138,13 +138,9 @@ public class BoardController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size) {
     Category category1 = Category.valueOf(category.toUpperCase());
-    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
+    Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
         boardPage.getContent().stream()
-            .filter(
-                board ->
-                    board.getCategory1().equals(category1)
-                        || board.getCategory2().equals(category1))
             .map(
                 board ->
                     EntityModel.of(
