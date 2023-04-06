@@ -60,10 +60,10 @@ public class UserController {
 
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
-  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long userId) {
-    User user = userService.getUserById(userId);
+  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long user_id) {
+    User user = userService.getUserById(user_id);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
-    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
