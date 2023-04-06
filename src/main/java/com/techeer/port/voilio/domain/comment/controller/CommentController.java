@@ -7,11 +7,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentInfo;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
+import com.techeer.port.voilio.domain.comment.dto.response.CommentResponse;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
 import com.techeer.port.voilio.domain.comment.service.CommentService;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,6 +66,17 @@ public class CommentController {
     ResultResponse<Comment> resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(CommentController.class).deleteComment(commentId)).withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @Operation(summary = "댓글 조회", description = "게시글별로 댓글 조회 메서드입니다.")
+  @GetMapping("/{boardId}/list")
+  public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long boardId) {
+    List<CommentResponse> commentList = commentService.findCommentByBoardId(boardId);
+    ResultResponse<Comment> resultResponse = new ResultResponse<>(GET_COMMENT_SUCCESS, commentList);
+    resultResponse.add(
+        linkTo(methodOn(CommentController.class).getCommentList(boardId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

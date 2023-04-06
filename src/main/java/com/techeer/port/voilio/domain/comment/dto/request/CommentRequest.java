@@ -10,6 +10,10 @@ import lombok.*;
 @Getter
 public class CommentRequest {
 
+  @Schema(description = "유저 아이디")
+  @NotNull
+  private Long userId;
+
   @Schema(description = "게시판 아이디")
   @NotNull
   private Long boardId;

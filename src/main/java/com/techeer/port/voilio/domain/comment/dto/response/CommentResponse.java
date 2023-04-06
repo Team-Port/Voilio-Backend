@@ -1,3 +1,17 @@
 package com.techeer.port.voilio.domain.comment.dto.response;
 
-public class CommentResponse {}
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class CommentResponse {
+
+  private Long commentId;
+  private String nickname;
+  private String content;
+  private LocalDateTime localDateTime;
+}

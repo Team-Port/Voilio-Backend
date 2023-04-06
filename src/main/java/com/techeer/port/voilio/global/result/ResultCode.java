@@ -19,9 +19,9 @@ public enum ResultCode {
   BOARD_FINDALL_SUCCESS("B003", "200", "전체 게시물 입니다."),
 
   COMMENT_CREATED_SUCCESS("C001", "301", "댓글이 정상적으로 등록되었습니다."),
-
   UPDATE_COMMENT_SUCCESS("C002", "302", "댓글이 정상적으로 수정되었습니다."),
   DELETE_COMMENT_SUCCESS("C003", "303", "댓글이 정상적으로 삭제되었습니다."),
+  GET_COMMENT_SUCCESS("C004", "304", "댓글이 정상적으로 출력되었습니다."),
   ;
 
   private final String code;
