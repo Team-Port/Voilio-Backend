@@ -8,14 +8,14 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class UserRequest {
-
+  private Long id;
   private String email;
   private String password;
   private String nickname;
 
   public User toEntity() {
 
-    return User.builder().email(email).password(password).nickname(nickname).build();
+    return User.builder().id(id).email(email).password(password).nickname(nickname).build();
   }
 
   public void setUserPassword(String encodedPassword) {
