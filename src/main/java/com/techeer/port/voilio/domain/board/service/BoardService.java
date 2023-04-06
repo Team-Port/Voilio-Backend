@@ -72,6 +72,5 @@ public class BoardService {
 
   public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
     return boardRepository.findBoardByCategory(category, category, pageable);
-    
   }
 }

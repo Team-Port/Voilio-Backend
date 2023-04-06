@@ -25,11 +25,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
   Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(
       Boolean isDeleted, Boolean isPublic, Pageable pageable);
-  
-  @Query("SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND (b.category1 = :category1 OR b.category2 = :category2) ORDER BY b.createAt DESC")
+
+  @Query(
+      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND (b.category1 ="
+          + " :category1 OR b.category2 = :category2) ORDER BY b.createAt DESC")
   Page<Board> findBoardByCategory(
       @Param("category1") Category category1,
       @Param("category2") Category category2,
       Pageable pageable);
-      
 }
