@@ -31,5 +31,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       @Param("category1") Category category1,
       @Param("category2") Category category2,
       Pageable pageable);
-
+      
 }
