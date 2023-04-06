@@ -25,6 +25,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       Boolean isDeleted, Boolean isPublic, Pageable pageable);
 
   Page<Board> findAllByIsDeletedAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(
-      Boolean isDeleted, Boolean isPublic, Category category1, Category category2, Pageable pageable);
-
+      Boolean isDeleted,
+      Boolean isPublic,
+      Category category1,
+      Category category2,
+      Pageable pageable);
 }

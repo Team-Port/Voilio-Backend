@@ -71,6 +71,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
-    return boardRepository.findAllByIsDeletedAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(false, true, category, category, pageable);
+    return boardRepository.findAllByIsDeletedAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(
+        false, true, category, category, pageable);
   }
 }
