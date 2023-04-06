@@ -67,17 +67,6 @@ public class BoardService {
     return boardRepository.save(request.toEntity(board));
   }
 
-  public List<BoardResponse> findBoardByCategory(Category category) {
-    List<Board> boards = boardRepository.findAllByIsDeletedAndIsPublic(false, true);
-    return boardMapper.toDto(boards)
-        .stream()
-        .filter(
-        board ->
-            board.getCategory1().equals(category)
-                || board.getCategory2().equals(category))
-        .collect(Collectors.toList());
-  }
-
   public Page<Board> findAllBoard(Pageable pageable) {
     return boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
   }

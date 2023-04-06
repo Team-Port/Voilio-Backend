@@ -133,24 +133,37 @@ public class BoardController {
   }
 
   @GetMapping("/lists/category")
-  public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByCategory(
-      @RequestParam("category") String category) {
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByCategory(
+      @RequestParam("category") String category,
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
     Category category1 = Category.valueOf(category.toUpperCase());
-    List<EntityModel<BoardResponse>> boards =
-        boardService.findBoardByCategory(category1).stream()
+    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
+    List<EntityModel<BoardResponse>> boardLists =
+        boardPage.getContent().stream()
+            .filter(
+                board ->
+                    board.getCategory1().equals(category1)
+                        || board.getCategory2().equals(category1))
             .map(
                 board ->
                     EntityModel.of(
-                        board,
+                        boardMapper.toDto(board),
                         linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
                             .withSelfRel()))
             .collect(Collectors.toList());
 
-    ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
-        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
+    Pagination<EntityModel<BoardResponse>> result =
+        new Pagination<>(
+            boardLists,
+            boardPage.getNumber(),
+            boardPage.getSize(),
+            boardPage.getTotalElements(),
+            boardPage.getTotalPages(),
+            linkTo(methodOn(BoardController.class).findBoardByCategory(category, page, size)).withSelfRel());
 
-    resultResponse.add(
-        linkTo(methodOn(BoardController.class).findBoardByCategory(category)).withSelfRel());
+    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FIND_SUCCESS, result);
+
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
