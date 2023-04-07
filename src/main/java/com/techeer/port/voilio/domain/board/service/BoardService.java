@@ -85,6 +85,9 @@ public class BoardService {
 
   public Page<Board> findBoardByUserId(Long id, Pageable pageable) {
     Page<Board> result = boardRepository.findBoardByUserId(id, pageable);
+    if(result.isEmpty()) {
+      throw new NotFoundUser();
+    }
     return result;
   }
 }
