@@ -82,4 +82,9 @@ public class BoardService {
     }
     return result;
   }
+
+  public Page<Board> findBoardByUserId(Long id, Pageable pageable) {
+    Page<Board> result = boardRepository.findBoardByUserId(id, pageable);
+    return result;
+  }
 }
