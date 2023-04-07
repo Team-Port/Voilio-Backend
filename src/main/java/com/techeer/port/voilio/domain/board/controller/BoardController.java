@@ -188,7 +188,8 @@ public class BoardController {
             boardPage.getSize(),
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findBoardByUserId(id, page, size)).withSelfRel());
+            linkTo(methodOn(BoardController.class).findBoardByUserId(id, page, size))
+                .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
