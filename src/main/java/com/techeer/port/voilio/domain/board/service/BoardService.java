@@ -67,8 +67,9 @@ public class BoardService {
   }
 
   public Page<Board> findAllBoard(Pageable pageable) {
-    Page<Board> result =  boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
-    if(result.isEmpty()) {
+    Page<Board> result =
+        boardRepository.findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(false, true, pageable);
+    if (result.isEmpty()) {
       throw new NotFoundBoard();
     }
     return result;
@@ -76,7 +77,7 @@ public class BoardService {
 
   public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
     Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
-    if(result.isEmpty()) {
+    if (result.isEmpty()) {
       throw new NotFoundBoard();
     }
     return result;
