@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.board.repository;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +34,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       @Param("category1") Category category1,
       @Param("category2") Category category2,
       Pageable pageable);
+
+  @Query(
+      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND b.user.id = :id ORDER BY b.createAt DESC")
+  Page<Board> findBoardByUserId(
+      @Param("id") Long id, Pageable pageable);
 }
