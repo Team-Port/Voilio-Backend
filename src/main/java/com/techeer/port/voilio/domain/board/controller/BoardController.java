@@ -14,6 +14,7 @@ import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
+import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import java.util.List;
@@ -103,7 +104,7 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @GetMapping("/list")
+  @GetMapping("/lists")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
@@ -129,5 +130,38 @@ public class BoardController {
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
+  }
+
+  @GetMapping("/lists/category")
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByCategory(
+      @RequestParam("category") String category,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size) {
+    Category category1 = Category.valueOf(category.toUpperCase());
+    Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
+    List<EntityModel<BoardResponse>> boardLists =
+        boardPage.getContent().stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        boardMapper.toDto(board),
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
+
+    Pagination<EntityModel<BoardResponse>> result =
+        new Pagination<>(
+            boardLists,
+            boardPage.getNumber(),
+            boardPage.getSize(),
+            boardPage.getTotalElements(),
+            boardPage.getTotalPages(),
+            linkTo(methodOn(BoardController.class).findBoardByCategory(category, page, size))
+                .withSelfRel());
+
+    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FIND_SUCCESS, result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
