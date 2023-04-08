@@ -170,7 +170,8 @@ public class BoardController {
       @PathVariable("nickname") String nickname,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size) {
-    Page<Board> boardPage = boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+    Page<Board> boardPage =
+        boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
         boardPage.getContent().stream()
             .map(
@@ -188,7 +189,8 @@ public class BoardController {
             boardPage.getSize(),
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size)).withSelfRel());
+            linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size))
+                .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
