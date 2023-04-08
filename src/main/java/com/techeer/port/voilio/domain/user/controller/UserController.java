@@ -4,6 +4,7 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.techeer.port.voilio.domain.board.controller.BoardController;
 import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -66,5 +67,15 @@ public class UserController {
     resultResponse.add(linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @DeleteMapping("/{user_id}")
+  @Operation(summary = "회원 삭제", description = "회원 삭제 메서드입니다.")
+  public ResponseEntity<ResultResponse> deleteUser(@PathVariable Long user_id) {
+    userService.deleteUser(user_id);
+    ResultResponse<?> resultResponse = new ResultResponse<>(DELETE_USER_SUCCESS);
+    resultResponse.add(linkTo(methodOn(UserController.class).deleteUser(user_id)).withSelfRel());
+
+  return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
