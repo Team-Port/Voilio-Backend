@@ -33,4 +33,11 @@ public class UserService {
     User user = userRepository.findUserById(userId).orElseThrow(NotFoundUser::new);
     return user;
   }
+
+  public void deleteUser(Long userId){
+    User user = getUserById(userId);
+    user.changeDeleted();
+    userRepository.save(user);
+  }
+
 }
