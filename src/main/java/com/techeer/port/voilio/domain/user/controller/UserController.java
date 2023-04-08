@@ -60,10 +60,20 @@ public class UserController {
 
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
-  public ResponseEntity<ResultResponse> getUserById(@PathVariable Long userId) {
+  public ResponseEntity<ResultResponse> getUserById(@PathVariable("user_id") Long userId) {
     User user = userService.getUserById(userId);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
     resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @DeleteMapping("/{user_id}")
+  @Operation(summary = "회원 삭제", description = "회원 삭제 메서드입니다.")
+  public ResponseEntity<ResultResponse> deleteUser(@PathVariable("user_id") Long userId) {
+    userService.deleteUser(userId);
+    ResultResponse<?> resultResponse = new ResultResponse<>(DELETE_USER_SUCCESS);
+    resultResponse.add(linkTo(methodOn(UserController.class).deleteUser(userId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
