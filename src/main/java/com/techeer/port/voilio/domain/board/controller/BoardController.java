@@ -164,4 +164,36 @@ public class BoardController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+  @GetMapping("/lists/@{nickname}")
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByUserId(
+      @PathVariable("nickname") String nickname,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size) {
+    Page<Board> boardPage =
+        boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+    List<EntityModel<BoardResponse>> boardLists =
+        boardPage.getContent().stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        boardMapper.toDto(board),
+                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
+
+    Pagination<EntityModel<BoardResponse>> result =
+        new Pagination<>(
+            boardLists,
+            boardPage.getNumber(),
+            boardPage.getSize(),
+            boardPage.getTotalElements(),
+            boardPage.getTotalPages(),
+            linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size))
+                .withSelfRel());
+
+    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    return ResponseEntity.ok().body(resultResponse);
+  }
 }

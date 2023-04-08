@@ -82,4 +82,19 @@ public class BoardService {
     }
     return result;
   }
+
+  public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
+    User user = userRepository.findUserByNickname(nickname);
+    Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
+
+    if (result.isEmpty()) {
+
+      if (user == null) {
+        throw new NotFoundUser();
+      } else {
+        throw new NotFoundBoard();
+      }
+    }
+    return result;
+  }
 }
