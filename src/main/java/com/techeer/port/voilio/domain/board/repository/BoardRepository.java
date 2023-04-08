@@ -36,7 +36,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       Pageable pageable);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND b.user.id = :id ORDER BY b.createAt DESC")
-  Page<Board> findBoardByUserId(
-      @Param("id") Long id, Pageable pageable);
+      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND b.user.nickname = :nickname ORDER BY b.createAt DESC")
+  Page<Board> findBoardByUserNickname(
+      @Param("nickname") String nickname, Pageable pageable);
 }
