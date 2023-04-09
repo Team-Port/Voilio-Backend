@@ -92,12 +92,10 @@ public class BoardService {
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
 
     if (result.isEmpty()) {
-
-      if (user == null) {
+      if (user == null)
         throw new NotFoundUser();
-      } else {
+      else
         throw new NotFoundBoard();
-      }
     }
     return result;
   }
