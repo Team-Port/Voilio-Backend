@@ -27,14 +27,14 @@ public class BoardService {
   private final UserRepository userRepository;
   private final BoardMapper boardMapper;
 
-  public void deleteBoard(Long boardId) {
-    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+  public void deleteBoard(Long board_id) {
+    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
     board.changeDeleted();
     boardRepository.save(board);
   }
 
-  public BoardResponse findBoardById(Long boardId) {
-    Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
+  public BoardResponse findBoardById(Long board_id) {
+    Board board = boardRepository.findBoardById(board_id).orElseThrow(NotFoundBoard::new);
     return boardMapper.toDto(board);
   }
 
@@ -45,8 +45,8 @@ public class BoardService {
     boardRepository.save(boardCreateRequest.toEntity(user));
   }
 
-  public void hideBoard(Long boardId) {
-    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+  public void hideBoard(Long board_id) {
+    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
     board.changePublic();
     boardRepository.save(board);
   }
@@ -58,8 +58,8 @@ public class BoardService {
   }
 
   @Transactional
-  public Board updateBoard(Long boardId, BoardUpdateRequest request) {
-    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+  public Board updateBoard(Long board_id, BoardUpdateRequest request) {
+    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
     if (board.getIsDeleted() == true) throw new NotFoundBoard();
     return boardRepository.save(request.toEntity(board));
   }
