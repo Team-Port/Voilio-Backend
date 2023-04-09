@@ -34,10 +34,7 @@ public class BoardService {
   }
 
   public BoardResponse findBoardById(Long boardId) {
-    Board board =
-        boardRepository
-            .findBoardById(boardId)
-            .orElseThrow(NotFoundBoard::new);
+    Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return boardMapper.toDto(board);
   }
 
@@ -55,10 +52,8 @@ public class BoardService {
   }
 
   public List<BoardResponse> findBoardByKeyword(String keyword) {
-    List<Board> boards =
-        boardRepository.findBoardByKeyword(keyword);
-    if(boards.isEmpty())
-      throw new NotFoundBoard();
+    List<Board> boards = boardRepository.findBoardByKeyword(keyword);
+    if (boards.isEmpty()) throw new NotFoundBoard();
     return boardMapper.toDto(boards);
   }
 
@@ -70,8 +65,7 @@ public class BoardService {
   }
 
   public Page<Board> findAllBoard(Pageable pageable) {
-    Page<Board> result =
-        boardRepository.findAllBoard(pageable);
+    Page<Board> result = boardRepository.findAllBoard(pageable);
     if (result.isEmpty()) {
       throw new NotFoundBoard();
     }
