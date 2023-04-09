@@ -19,7 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
           + " false ORDER BY b.createAt DESC")
   List<Board> findBoardByKeyword(@Param("keyword") String keyword);
 
-  @Query("SELECT b FROM Board b WHERE b.id = :id AND b.isDeleted = false AND b.isPublic = true")
+  @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false AND b.isPublic = true")
   Optional<Board> findBoardById(@Param("board_id") Long id);
 
   @Query(
