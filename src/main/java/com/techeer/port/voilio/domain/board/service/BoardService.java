@@ -57,6 +57,8 @@ public class BoardService {
   public List<BoardResponse> findBoardByKeyword(String keyword) {
     List<Board> boards =
         boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+    if(boards.isEmpty())
+      throw new NotFoundBoard();
     return boardMapper.toDto(boards);
   }
 
