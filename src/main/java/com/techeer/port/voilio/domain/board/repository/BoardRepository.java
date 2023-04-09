@@ -13,18 +13,20 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-  List<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic);
 
-  List<Board> findAllByTitleContaining(String keyword);
+  @Query(
+      "SELECT b FROM Board b WHERE b.title LIKE %:keyword% AND b.isPublic = true AND b.isDeleted ="
+          + " false ORDER BY b.createAt DESC")
+  List<Board> findBoardByKeyword(@Param("keyword") String keyword);
 
-  List<Board> findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(String keyword);
+  @Query(
+      "SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false AND b.isPublic = true")
+  Optional<Board> findBoardById(@Param("board_id") Long id);
 
-  Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
-
-  Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
-
-  Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(
-      Boolean isDeleted, Boolean isPublic, Pageable pageable);
+  @Query(
+      "SELECT b FROM Board b WHERE b.isDeleted = :isDeleted AND b.isPublic = :isPublic ORDER BY"
+          + " b.createAt DESC")
+  Page<Board> findAllBoard(Pageable pageable);
 
   @Query(
       "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND (b.category1 ="

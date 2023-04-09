@@ -1,10 +1,6 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.*;
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_CREATED_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_UPDATED_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -17,6 +13,8 @@ import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Board", description = "Board API Document")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/boards")
@@ -37,6 +36,7 @@ public class BoardController {
   private final BoardMapper boardMapper;
 
   @GetMapping("/{board_id}")
+  @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id) {
     BoardResponse board = boardService.findBoardById(board_id);
@@ -49,6 +49,7 @@ public class BoardController {
   }
 
   @PutMapping("/update/{boardId}")
+  @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
   public ResponseEntity<ResultResponse> updateBoard(
       @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest) {
     boardService.updateBoard(boardId, boardUpdateRequest);
@@ -60,6 +61,7 @@ public class BoardController {
   }
 
   @DeleteMapping("/{boardId}")
+  @Operation(summary = "게시물 삭제", description = "게시물 삭제 메서드입니다.")
   public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
     boardService.deleteBoard(boardId);
     ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
@@ -68,6 +70,7 @@ public class BoardController {
   }
 
   @GetMapping
+  @Operation(summary = "키워드가 있는 게시물 출력", description = "키워드를 통한 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
       @RequestParam("search") String search) {
     List<EntityModel<BoardResponse>> boards =
@@ -87,6 +90,7 @@ public class BoardController {
   }
 
   @PatchMapping("{boardId}/hide")
+  @Operation(summary = "게시물 숨김", description = "게시물 숨기기 메서드입니다.")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
     boardService.hideBoard(boardId);
     ResultResponse<?> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
@@ -95,6 +99,7 @@ public class BoardController {
   }
 
   @PostMapping("/create")
+  @Operation(summary = "게시물 생성", description = "게시물 생성 메서드입니다.")
   public ResponseEntity<ResultResponse> createBoard(
       @Validated @RequestBody BoardCreateRequest boardCreateRequest) {
     boardService.createBoard(boardCreateRequest);
@@ -105,6 +110,7 @@ public class BoardController {
   }
 
   @GetMapping("/lists")
+  @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
@@ -133,6 +139,7 @@ public class BoardController {
   }
 
   @GetMapping("/lists/category")
+  @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByCategory(
       @RequestParam("category") String category,
       @RequestParam(defaultValue = "0") int page,
@@ -166,6 +173,7 @@ public class BoardController {
   }
 
   @GetMapping("/lists/@{nickname}")
+  @Operation(summary = "유저 별 게시물 출력", description = "유저 닉네임을 통한 유저 별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByUserId(
       @PathVariable("nickname") String nickname,
       @RequestParam(defaultValue = "0") int page,
