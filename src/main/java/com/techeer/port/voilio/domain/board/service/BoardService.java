@@ -57,16 +57,14 @@ public class BoardService {
   public List<BoardResponse> findBoardByKeyword(String keyword) {
     List<Board> boards =
         boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
-    if(boards.isEmpty())
-      throw new NotFoundBoard();
+    if (boards.isEmpty()) throw new NotFoundBoard();
     return boardMapper.toDto(boards);
   }
 
   @Transactional
   public Board updateBoard(Long boardId, BoardUpdateRequest request) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
-    if(board.getIsDeleted() == true)
-      throw new NotFoundBoard();
+    if (board.getIsDeleted() == true) throw new NotFoundBoard();
     return boardRepository.save(request.toEntity(board));
   }
 
@@ -92,10 +90,8 @@ public class BoardService {
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
 
     if (result.isEmpty()) {
-      if (user == null)
-        throw new NotFoundUser();
-      else
-        throw new NotFoundBoard();
+      if (user == null) throw new NotFoundUser();
+      else throw new NotFoundBoard();
     }
     return result;
   }
