@@ -13,15 +13,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-  List<Board> findAllByIsDeletedAndIsPublic(Boolean isDeleted, Boolean isPublic);
-
-  List<Board> findAllByTitleContaining(String keyword);
 
   List<Board> findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(String keyword);
 
   Optional<Board> findByIdAndIsDeletedFalseAndIsPublicTrue(Long boardId);
-
-  Optional<Board> findByIdAndIsDeleted(Long boardId, Boolean isDeleted);
 
   Page<Board> findAllByIsDeletedAndIsPublicOrderByCreateAtDesc(
       Boolean isDeleted, Boolean isPublic, Pageable pageable);
