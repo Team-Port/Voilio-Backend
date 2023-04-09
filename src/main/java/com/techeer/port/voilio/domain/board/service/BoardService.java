@@ -63,6 +63,8 @@ public class BoardService {
   @Transactional
   public Board updateBoard(Long boardId, BoardUpdateRequest request) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    if(board.getIsDeleted() == true)
+      throw new NotFoundBoard();
     return boardRepository.save(request.toEntity(board));
   }
 
