@@ -35,7 +35,7 @@ public class SecurityConfig {
         .antMatchers("/api/v1/users")
         .permitAll()
         .and()
-        .addFilterBefore(   // JwtAuthenticationFilter 를 UsernamePasswordAuthenticationFilter 전에 넣는다
+        .addFilterBefore( // JwtAuthenticationFilter 를 UsernamePasswordAuthenticationFilter 전에 넣는다
             new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
