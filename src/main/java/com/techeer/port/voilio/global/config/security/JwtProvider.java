@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.global.config;
+package com.techeer.port.voilio.global.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -22,13 +22,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProvider {
   private final Key key;
+  private final long EXP = 1000 * 60 * 60;      // Token 만료시간 : 1 Hour
 
   public JwtProvider(@Value("${jwt.secret}") String secretKey) {
     byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
     this.key = Keys.hmacShaKeyFor(secretByteKey);
   }
 
-  public JwtToken generateToken(Authentication authentication) {
+  // Token 생성
+  public JwsToken generateToken(Authentication authentication) {
     String authorities =
         authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -39,27 +41,28 @@ public class JwtProvider {
         Jwts.builder()
             .setSubject(authorities)
             .claim("auth", authorities)
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+            .setExpiration(new Date(System.currentTimeMillis() + EXP))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
 
     // Refresh Token 생성
     String refreshToken =
         Jwts.builder()
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 36))
+            .setExpiration(new Date(System.currentTimeMillis() + EXP * 24))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
 
-    return JwtToken.builder()
+    return JwsToken.builder()
         .grantType("Bearer")
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .build();
   }
 
+  // Spring Security 인증 과정에서 권한 확인을 위한 기능
   public Authentication getAuthentication(String accessToken) {
     // 토큰 복호화
-    Claims claims = parseClaime(accessToken);
+    Claims claims = parseClaims(accessToken);
     if (claims.get("auth") == null) {
       throw new RuntimeException("권한 정보가 없는 토큰입니다.");
     }
@@ -67,11 +70,13 @@ public class JwtProvider {
         Arrays.stream(claims.get("auth").toString().split(","))
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
-    UserDetails principal = new User(claims.getSubject(), "", authorities);
+    UserDetails userDetails = new User(claims.getSubject(), "", authorities);
 
-    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
   }
 
+
+  // Token 검증
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -88,11 +93,12 @@ public class JwtProvider {
     return false;
   }
 
-  private Claims parseClaime(String accessToken) {
+  private Claims parseClaims(String accessToken) {
     try {
       return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
     } catch (ExpiredJwtException e) {
       return e.getClaims();
     }
   }
+
 }

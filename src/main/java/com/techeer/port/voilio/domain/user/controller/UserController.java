@@ -7,7 +7,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
-import com.techeer.port.voilio.global.config.JwtToken;
+import com.techeer.port.voilio.global.config.security.JwsToken;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -81,8 +81,8 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<JwtToken> login(@RequestBody Map<String, String> loginForm) {
-    JwtToken token = userService.login(loginForm.get("email"), loginForm.get("password"));
+  public ResponseEntity<JwsToken> login(@RequestBody Map<String, String> loginForm) {
+    JwsToken token = userService.login(loginForm.get("email"), loginForm.get("password"));
     //    ResultResponse<JwtToken> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, token);
     //    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
     //    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);

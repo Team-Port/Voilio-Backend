@@ -5,8 +5,8 @@ import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import com.techeer.port.voilio.global.config.JwtToken;
-import com.techeer.port.voilio.global.config.JwtProvider;
+import com.techeer.port.voilio.global.config.security.JwsToken;
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public JwtToken login(String email, String password) {
+  public JwsToken login(String email, String password) {
     User user = getUser(email);
     String encodedPwd = user.getPassword();
 
@@ -70,7 +70,7 @@ public class UserService {
         authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
     // 검증된 인증 정보로 JWT 토큰 생성
-    JwtToken token = jwtProvider.generateToken(authentication);
+    JwsToken token = jwtProvider.generateToken(authentication);
 
     return token;
   }

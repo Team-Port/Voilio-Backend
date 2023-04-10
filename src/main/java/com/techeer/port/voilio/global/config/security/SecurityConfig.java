@@ -1,5 +1,7 @@
-package com.techeer.port.voilio.global.config;
+package com.techeer.port.voilio.global.config.security;
 
+import com.techeer.port.voilio.global.config.security.JwtAuthenticationFilter;
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +34,7 @@ public class SecurityConfig {
         .httpBasic()
         .disable()
         .authorizeRequests()
-        .antMatchers("/api/users")
+        .antMatchers("/api/v1/users")
         .permitAll()
         .and()
         .addFilterBefore(

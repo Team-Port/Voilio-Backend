@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.global.config;
+package com.techeer.port.voilio.global.config.security;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
