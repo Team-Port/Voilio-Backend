@@ -36,3 +36,6 @@ logging:
   level:
     org:
       hibernate: info
+
+jwt:
+  token: masdfafqawf^65wdsadasdcafafafaFEFFA1!!!dfefaefGegegege$3edw2ewfaf@rfefa
