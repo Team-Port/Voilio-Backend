@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,12 +16,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 public class JwtProvider {
   private String secretKey;
-  private long EXP = 30 * 60 * 1000L;     // 토큰 유효시간 30분
-  public JwtProvider(@Value("${jwt.token}") String secretKey, UserDetailsService userDetailsService) {
+  private long EXP = 30 * 60 * 1000L; // 토큰 유효시간 30분
+
+  public JwtProvider(
+      @Value("${jwt.token}") String secretKey, UserDetailsService userDetailsService) {
     this.secretKey = secretKey;
     this.userDetailsService = userDetailsService;
   }
-
 
   private final UserDetailsService userDetailsService;
 
