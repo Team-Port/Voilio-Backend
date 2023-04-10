@@ -16,11 +16,13 @@ public class User extends BaseEntity {
   @Column(name = "user_id")
   private Long id;
 
-  @NotBlank @Column private String email;
+  @Column(unique = true)
+  @NotBlank private String email;
 
   @NotBlank @Column private String password;
 
-  @NotBlank @Column private String nickname;
+  @Column(unique = true)
+  @NotBlank private String nickname;
 
   @Builder
   private User(Long id, String email, String password, String nickname) {
