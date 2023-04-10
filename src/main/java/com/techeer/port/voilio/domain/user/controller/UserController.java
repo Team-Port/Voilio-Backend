@@ -83,7 +83,6 @@ public class UserController {
   @PostMapping("/login")
   public ResponseEntity<JwtToken> login(@RequestBody Map<String, String> loginForm) {
     JwtToken token = userService.login(loginForm.get("email"), loginForm.get("password"));
-
     //    ResultResponse<JwtToken> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, token);
     //    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
     //    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);

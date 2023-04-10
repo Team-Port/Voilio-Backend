@@ -6,7 +6,7 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.JwtToken;
-import com.techeer.port.voilio.global.config.JwtTokenProvider;
+import com.techeer.port.voilio.global.config.JwtProvider;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final JwtTokenProvider jwtTokenProvider;
+  private final JwtProvider jwtProvider;
   private AuthenticationManagerBuilder authenticationManagerBuilder;
 
   public void registerUser(UserRequest userRequest) throws Exception {
@@ -70,7 +70,7 @@ public class UserService {
         authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
     // 검증된 인증 정보로 JWT 토큰 생성
-    JwtToken token = jwtTokenProvider.generateToken(authentication);
+    JwtToken token = jwtProvider.generateToken(authentication);
 
     return token;
   }

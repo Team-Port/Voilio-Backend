@@ -20,10 +20,10 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class JwtTokenProvider {
+public class JwtProvider {
   private final Key key;
 
-  public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+  public JwtProvider(@Value("${jwt.secret}") String secretKey) {
     byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
     this.key = Keys.hmacShaKeyFor(secretByteKey);
   }

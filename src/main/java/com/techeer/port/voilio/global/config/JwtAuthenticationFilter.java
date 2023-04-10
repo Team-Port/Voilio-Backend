@@ -12,10 +12,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
-  private final JwtTokenProvider jwtTokenProvider;
+  private final JwtProvider jwtProvider;
 
-  public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-    this.jwtTokenProvider = jwtTokenProvider;
+  public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+    this.jwtProvider = jwtProvider;
   }
 
   @Override
@@ -24,8 +24,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     String token = resolveToken((HttpServletRequest) request);
 
     // token 유효성 검사
-    if (token != null && jwtTokenProvider.validateToken(token)) {
-      Authentication authentication = jwtTokenProvider.getAuthentication(token);
+    if (token != null && jwtProvider.validateToken(token)) {
+      Authentication authentication = jwtProvider.getAuthentication(token);
       SecurityContextHolder.getContext().setAuthentication(authentication);
     }
     chain.doFilter(request, response);
