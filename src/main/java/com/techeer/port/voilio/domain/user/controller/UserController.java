@@ -83,8 +83,7 @@ public class UserController {
 
   @PostMapping("/login")
   public ResponseEntity<ResultResponse> login(@RequestBody Map<String, String> loginForm) {
-    User user = userService.getUser(loginForm.get("email"));
-    String createdToken = jwtProvider.createToken(user.getUsername(), user.getRoles());
+    String createdToken = userService.login(loginForm.get("email"), loginForm.get("password"));
 
     ResultResponse<?> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, createdToken);
     resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
