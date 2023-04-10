@@ -55,23 +55,24 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public JwsToken login(String email, String password) {
-    User user = getUser(email);
-    String encodedPwd = user.getPassword();
-
-    if (!passwordEncoder.matches(password, encodedPwd)) {
-      throw new InvalidPassword();
-    }
-
-    // Authentication 객체 생성
-    UsernamePasswordAuthenticationToken authenticationToken =
-        new UsernamePasswordAuthenticationToken(email, password);
-    Authentication authentication =
-        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-    // 검증된 인증 정보로 JWT 토큰 생성
-    JwsToken token = jwtProvider.generateToken(authentication);
-
-    return token;
-  }
+//  @Transactional
+//  public JwsToken login(String email, String password) {
+//    User user = getUser(email);
+//    String encodedPwd = user.getPassword();
+//
+//    if (!passwordEncoder.matches(password, encodedPwd)) {
+//      throw new InvalidPassword();
+//    }
+//
+//    // Authentication 객체 생성
+//    UsernamePasswordAuthenticationToken authenticationToken =
+//        new UsernamePasswordAuthenticationToken(email, password);
+//    Authentication authentication =
+//        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//
+//    // 검증된 인증 정보로 JWT 토큰 생성
+//    JwsToken token = jwtProvider.createToken();
+//
+//    return token;
+//  }
 }
