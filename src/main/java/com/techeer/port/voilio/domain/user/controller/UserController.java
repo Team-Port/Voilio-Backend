@@ -32,7 +32,7 @@ public class UserController {
 
   private final UserService userService;
 
-  @PostMapping("/create")
+  @PostMapping("/join")
   @Operation(summary = "회원 생성", description = "회원 생성 메서드입니다.")
   public ResponseEntity<ResultResponse> createUser(@Valid @RequestBody UserRequest userRequest)
       throws Exception {
