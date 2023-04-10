@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.dto.request;
 
 import com.techeer.port.voilio.domain.user.entity.User;
 import lombok.*;
+import java.util.Collections;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,7 +16,7 @@ public class UserRequest {
 
   public User toEntity() {
 
-    return User.builder().id(id).email(email).password(password).nickname(nickname).build();
+    return User.builder().id(id).email(email).password(password).nickname(nickname).roles(Collections.singletonList("ROLE_USER")).build();
   }
 
   public void setUserPassword(String encodedPassword) {
