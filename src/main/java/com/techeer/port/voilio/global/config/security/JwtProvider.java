@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProvider {
   private final Key key;
-  private final long EXP = 1000 * 60 * 60;      // Token 만료시간 : 1 Hour
+  private final long EXP = 1000 * 60 * 60; // Token 만료시간 : 1 Hour
 
   public JwtProvider(@Value("${jwt.secret}") String secretKey) {
     byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
@@ -75,7 +75,6 @@ public class JwtProvider {
     return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
   }
 
-
   // Token 검증
   public boolean validateToken(String token) {
     try {
@@ -100,5 +99,4 @@ public class JwtProvider {
       return e.getClaims();
     }
   }
-
 }

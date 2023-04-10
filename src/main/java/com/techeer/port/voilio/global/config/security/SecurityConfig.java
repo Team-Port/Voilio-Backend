@@ -1,7 +1,5 @@
 package com.techeer.port.voilio.global.config.security;
 
-import com.techeer.port.voilio.global.config.security.JwtAuthenticationFilter;
-import com.techeer.port.voilio.global.config.security.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,8 +36,7 @@ public class SecurityConfig {
         .permitAll()
         .and()
         .addFilterBefore(
-            new JwtAuthenticationFilter(jwtProvider),
-            UsernamePasswordAuthenticationFilter.class);
+            new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

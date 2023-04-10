@@ -17,12 +17,14 @@ public class User extends BaseEntity {
   private Long id;
 
   @Column(unique = true)
-  @NotBlank private String email;
+  @NotBlank
+  private String email;
 
   @NotBlank @Column private String password;
 
   @Column(unique = true)
-  @NotBlank private String nickname;
+  @NotBlank
+  private String nickname;
 
   @Builder
   private User(Long id, String email, String password, String nickname) {
