@@ -7,16 +7,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.config.JwtToken;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "User API Document")
@@ -61,7 +66,7 @@ public class UserController {
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
   public ResponseEntity<ResultResponse> getUserById(@PathVariable("user_id") Long userId) {
-    User user = userService.getUserById(userId);
+    User user = userService.getUser(userId);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
     resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
 
@@ -77,4 +82,16 @@ public class UserController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+
+  @PostMapping("/login")
+  public ResponseEntity<JwtToken> login(@RequestBody Map<String, String> loginForm) {
+    JwtToken token = userService.login(loginForm.get("email"), loginForm.get("password"));
+
+//    ResultResponse<JwtToken> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, token);
+//    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
+//    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    return ResponseEntity.ok(token);
+  }
+
 }
