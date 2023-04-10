@@ -19,9 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "User API Document")
@@ -83,15 +80,13 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-
   @PostMapping("/login")
   public ResponseEntity<JwtToken> login(@RequestBody Map<String, String> loginForm) {
     JwtToken token = userService.login(loginForm.get("email"), loginForm.get("password"));
 
-//    ResultResponse<JwtToken> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, token);
-//    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
-//    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    //    ResultResponse<JwtToken> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, token);
+    //    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
+    //    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     return ResponseEntity.ok(token);
   }
-
 }

@@ -5,12 +5,10 @@ import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.techeer.port.voilio.global.config.JwtToken;
 import com.techeer.port.voilio.global.config.JwtTokenProvider;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -57,18 +55,19 @@ public class UserService {
     userRepository.save(user);
   }
 
-
   public JwtToken login(String email, String password) {
     User user = getUser(email);
     String encodedPwd = user.getPassword();
 
-    if(!passwordEncoder.matches(password, encodedPwd)){
+    if (!passwordEncoder.matches(password, encodedPwd)) {
       throw new InvalidPassword();
     }
 
     // Authentication 객체 생성
-    UsernamePasswordAuthenticationToken authenticationToken =  new UsernamePasswordAuthenticationToken(email, password);
-    Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+    UsernamePasswordAuthenticationToken authenticationToken =
+        new UsernamePasswordAuthenticationToken(email, password);
+    Authentication authentication =
+        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
     // 검증된 인증 정보로 JWT 토큰 생성
     JwtToken token = jwtTokenProvider.generateToken(authentication);
