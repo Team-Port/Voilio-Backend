@@ -4,10 +4,12 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.techeer.port.voilio.domain.user.dto.request.UserRequest;
+import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.service.AuthService;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
+import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,16 +32,10 @@ public class UserController {
   private final UserService userService;
   private final JwtProvider jwtProvider;
 
-  @PostMapping("/join")
-  @Operation(summary = "회원 생성", description = "회원 생성 메서드입니다.")
-  public ResponseEntity<ResultResponse> createUser(@Valid @RequestBody UserRequest userRequest)
-      throws Exception {
-    userService.registerUser(userRequest);
-    ResultResponse<User> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(UserController.class).createUser(userRequest)).withSelfRel());
-
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  @GetMapping("/me")
+  public ResponseEntity<UserResponse> getMyMemberInfo() {
+    UserResponse myInfoBySecurity = userService.getMyInfoBySecurity();
+    return ResponseEntity.ok((myInfoBySecurity));
   }
 
   @GetMapping("/list")
@@ -81,13 +77,5 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @PostMapping("/login")
-  public ResponseEntity<ResultResponse> login(@RequestBody Map<String, String> loginForm) {
-    String createdToken = userService.login(loginForm.get("email"), loginForm.get("password"));
 
-    ResultResponse<?> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, createdToken);
-    resultResponse.add(linkTo(methodOn(UserController.class).login(loginForm)).withSelfRel());
-
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  }
 }
