@@ -38,4 +38,4 @@ logging:
       hibernate: info
 
 jwt:
-  token: masdfafqawf^65wdsadasdcafafafaFEFFA1!!!dfefaefGegegege$3edw2ewfaf@rfefa
+  secret: masdfafqawf65wdsadadcdwgzqpfoqmdyrkvuapfcjTTOwkfpOEsdcafafafaFEFFA1dfefaefGeAOgegIge3edw2ewfaffefa
