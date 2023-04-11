@@ -25,23 +25,22 @@ public class User extends BaseEntity implements UserDetails {
   @Column(name = "user_id")
   private Long id;
 
-  @Column(unique = true)
+  @Column(nullable = false)
   @NotBlank
   private String email;
 
-  @NotBlank @Column private String password;
+  @NotBlank @Column(nullable = false) private String password;
 
-  @Column(unique = true)
+  @Column(nullable = false)
   @NotBlank
   private String nickname;
 
-  @ElementCollection(fetch = FetchType.EAGER) // roles 컬렉션
-  @Builder.Default
-  private List<String> roles = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private Authority authority;
 
-  @Override // 사용자의 권한 목록 리턴
+  @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    return null;
   }
 
   @Override
