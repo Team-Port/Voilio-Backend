@@ -6,17 +6,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.service.AuthService;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
-import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -76,6 +72,4 @@ public class UserController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
-
-
 }

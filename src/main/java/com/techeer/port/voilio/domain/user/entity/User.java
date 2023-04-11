@@ -1,15 +1,11 @@
 package com.techeer.port.voilio.domain.user.entity;
 
 import com.techeer.port.voilio.global.common.BaseEntity;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -29,7 +25,9 @@ public class User extends BaseEntity implements UserDetails {
   @NotBlank
   private String email;
 
-  @NotBlank @Column(nullable = false) private String password;
+  @NotBlank
+  @Column(nullable = false)
+  private String password;
 
   @Column(nullable = false)
   @NotBlank

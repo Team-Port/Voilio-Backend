@@ -2,7 +2,6 @@ package com.techeer.port.voilio.domain.user.dto.request;
 
 import com.techeer.port.voilio.domain.user.entity.Authority;
 import com.techeer.port.voilio.domain.user.entity.User;
-import java.util.Collections;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,17 +22,18 @@ public class UserRequest {
         .email(email)
         .password(password)
         .nickname(nickname)
-            .authority(Authority.ROLE_USER)
+        .authority(Authority.ROLE_USER)
         .build();
   }
+
   public User toEntity(PasswordEncoder passwordEncoder) {
     return User.builder()
-            .id(id)
-            .email(email)
-            .password(passwordEncoder.encode(password))
-            .nickname(nickname)
-            .authority(Authority.ROLE_USER)
-            .build();
+        .id(id)
+        .email(email)
+        .password(passwordEncoder.encode(password))
+        .nickname(nickname)
+        .authority(Authority.ROLE_USER)
+        .build();
   }
 
   public void setUserPassword(String encodedPassword) {
