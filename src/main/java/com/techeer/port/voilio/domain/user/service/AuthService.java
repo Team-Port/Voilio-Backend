@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.rmi.AlreadyBoundException;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,9 +25,9 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
 
-  public UserResponse signup(UserRequest requestDto) {
+  public UserResponse signup(UserRequest requestDto) throws AlreadyBoundException {
     if (userRepository.existsByEmail(requestDto.getEmail())) {
-      throw new RuntimeException("이미 가입되어 있는 유저입니다");
+      throw new AlreadyBoundException();
     }
 
     User user = requestDto.toEntity(passwordEncoder);
@@ -34,7 +36,6 @@ public class AuthService {
 
   public TokenDto login(UserRequest requestDto) {
     UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
-
     Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
     return jwtProvider.generateTokenDto(authentication);
