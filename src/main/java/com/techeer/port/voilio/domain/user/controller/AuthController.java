@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.rmi.AlreadyBoundException;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<ResultResponse<UserResponse>> signup(@RequestBody UserRequest userRequest) {
+  public ResponseEntity<ResultResponse<UserResponse>> signup(@RequestBody UserRequest userRequest) throws AlreadyBoundException {
     UserResponse userResponse = authService.signup(userRequest);
     ResultResponse<UserResponse> resultResponse =
         new ResultResponse<>(USER_REGISTRATION_SUCCESS, userResponse);
