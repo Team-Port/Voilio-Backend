@@ -1,5 +1,9 @@
 package com.techeer.port.voilio.domain.board.service;
 
+import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.techeer.port.voilio.domain.board.controller.BoardController;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
@@ -11,16 +15,12 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.techeer.port.voilio.global.mapper.AllMapper;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,11 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FIND_SUCCESS;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 @Transactional
@@ -110,8 +105,17 @@ public class BoardService {
   }
 
   public ResultResponse<List<EntityModel<Board>>> findAllBoard() {
-    List<EntityModel<BoardFindAllDevResponse>> boardEntities =  allMapper.toDto(boardRepository.findAll()).stream().map(boardFindAllDevResponse ->
-      EntityModel.of(boardFindAllDevResponse, linkTo(methodOn(BoardController.class).findBoardById(boardFindAllDevResponse.getBoard().getId())).withSelfRel())).collect(Collectors.toList());
-    return new ResultResponse<>(BOARD_FINDALL_SUCCESS,boardEntities);
+    List<EntityModel<BoardFindAllDevResponse>> boardEntities =
+        allMapper.toDto(boardRepository.findAll()).stream()
+            .map(
+                boardFindAllDevResponse ->
+                    EntityModel.of(
+                        boardFindAllDevResponse,
+                        linkTo(
+                                methodOn(BoardController.class)
+                                    .findBoardById(boardFindAllDevResponse.getBoard().getId()))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
+    return new ResultResponse<>(BOARD_FINDALL_SUCCESS, boardEntities);
   }
 }
