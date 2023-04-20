@@ -207,19 +207,8 @@ public class BoardController {
 
   @GetMapping("/dev/lists")
   @Operation(summary = "모든 게시물 출력", description = "개발용 모든 게시물을 출력하는 메서드입니다.")
-  public ResponseEntity<EntityModel<ResultResponse<List<EntityModel<BoardResponse>>>>>
-      findAllBoard() {
-    List<EntityModel<BoardResponse>> boards =
-        boardService.findAllBoard().stream()
-            .map(
-                board ->
-                    EntityModel.of(
-                        board,
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                            .withSelfRel()))
-            .collect(Collectors.toList());
-    ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
-        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
+  public ResponseEntity<EntityModel<ResultResponse<List<EntityModel<Board>>>>> findAllBoard() {
+    ResultResponse<List<EntityModel<Board>>> resultResponse = boardService.findAllBoard();
 
     return ResponseEntity.status(HttpStatus.OK)
         .body(
