@@ -3,6 +3,7 @@ package com.techeer.port.voilio.domain.board.service;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
@@ -11,12 +12,19 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import com.techeer.port.voilio.s3.util.S3Manager;
 import lombok.RequiredArgsConstructor;
+import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -26,6 +34,7 @@ public class BoardService {
   private final BoardRepository boardRepository;
   private final UserRepository userRepository;
   private final BoardMapper boardMapper;
+  private final S3Manager s3Manager;
 
   public void deleteBoard(Long board_id) {
     Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
@@ -89,5 +98,13 @@ public class BoardService {
       else throw new NotFoundBoard();
     }
     return result;
+  }
+
+  public UploadFileResponse uploadFiles(MultipartFile videoFile,MultipartFile thumbnailFile) {
+    try {
+      return boardMapper.toDto(s3Manager.upload(videoFile,"/video"),s3Manager.upload(thumbnailFile,"/thumbnail"));
+    } catch (IOException e) {
+      throw new ConvertException();
+    }
   }
 }
