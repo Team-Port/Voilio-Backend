@@ -91,7 +91,7 @@ public class BoardService {
     return result;
   }
 
-  public List<BoardResponse> findAllBoard(){
+  public List<BoardResponse> findAllBoard() {
     List<Board> boards = boardRepository.findAll();
     return boardMapper.toDto(boards);
   }
