@@ -25,6 +25,8 @@ public enum ResultCode {
   UPDATE_COMMENT_SUCCESS("C002", "302", "댓글이 정상적으로 수정되었습니다."),
   DELETE_COMMENT_SUCCESS("C003", "303", "댓글이 정상적으로 삭제되었습니다."),
   GET_COMMENT_SUCCESS("C004", "304", "댓글이 정상적으로 출력되었습니다."),
+
+  FILE_UPLOAD_SUCCESS("F001","201","파일을 정상적으로 등록했습니다."),
   ;
 
   private final String code;
