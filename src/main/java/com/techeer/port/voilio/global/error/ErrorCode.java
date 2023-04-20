@@ -21,8 +21,8 @@ public enum ErrorCode {
   // comment
   COMMENT_NOT_FOUND_EXCEPTION(400, "C001", "댓글을 찾을 수 없음"),
 
-  CONVERT_FILE_ERROR(400,"S001","파일 변환 실패"),
-  UPLOAD_FILE_ERROR(400,"S002","파일이 존재하지 않음"),
+  CONVERT_FILE_ERROR(400, "S001", "파일 변환 실패"),
+  UPLOAD_FILE_ERROR(400, "S002", "파일이 존재하지 않음"),
   ;
   private final int status;
   private final String code;

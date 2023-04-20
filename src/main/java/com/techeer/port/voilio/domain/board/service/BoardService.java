@@ -12,12 +12,9 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-
-import java.io.File;
+import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.List;
-
-import com.techeer.port.voilio.s3.util.S3Manager;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
@@ -100,9 +97,10 @@ public class BoardService {
     return result;
   }
 
-  public UploadFileResponse uploadFiles(MultipartFile videoFile,MultipartFile thumbnailFile) {
+  public UploadFileResponse uploadFiles(MultipartFile videoFile, MultipartFile thumbnailFile) {
     try {
-      return boardMapper.toDto(s3Manager.upload(videoFile,"/video"),s3Manager.upload(thumbnailFile,"/thumbnail"));
+      return boardMapper.toDto(
+          s3Manager.upload(videoFile, "/video"), s3Manager.upload(thumbnailFile, "/thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }

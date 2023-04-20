@@ -17,8 +17,6 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -213,11 +211,19 @@ public class BoardController {
     return ResponseEntity.ok().body(resultResponse);
   }
 
-  @PostMapping(value = "/files",consumes = "multipart/form-data")
-  public ResponseEntity<EntityModel<ResultResponse<UploadFileResponse>>> uploadVideo(@RequestParam(value = "video",required = false)MultipartFile videoFile,@RequestParam(value = "thumbnail",required = false)MultipartFile thumbnailFile) {
+  @PostMapping(value = "/files", consumes = "multipart/form-data")
+  public ResponseEntity<EntityModel<ResultResponse<UploadFileResponse>>> uploadVideo(
+      @RequestParam(value = "video", required = false) MultipartFile videoFile,
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
     UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
-    ResultResponse<UploadFileResponse> resultResponse = new ResultResponse<>(FILE_UPLOAD_SUCCESS, uploadFile);
+    ResultResponse<UploadFileResponse> resultResponse =
+        new ResultResponse<>(FILE_UPLOAD_SUCCESS, uploadFile);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(EntityModel.of(resultResponse, linkTo(methodOn(BoardController.class).uploadVideo(videoFile, thumbnailFile)).withSelfRel()));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            EntityModel.of(
+                resultResponse,
+                linkTo(methodOn(BoardController.class).uploadVideo(videoFile, thumbnailFile))
+                    .withSelfRel()));
   }
 }
