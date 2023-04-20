@@ -100,7 +100,7 @@ public class BoardService {
   public UploadFileResponse uploadFiles(MultipartFile videoFile, MultipartFile thumbnailFile) {
     try {
       return boardMapper.toDto(
-          s3Manager.upload(videoFile, "/video"), s3Manager.upload(thumbnailFile, "/thumbnail"));
+          s3Manager.upload(videoFile, "video"), s3Manager.upload(thumbnailFile, "thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }
