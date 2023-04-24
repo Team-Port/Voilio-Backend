@@ -41,7 +41,7 @@ public class AuthController {
   public ResponseEntity<ResultResponse<TokenDto>> login(@RequestBody UserRequest userRequest) throws AlreadyBoundException {
     TokenDto tokenDto = authService.login(userRequest);
     ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
-    resultResponse.add(linkTo(methodOn(AuthController.class).signup(userRequest)).withSelfRel());
+    resultResponse.add(linkTo(methodOn(AuthController.class).login(userRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
