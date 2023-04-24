@@ -38,7 +38,8 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ResultResponse<TokenDto>> login(@RequestBody UserRequest userRequest) throws AlreadyBoundException {
+  public ResponseEntity<ResultResponse<TokenDto>> login(@RequestBody UserRequest userRequest)
+      throws AlreadyBoundException {
     TokenDto tokenDto = authService.login(userRequest);
     ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
     resultResponse.add(linkTo(methodOn(AuthController.class).login(userRequest)).withSelfRel());
