@@ -19,4 +19,5 @@ public class BoardResponse {
   private String thumbnail_url;
   private LocalDateTime updated_at;
   private LocalDateTime created_at;
+  private Long user_id;
 }

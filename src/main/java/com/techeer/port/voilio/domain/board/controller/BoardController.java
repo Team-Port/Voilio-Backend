@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,14 +103,35 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @PostMapping("/create")
+  @PostMapping(value = "/create", consumes = "multipart/form-data")
   @Operation(summary = "게시물 생성", description = "게시물 생성 메서드입니다.")
   public ResponseEntity<ResultResponse> createBoard(
-      @Validated @RequestBody BoardCreateRequest boardCreateRequest) {
+      @RequestParam(value = "user_id") Long user_id,
+      @RequestParam(value = "title") String title,
+      @RequestParam(value = "content") String content,
+      @RequestParam(value = "category1") Category category1,
+      @RequestParam(value = "category2") Category category2,
+      @RequestParam(value = "video") MultipartFile videoFile,
+      @RequestParam(value = "thumbnail") MultipartFile thumbnailFile) {
+    UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
+    BoardCreateRequest boardCreateRequest =
+        BoardCreateRequest.builder()
+            .user_id(user_id)
+            .title(title)
+            .content(content)
+            .category1(category1)
+            .category2(category2)
+            .video_url(uploadFile.getVideo_url())
+            .thumbnail_url(uploadFile.getThumbnail_url())
+            .build();
     boardService.createBoard(boardCreateRequest);
     ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(BoardController.class).createBoard(boardCreateRequest)).withSelfRel());
+        linkTo(
+                methodOn(BoardController.class)
+                    .createBoard(
+                        user_id, title, content, category1, category2, videoFile, thumbnailFile))
+            .withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 

@@ -24,7 +24,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Optional<Board> findBoardById(@Param("board_id") Long id);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted = :isDeleted AND b.isPublic = :isPublic ORDER BY"
+      "SELECT b FROM Board b WHERE b.isDeleted is false AND b.isPublic is true ORDER BY"
           + " b.createAt DESC")
   Page<Board> findAllBoard(Pageable pageable);
 
