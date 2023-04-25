@@ -6,7 +6,6 @@ import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;
