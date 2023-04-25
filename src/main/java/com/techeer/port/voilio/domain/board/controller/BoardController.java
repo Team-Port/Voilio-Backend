@@ -7,17 +7,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
@@ -25,15 +28,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Board", description = "Board API Document")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/boards")
+@Slf4j
 public class BoardController {
 
   private final BoardService boardService;
   private final BoardMapper boardMapper;
+  private final S3Manager s3Manager;
 
   @GetMapping("/{board_id}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
@@ -203,5 +209,21 @@ public class BoardController {
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
+  }
+
+  @PostMapping(value = "/files", consumes = "multipart/form-data")
+  public ResponseEntity<EntityModel<ResultResponse<UploadFileResponse>>> uploadVideo(
+      @RequestParam(value = "video", required = false) MultipartFile videoFile,
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
+    UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
+    ResultResponse<UploadFileResponse> resultResponse =
+        new ResultResponse<>(FILE_UPLOAD_SUCCESS, uploadFile);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            EntityModel.of(
+                resultResponse,
+                linkTo(methodOn(BoardController.class).uploadVideo(videoFile, thumbnailFile))
+                    .withSelfRel()));
   }
 }
