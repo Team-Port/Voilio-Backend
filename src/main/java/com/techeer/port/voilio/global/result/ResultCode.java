@@ -14,6 +14,7 @@ public enum ResultCode {
   GET_ALL_USER_SUCCESS("U002", "200", "모든 사용자를 정상적으로 불러왔습니다."),
   GET_USER_SUCCESS("U003", "200", "지정 사용자를 정상적으로 불러왔습니다."),
   DELETE_USER_SUCCESS("U004", "200", "지정 사용자를 정상적으로 삭제했습니다."),
+  LOGIN_SUCCESS("U005", "200", "정상적으로 로그인 되었습니다."),
 
   BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
 

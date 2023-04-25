@@ -36,3 +36,6 @@ logging:
   level:
     org:
       hibernate: info
+
+jwt:
+  secret: masdfafqawf65wdsadadcdwgzqpfoqmdyrkvuapfcjTTOwkfpOEsdcafafafaFEFFA1dfefaefGeAOgegIge3edw2ewfaffefa
