@@ -20,4 +20,5 @@ public class BoardResponse {
   private LocalDateTime updated_at;
   private LocalDateTime created_at;
   private Long user_id;
+  private String nickname;
 }

@@ -20,7 +20,7 @@ public class BoardMapper {
         .thumbnail_url(board.getThumbnail_url())
         .updated_at(board.getUpdateAt())
         .created_at(board.getCreateAt())
-        .user_id(board.getUser().getId())
+        .user_id(board.getUser().getId()).nickname(board.getUser().getNickname())
         .build();
   }
 
