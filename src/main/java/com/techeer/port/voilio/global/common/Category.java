@@ -13,7 +13,8 @@ public enum Category {
   PYTHON(5),
   REACT(6),
   DANCE(7),
-  LANGUAGE(8);
+  LANGUAGE(8),
+  ETC(9);
 
   private final int value;
 }
