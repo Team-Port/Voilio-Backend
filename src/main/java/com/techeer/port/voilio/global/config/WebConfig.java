@@ -10,11 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings(final CorsRegistry registry) {
-    registry
-        .addMapping("/**")
-        .allowedOrigins("http://localhost:3000", "http://www.voilio.site")
-        .allowedMet가hods(ALLOWED_METHOD_NAMES.split(","))
-        .allowedHeaders("*")
-        .allowCredentials(true);
+    registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000", "http://www.voilio.site")
+            .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+            .allowedHeaders("*")
+            .allowCredentials(true);
   }
 }
