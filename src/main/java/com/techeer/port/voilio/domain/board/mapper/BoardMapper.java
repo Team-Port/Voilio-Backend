@@ -21,6 +21,7 @@ public class BoardMapper {
         .updated_at(board.getUpdateAt())
         .created_at(board.getCreateAt())
         .user_id(board.getUser().getId())
+        .nickname(board.getUser().getNickname())
         .build();
   }
 
