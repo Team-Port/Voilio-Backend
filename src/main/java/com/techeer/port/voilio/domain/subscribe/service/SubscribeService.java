@@ -1,17 +1,13 @@
 package com.techeer.port.voilio.domain.subscribe.service;
 
-import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +25,7 @@ public class SubscribeService {
 
         Subscribe newFollower = new Subscribe();
         newFollower.setUser(user);
-        newFollower.setFollower(follower);
+        newFollower.setSubscriber(follower);
         subscribeRepository.save(newFollower);
     }
 

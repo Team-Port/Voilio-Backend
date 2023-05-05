@@ -1,7 +1,5 @@
 package com.techeer.port.voilio.domain.subscribe.dto.request;
 
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
