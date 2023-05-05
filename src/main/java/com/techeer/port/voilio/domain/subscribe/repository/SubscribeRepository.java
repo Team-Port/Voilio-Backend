@@ -1,2 +1,3 @@
-package com.techeer.port.voilio.domain.subscribe.repository;public interface SubscribeRepository {
-}
+package com.techeer.port.voilio.domain.subscribe.repository;
+
+public interface SubscribeRepository {}
