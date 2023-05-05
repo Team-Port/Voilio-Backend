@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.entity;
 
+<<<<<<< HEAD
 import com.techeer.port.voilio.domain.user.entity.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,3 +34,6 @@ public class Subscribe {
     @JoinColumn(name = "subscriber_id")
     private User subscriber;
 }
+=======
+public class Subscribe {}
+>>>>>>> subscribe

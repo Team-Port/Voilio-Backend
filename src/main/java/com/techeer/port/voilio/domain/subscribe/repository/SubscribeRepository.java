@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.repository;
 
+<<<<<<< HEAD
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.user.entity.User;
@@ -21,3 +22,6 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     Page<Subscribe> findFollowersByNickname(@Param("nickname") String nickname, Pageable pageable);
 
 }
+=======
+public interface SubscribeRepository {}
+>>>>>>> subscribe

@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.service;
 
+<<<<<<< HEAD
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
@@ -50,3 +51,6 @@ public class SubscribeService {
     }
 
 }
+=======
+public class SubscribeService {}
+>>>>>>> subscribe

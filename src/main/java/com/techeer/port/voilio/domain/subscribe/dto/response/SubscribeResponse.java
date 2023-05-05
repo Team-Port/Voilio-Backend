@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.dto.response;
 
+<<<<<<< HEAD
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,3 +16,6 @@ public class SubscribeResponse {
     private String follower_nickname;
     private LocalDateTime localDateTime;
 }
+=======
+public class SubscribeResponse {}
+>>>>>>> subscribe

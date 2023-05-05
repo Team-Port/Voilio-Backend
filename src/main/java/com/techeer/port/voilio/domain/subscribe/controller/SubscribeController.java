@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
+<<<<<<< HEAD
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.COMMENT_CREATED_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_SUCCESS;
@@ -100,3 +101,6 @@ public class SubscribeController {
         return ResponseEntity.ok().body(resultResponse);
     }
 }
+=======
+public class SubscribeController {}
+>>>>>>> subscribe

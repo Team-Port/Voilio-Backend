@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.dto.request;
 
+<<<<<<< HEAD
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
@@ -21,3 +22,6 @@ public class SubscribeRequest {
     @NotNull
     private Long followerId;
 }
+=======
+public class SubscribeRequest {}
+>>>>>>> subscribe
