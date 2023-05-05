@@ -34,60 +34,64 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/subscribe")
 public class SubscribeController {
-    @Autowired
-    private SubscribeService subscribeService;
-    @Autowired
-    private SubscribeMapper subscribeMapper;
+  @Autowired private SubscribeService subscribeService;
+  @Autowired private SubscribeMapper subscribeMapper;
 
-    @PostMapping("/follow")
-    public ResponseEntity<ResultResponse> follow(@Valid @RequestBody SubscribeRequest subscribeRequest) {
+  @PostMapping("/follow")
+  public ResponseEntity<ResultResponse> follow(
+      @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-        subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
-        ResultResponse<Subscribe> resultResponse =
-            new ResultResponse<>(SUBSCRIBE_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
+    subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
-    @DeleteMapping("/unfollow")
-    public ResponseEntity<ResultResponse> unfollow(@Valid @RequestBody SubscribeRequest subscribeRequest) {
+  @DeleteMapping("/unfollow")
+  public ResponseEntity<ResultResponse> unfollow(
+      @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-        subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
-        ResultResponse<Subscribe> resultResponse =
-            new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
+    subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
-    @GetMapping("/lists/@{nickname}")
-    public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
-        @PathVariable("nickname") String nickname, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-        Page<Subscribe> followers = subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
-        List<EntityModel<SubscribeResponse>> followerLists =
-            followers.getContent().stream()
-                .map(
-                    subscribe ->
-                        EntityModel.of(
-                            subscribeMapper.toDto(subscribe),
-                            linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size))
-                                .withSelfRel()))
-                .collect(Collectors.toList());
+  @GetMapping("/lists/@{nickname}")
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
+      @PathVariable("nickname") String nickname,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size) {
+    Page<Subscribe> followers =
+        subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
+    List<EntityModel<SubscribeResponse>> followerLists =
+        followers.getContent().stream()
+            .map(
+                subscribe ->
+                    EntityModel.of(
+                        subscribeMapper.toDto(subscribe),
+                        linkTo(
+                                methodOn(SubscribeController.class)
+                                    .followerlists(nickname, page, size))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
 
-        Pagination<EntityModel<SubscribeResponse>> result =
-            new Pagination<>(
-                followerLists,
-                followers.getNumber(),
-                followers.getSize(),
-                followers.getTotalElements(),
-                followers.getTotalPages(),
-                linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size)).withSelfRel());
+    Pagination<EntityModel<SubscribeResponse>> result =
+        new Pagination<>(
+            followerLists,
+            followers.getNumber(),
+            followers.getSize(),
+            followers.getTotalElements(),
+            followers.getTotalPages(),
+            linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size))
+                .withSelfRel());
 
-        ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
-            new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-        return ResponseEntity.ok().body(resultResponse);
-    }
+    ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    return ResponseEntity.ok().body(resultResponse);
+  }
 }

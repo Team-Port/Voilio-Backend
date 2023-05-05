@@ -9,8 +9,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class SubscribeResponse {
-    private Long SubscribeId;
-    private String user_nickname;
-    private String follower_nickname;
-    private LocalDateTime localDateTime;
+  private Long SubscribeId;
+  private String user_nickname;
+  private String follower_nickname;
+  private LocalDateTime localDateTime;
 }

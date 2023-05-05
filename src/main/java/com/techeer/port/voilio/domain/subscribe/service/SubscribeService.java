@@ -13,36 +13,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubscribeService {
 
-    @Autowired
-    private SubscribeRepository subscribeRepository;
+  @Autowired private SubscribeRepository subscribeRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    public void follow(Long user_id, Long follow_id) {
-        User user = userRepository.findById(user_id).orElse(null);
-        User follower = userRepository.findById(follow_id).orElse(null);
+  public void follow(Long user_id, Long follow_id) {
+    User user = userRepository.findById(user_id).orElse(null);
+    User follower = userRepository.findById(follow_id).orElse(null);
 
-        Subscribe newFollower = new Subscribe();
-        newFollower.setUser(user);
-        newFollower.setSubscriber(follower);
-        subscribeRepository.save(newFollower);
+    Subscribe newFollower = new Subscribe();
+    newFollower.setUser(user);
+    newFollower.setSubscriber(follower);
+    subscribeRepository.save(newFollower);
+  }
+
+  public void delete(Long user_id, Long follow_id) {
+    User user = userRepository.findById(user_id).orElse(null);
+    User follower = userRepository.findById(follow_id).orElse(null);
+
+    Subscribe followerToDelete = subscribeRepository.findByUserAndFollower(user, follower);
+    subscribeRepository.delete(followerToDelete);
+  }
+
+  public Page<Subscribe> findFollowersByNickname(String nickname, Pageable pageable) {
+    Page<Subscribe> result = subscribeRepository.findFollowersByNickname(nickname, pageable);
+    if (result.isEmpty()) {
+      throw new NotFoundBoard();
     }
-
-    public void delete(Long user_id, Long follow_id) {
-        User user = userRepository.findById(user_id).orElse(null);
-        User follower = userRepository.findById(follow_id).orElse(null);
-
-        Subscribe followerToDelete = subscribeRepository.findByUserAndFollower(user, follower);
-        subscribeRepository.delete(followerToDelete);
-    }
-
-    public Page<Subscribe> findFollowersByNickname(String nickname, Pageable pageable) {
-        Page<Subscribe> result = subscribeRepository.findFollowersByNickname(nickname, pageable);
-        if (result.isEmpty()) {
-            throw new NotFoundBoard();
-        }
-        return result;
-    }
-
+    return result;
+  }
 }
