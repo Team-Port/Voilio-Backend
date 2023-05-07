@@ -11,8 +11,11 @@ import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +24,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +48,8 @@ public class BoardController {
   private final BoardService boardService;
   private final BoardMapper boardMapper;
   private final S3Manager s3Manager;
+  private final JwtProvider jwtProvider;
+  private final UserService userService;
 
   @GetMapping("/{board_id}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
@@ -203,28 +214,80 @@ public class BoardController {
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findBoardByUserId(
       @PathVariable("nickname") String nickname,
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "30") int size) {
-    Page<Board> boardPage =
-        boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
-    List<EntityModel<BoardResponse>> boardLists =
-        boardPage.getContent().stream()
-            .map(
-                board ->
-                    EntityModel.of(
-                        boardMapper.toDto(board),
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                            .withSelfRel()))
-            .collect(Collectors.toList());
+      @RequestParam(defaultValue = "30") int size,
+      @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorizationHeader
+  ) {
 
-    Pagination<EntityModel<BoardResponse>> result =
-        new Pagination<>(
-            boardLists,
-            boardPage.getNumber(),
-            boardPage.getSize(),
-            boardPage.getTotalElements(),
-            boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size))
-                .withSelfRel());
+    Long currentLoginUserNickname = null;
+
+    if(!"".equals(authorizationHeader)) {
+      String accessToken = authorizationHeader.substring(7); // "Bearer " 이후의 값만 추출
+
+      // 토큰이 유효한지 검증
+      if (!jwtProvider.validateToken(accessToken)) {
+        throw new RuntimeException("유효하지 않은 토큰입니다.");
+      }
+
+      // 현재 로그인한 사용자 정보 가져오기
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      Long currentUserNickname = Long.valueOf(userDetails.getUsername());
+
+      // 현재 로그인한 사용자와 요청한 사용자가 같은지 비교
+      currentLoginUserNickname = currentUserNickname;
+    }
+    Pagination<EntityModel<BoardResponse>> result = null;
+
+    if("".equals(authorizationHeader) || currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
+      Page<Board> boardPage =
+          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+      List<EntityModel<BoardResponse>> boardLists =
+          boardPage.getContent().stream()
+              .map(
+                  board ->
+                      EntityModel.of(
+                          boardMapper.toDto(board),
+                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                              .withSelfRel()))
+              .collect(Collectors.toList());
+
+      Pagination<EntityModel<BoardResponse>> resultNoAuth =
+          new Pagination<>(
+              boardLists,
+              boardPage.getNumber(),
+              boardPage.getSize(),
+              boardPage.getTotalElements(),
+              boardPage.getTotalPages(),
+              linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size, authorizationHeader))
+                  .withSelfRel());
+
+      result = resultNoAuth;
+    }
+    else {
+      Page<Board> boardPage =
+          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+      List<EntityModel<BoardResponse>> boardLists =
+          boardPage.getContent().stream()
+              .map(
+                  board ->
+                      EntityModel.of(
+                          boardMapper.toDto(board),
+                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                              .withSelfRel()))
+              .collect(Collectors.toList());
+
+      Pagination<EntityModel<BoardResponse>> resultAuth =
+          new Pagination<>(
+              boardLists,
+              boardPage.getNumber(),
+              boardPage.getSize(),
+              boardPage.getTotalElements(),
+              boardPage.getTotalPages(),
+              linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size, authorizationHeader))
+                  .withSelfRel());
+
+      result = resultAuth;
+    }
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
