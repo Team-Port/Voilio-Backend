@@ -36,6 +36,7 @@ public class UserService {
     User user = userRepository.findUserByEmail(email).orElseThrow(NotFoundUser::new);
     return user;
   }
+
   public Long getUserByNickname(String nickname) {
     User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
     return user.getId();

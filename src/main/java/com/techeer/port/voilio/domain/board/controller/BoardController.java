@@ -11,7 +11,6 @@ import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
-import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
@@ -24,15 +23,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -215,12 +211,12 @@ public class BoardController {
       @PathVariable("nickname") String nickname,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size,
-      @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorizationHeader
-  ) {
+      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
+          String authorizationHeader) {
 
     Long currentLoginUserNickname = null;
 
-    if(!"".equals(authorizationHeader)) {
+    if (!"".equals(authorizationHeader)) {
       String accessToken = authorizationHeader.substring(7); // "Bearer " 이후의 값만 추출
 
       // 토큰이 유효한지 검증
@@ -238,7 +234,8 @@ public class BoardController {
     }
     Pagination<EntityModel<BoardResponse>> result = null;
 
-    if("".equals(authorizationHeader) || currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
+    if ("".equals(authorizationHeader)
+        || currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
       Page<Board> boardPage =
           boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
       List<EntityModel<BoardResponse>> boardLists =
@@ -258,12 +255,13 @@ public class BoardController {
               boardPage.getSize(),
               boardPage.getTotalElements(),
               boardPage.getTotalPages(),
-              linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size, authorizationHeader))
+              linkTo(
+                      methodOn(BoardController.class)
+                          .findBoardByUserId(nickname, page, size, authorizationHeader))
                   .withSelfRel());
 
       result = resultNoAuth;
-    }
-    else {
+    } else {
       Page<Board> boardPage =
           boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
       List<EntityModel<BoardResponse>> boardLists =
@@ -283,7 +281,9 @@ public class BoardController {
               boardPage.getSize(),
               boardPage.getTotalElements(),
               boardPage.getTotalPages(),
-              linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size, authorizationHeader))
+              linkTo(
+                      methodOn(BoardController.class)
+                          .findBoardByUserId(nickname, page, size, authorizationHeader))
                   .withSelfRel());
 
       result = resultAuth;
