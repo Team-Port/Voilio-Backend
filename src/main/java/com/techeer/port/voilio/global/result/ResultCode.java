@@ -31,8 +31,7 @@ public enum ResultCode {
 
   SUBSCRIBE_SUCCESS("S001", "200", "팔로우 하였습니다."),
   UNSUBSCRIBE_SUCCESS("S002", "200", "팔로우를 취소하였습니다."),
-  SUBSCRIBE_FINDALL_SUCCESS("S003", "200", "팔로우 목록입니다.")
-  ;
+  SUBSCRIBE_FINDALL_SUCCESS("S003", "200", "팔로우 목록입니다.");
 
   private final String code;
   private final String status;
