@@ -21,15 +21,15 @@ import lombok.ToString;
 @Table(name = "subscribes")
 public class Subscribe {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "subscriber_id")
-    private User subscriber;
+  @ManyToOne
+  @JoinColumn(name = "subscriber_id")
+  private User subscriber;
 }

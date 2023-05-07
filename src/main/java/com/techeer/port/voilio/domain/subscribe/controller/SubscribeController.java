@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.UNSUBSCRIBE_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -34,37 +35,70 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/subscribe")
 public class SubscribeController {
-    @Autowired
-    private SubscribeService subscribeService;
-    @Autowired
-    private SubscribeMapper subscribeMapper;
+  @Autowired private SubscribeService subscribeService;
+  @Autowired private SubscribeMapper subscribeMapper;
 
-    @PostMapping("/follow")
-    public ResponseEntity<ResultResponse> follow(@Valid @RequestBody SubscribeRequest subscribeRequest) {
+  @PostMapping("/follow")
+  public ResponseEntity<ResultResponse> follow(
+      @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-        subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
-        ResultResponse<Subscribe> resultResponse =
-            new ResultResponse<>(SUBSCRIBE_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
+    subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
-    @DeleteMapping("/unfollow")
-    public ResponseEntity<ResultResponse> unfollow(@Valid @RequestBody SubscribeRequest subscribeRequest) {
+  @DeleteMapping("/unfollow")
+  public ResponseEntity<ResultResponse> unfollow(
+      @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-        subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
-        ResultResponse<Subscribe> resultResponse =
-            new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
-        resultResponse.add(
-            linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
+    subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
+<<<<<<< Updated upstream
+  @GetMapping("/lists/@{nickname}")
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
+      @PathVariable("nickname") String nickname,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size) {
+    Page<Subscribe> followers =
+        subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
+    List<EntityModel<SubscribeResponse>> followerLists =
+        followers.getContent().stream()
+            .map(
+                subscribe ->
+                    EntityModel.of(
+                        subscribeMapper.toDto(subscribe),
+                        linkTo(
+                                methodOn(SubscribeController.class)
+                                    .followerlists(nickname, page, size))
+                            .withSelfRel()))
+            .collect(Collectors.toList());
+
+    Pagination<EntityModel<SubscribeResponse>> result =
+        new Pagination<>(
+            followerLists,
+            followers.getNumber(),
+            followers.getSize(),
+            followers.getTotalElements(),
+            followers.getTotalPages(),
+            linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size))
+                .withSelfRel());
+
+    ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    return ResponseEntity.ok().body(resultResponse);
+  }
+=======
     @GetMapping("/lists/@{nickname}")
-    public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
+    public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerLists(
         @PathVariable("nickname") String nickname, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
         Page<Subscribe> followers = subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
         List<EntityModel<SubscribeResponse>> followerLists =
@@ -72,9 +106,7 @@ public class SubscribeController {
                 .map(
                     subscribe ->
                         EntityModel.of(
-                            subscribeMapper.toDto(subscribe),
-                            linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size))
-                                .withSelfRel()))
+                            subscribeMapper.toDto(subscribe)))
                 .collect(Collectors.toList());
 
         Pagination<EntityModel<SubscribeResponse>> result =
@@ -84,10 +116,11 @@ public class SubscribeController {
                 followers.getSize(),
                 followers.getTotalElements(),
                 followers.getTotalPages(),
-                linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size)).withSelfRel());
+                linkTo(methodOn(SubscribeController.class).followerLists(nickname, page, size)).withSelfRel());
 
         ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
-            new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+            new ResultResponse<>(SUBSCRIBE_FINDALL_SUCCESS, result);
         return ResponseEntity.ok().body(resultResponse);
     }
+>>>>>>> Stashed changes
 }
