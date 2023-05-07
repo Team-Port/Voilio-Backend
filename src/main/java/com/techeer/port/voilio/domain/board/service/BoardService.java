@@ -15,6 +15,7 @@ import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
@@ -87,7 +88,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
-    User user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNickname(nickname);
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
 
     if (result.isEmpty()) {
