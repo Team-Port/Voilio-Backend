@@ -31,15 +31,9 @@ public class SubscribeService {
     User user = userRepository.findById(user_id).orElse(null);
     User follower = userRepository.findById(follow_id).orElse(null);
 
-<<<<<<< Updated upstream
     Subscribe followerToDelete = subscribeRepository.findByUserAndFollower(user, follower);
     subscribeRepository.delete(followerToDelete);
   }
-=======
-        Subscribe followerToDelete = subscribeRepository.findByUserAndSubscriber(user, follower);
-        subscribeRepository.delete(followerToDelete);
-    }
->>>>>>> Stashed changes
 
   public Page<Subscribe> findFollowersByNickname(String nickname, Pageable pageable) {
     Page<Subscribe> result = subscribeRepository.findFollowersByNickname(nickname, pageable);

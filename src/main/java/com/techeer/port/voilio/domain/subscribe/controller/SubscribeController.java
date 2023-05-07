@@ -62,7 +62,6 @@ public class SubscribeController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-<<<<<<< Updated upstream
   @GetMapping("/lists/@{nickname}")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
       @PathVariable("nickname") String nickname,
@@ -96,31 +95,4 @@ public class SubscribeController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
   }
-=======
-    @GetMapping("/lists/@{nickname}")
-    public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerLists(
-        @PathVariable("nickname") String nickname, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-        Page<Subscribe> followers = subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
-        List<EntityModel<SubscribeResponse>> followerLists =
-            followers.getContent().stream()
-                .map(
-                    subscribe ->
-                        EntityModel.of(
-                            subscribeMapper.toDto(subscribe)))
-                .collect(Collectors.toList());
-
-        Pagination<EntityModel<SubscribeResponse>> result =
-            new Pagination<>(
-                followerLists,
-                followers.getNumber(),
-                followers.getSize(),
-                followers.getTotalElements(),
-                followers.getTotalPages(),
-                linkTo(methodOn(SubscribeController.class).followerLists(nickname, page, size)).withSelfRel());
-
-        ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
-            new ResultResponse<>(SUBSCRIBE_FINDALL_SUCCESS, result);
-        return ResponseEntity.ok().body(resultResponse);
-    }
->>>>>>> Stashed changes
 }
