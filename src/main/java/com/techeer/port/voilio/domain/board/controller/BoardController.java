@@ -250,7 +250,7 @@ public class BoardController {
     }
     Pagination<EntityModel<BoardResponse>> result = null;
 
-    if("".equals(authorizationHeader) || currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
+    if("".equals(authorizationHeader) || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
       Page<Board> boardPage =
           boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
       List<EntityModel<BoardResponse>> boardLists =
