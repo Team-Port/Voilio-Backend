@@ -42,7 +42,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> follow(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
@@ -54,7 +54,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unfollow(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getFollowerId());
+    subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
