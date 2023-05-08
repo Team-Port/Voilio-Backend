@@ -15,5 +15,5 @@ public class SubscribeRequest {
 
   @NotNull private Long userId;
 
-  @NotNull private Long followerId;
+  @NotNull private Long subscriberId;
 }
