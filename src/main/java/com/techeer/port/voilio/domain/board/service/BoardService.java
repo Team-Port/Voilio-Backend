@@ -45,6 +45,11 @@ public class BoardService {
     return boardMapper.toDto(board);
   }
 
+  public BoardResponse findBoardByIdExceptHide(Long board_id) {
+    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
+    return boardMapper.toDto(board);
+  }
+
   @Transactional
   public void createBoard(BoardCreateRequest boardCreateRequest) {
     User user =
@@ -90,6 +95,17 @@ public class BoardService {
   public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
     Optional<User> user = userRepository.findUserByNickname(nickname);
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
+
+    if (result.isEmpty()) {
+      if (user == null) throw new NotFoundUser();
+      else throw new NotFoundBoard();
+    }
+    return result;
+  }
+
+  public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
+    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable);
 
     if (result.isEmpty()) {
       if (user == null) throw new NotFoundUser();
