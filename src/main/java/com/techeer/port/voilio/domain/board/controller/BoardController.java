@@ -63,6 +63,18 @@ public class BoardController {
                 responseFormat,
                 linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
+  @GetMapping("/{nickname}/{board_id}")
+  public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardByIdExceptHide(
+      @PathVariable Long board_id,
+      @PathVariable String nickname) {
+    BoardResponse board = boardService.findBoardByIdExceptHide(board_id);
+    ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            EntityModel.of(
+                responseFormat,
+                linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board_id, nickname)).withSelfRel()));
+  }
 
   @PutMapping("/update/{boardId}")
   @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
