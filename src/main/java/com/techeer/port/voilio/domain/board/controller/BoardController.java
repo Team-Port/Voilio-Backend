@@ -277,14 +277,14 @@ public class BoardController {
     }
     else {
       Page<Board> boardPage =
-          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size));
       List<EntityModel<BoardResponse>> boardLists =
           boardPage.getContent().stream()
               .map(
                   board ->
                       EntityModel.of(
                           boardMapper.toDto(board),
-                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                          linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board.getId(), nickname))
                               .withSelfRel()))
               .collect(Collectors.toList());
 
