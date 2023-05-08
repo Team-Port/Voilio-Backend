@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.UNSUBSCRIBE_SUCCESS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -91,7 +92,7 @@ public class SubscribeController {
                 .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
-        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+        new ResultResponse<>(SUBSCRIBE_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
   }
 }
