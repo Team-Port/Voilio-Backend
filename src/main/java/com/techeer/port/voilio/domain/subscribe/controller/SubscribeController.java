@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_FINDALL_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.UNSUBSCRIBE_SUCCESS;
