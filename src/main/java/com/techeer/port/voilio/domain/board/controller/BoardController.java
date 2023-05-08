@@ -59,17 +59,18 @@ public class BoardController {
                 responseFormat,
                 linkTo(methodOn(BoardController.class).findBoardById(board_id)).withSelfRel()));
   }
+
   @GetMapping("/{nickname}/{board_id}")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardByIdExceptHide(
-      @PathVariable Long board_id,
-      @PathVariable String nickname) {
+      @PathVariable Long board_id, @PathVariable String nickname) {
     BoardResponse board = boardService.findBoardByIdExceptHide(board_id);
     ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
     return ResponseEntity.status(HttpStatus.OK)
         .body(
             EntityModel.of(
                 responseFormat,
-                linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board_id, nickname)).withSelfRel()));
+                linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board_id, nickname))
+                    .withSelfRel()));
   }
 
   @PutMapping("/update/{boardId}")
@@ -246,7 +247,8 @@ public class BoardController {
     }
     Pagination<EntityModel<BoardResponse>> result = null;
 
-    if("".equals(authorizationHeader) || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
+    if ("".equals(authorizationHeader)
+        || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
       Page<Board> boardPage =
           boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
       List<EntityModel<BoardResponse>> boardLists =
@@ -281,7 +283,9 @@ public class BoardController {
                   board ->
                       EntityModel.of(
                           boardMapper.toDto(board),
-                          linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board.getId(), nickname))
+                          linkTo(
+                                  methodOn(BoardController.class)
+                                      .findBoardByIdExceptHide(board.getId(), nickname))
                               .withSelfRel()))
               .collect(Collectors.toList());
 
