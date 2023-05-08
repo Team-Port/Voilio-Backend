@@ -31,7 +31,7 @@ public class SubscribeService {
     User user = userRepository.findById(user_id).orElse(null);
     User follower = userRepository.findById(follow_id).orElse(null);
 
-    Subscribe followerToDelete = subscribeRepository.findByUserAndFollower(user, follower);
+    Subscribe followerToDelete = subscribeRepository.findByUserAndSubscriber(user, follower);
     subscribeRepository.delete(followerToDelete);
   }
 
