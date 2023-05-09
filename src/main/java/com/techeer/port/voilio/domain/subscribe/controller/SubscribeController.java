@@ -37,32 +37,32 @@ public class SubscribeController {
   @Autowired private SubscribeService subscribeService;
   @Autowired private SubscribeMapper subscribeMapper;
 
-  @PostMapping("/follow")
-  public ResponseEntity<ResultResponse> follow(
+  @PostMapping("/")
+  public ResponseEntity<ResultResponse> subscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
     subscribeService.subscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
+        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @DeleteMapping("/unfollow")
-  public ResponseEntity<ResultResponse> unfollow(
+  @DeleteMapping("/")
+  public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
     subscribeService.unsubscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
+        linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
   @GetMapping("/lists/@{nickname}")
-  public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> followerlists(
+  public ResponseEntity<ResultResponse<Pagination<EntityModel<SubscribeResponse>>>> subscribeLists(
       @PathVariable("nickname") String nickname,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size) {
@@ -76,7 +76,7 @@ public class SubscribeController {
                         subscribeMapper.toDto(subscribe),
                         linkTo(
                                 methodOn(SubscribeController.class)
-                                    .followerlists(nickname, page, size))
+                                    .subscribeLists(nickname, page, size))
                             .withSelfRel()))
             .collect(Collectors.toList());
 
@@ -87,7 +87,7 @@ public class SubscribeController {
             followers.getSize(),
             followers.getTotalElements(),
             followers.getTotalPages(),
-            linkTo(methodOn(SubscribeController.class).followerlists(nickname, page, size))
+            linkTo(methodOn(SubscribeController.class).subscribeLists(nickname, page, size))
                 .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
