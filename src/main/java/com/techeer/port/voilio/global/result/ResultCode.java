@@ -29,9 +29,9 @@ public enum ResultCode {
 
   FILE_UPLOAD_SUCCESS("F001", "201", "파일을 정상적으로 등록했습니다."),
 
-  SUBSCRIBE_SUCCESS("S001", "200", "팔로우 하였습니다."),
-  UNSUBSCRIBE_SUCCESS("S002", "200", "팔로우를 취소하였습니다."),
-  SUBSCRIBE_FINDALL_SUCCESS("S003", "200", "팔로우 목록입니다.");
+  SUBSCRIBE_SUCCESS("S001", "200", "구독 하였습니다."),
+  UNSUBSCRIBE_SUCCESS("S002", "200", "구독을 취소하였습니다."),
+  SUBSCRIBE_FINDALL_SUCCESS("S003", "200", "구독자 목록입니다.");
 
   private final String code;
   private final String status;
