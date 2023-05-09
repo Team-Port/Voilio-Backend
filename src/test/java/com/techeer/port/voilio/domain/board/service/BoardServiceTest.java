@@ -1,32 +1,32 @@
-//package com.techeer.port.voilio.domain.board.service;
+// package com.techeer.port.voilio.domain.board.service;
 //
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.Mockito.*;
+// import static org.junit.jupiter.api.Assertions.*;
+// import static org.mockito.BDDMockito.given;
+// import static org.mockito.Mockito.*;
 //
-//import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
-//import com.techeer.port.voilio.domain.board.entity.Board;
-//import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
-//import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
-//import com.techeer.port.voilio.domain.board.repository.BoardRepository;
-//import com.techeer.port.voilio.domain.user.entity.User;
-//import com.techeer.port.voilio.domain.user.repository.UserRepository;
-//import com.techeer.port.voilio.global.common.Category;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//import org.junit.jupiter.api.*;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Spy;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.test.context.ActiveProfiles;
+// import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+// import com.techeer.port.voilio.domain.board.entity.Board;
+// import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
+// import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+// import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+// import com.techeer.port.voilio.domain.user.entity.User;
+// import com.techeer.port.voilio.domain.user.repository.UserRepository;
+// import com.techeer.port.voilio.global.common.Category;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Optional;
+// import org.junit.jupiter.api.*;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Spy;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import org.springframework.test.context.ActiveProfiles;
 //
-//@ExtendWith(MockitoExtension.class)
-//@ActiveProfiles("test")
-//@DisplayName("Board Service")
-//public class BoardServiceTest {
+// @ExtendWith(MockitoExtension.class)
+// @ActiveProfiles("test")
+// @DisplayName("Board Service")
+// public class BoardServiceTest {
 //  @Mock private BoardRepository boardRepository;
 //  @Mock private UserRepository userRepository;
 //  @Spy private BoardMapper boardMapper;
@@ -175,4 +175,4 @@
 //          });
 //    }
 //  }
-//}
+// }
