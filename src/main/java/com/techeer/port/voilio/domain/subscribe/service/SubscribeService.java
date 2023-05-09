@@ -17,7 +17,7 @@ public class SubscribeService {
 
   @Autowired private UserRepository userRepository;
 
-  public void follow(Long user_id, Long follow_id) {
+  public void subscribe(Long user_id, Long follow_id) {
     User user = userRepository.findById(user_id).orElseThrow(NotFoundUser::new);
     User follower = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
@@ -27,7 +27,7 @@ public class SubscribeService {
     subscribeRepository.save(newFollower);
   }
 
-  public void delete(Long user_id, Long follow_id) {
+  public void unsubscribe(Long user_id, Long follow_id) {
     User user = userRepository.findById(user_id).orElseThrow(NotFoundUser::new);
     User follower = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
@@ -35,7 +35,7 @@ public class SubscribeService {
     subscribeRepository.delete(followerToDelete);
   }
 
-  public Page<Subscribe> findFollowersByNickname(String nickname, Pageable pageable) {
+  public Page<Subscribe> findSubscribersByNickname(String nickname, Pageable pageable) {
     Page<Subscribe> result = subscribeRepository.findFollowersByNickname(nickname, pageable);
     if (result.isEmpty()) {
       throw new NotFoundUser();

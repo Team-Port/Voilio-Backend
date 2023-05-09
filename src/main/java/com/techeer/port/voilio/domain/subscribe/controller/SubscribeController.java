@@ -41,7 +41,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> follow(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.follow(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
+    subscribeService.subscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).follow(subscribeRequest)).withSelfRel());
@@ -53,7 +53,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unfollow(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.delete(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
+    subscribeService.unsubscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unfollow(subscribeRequest)).withSelfRel());
@@ -67,7 +67,7 @@ public class SubscribeController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size) {
     Page<Subscribe> followers =
-        subscribeService.findFollowersByNickname(nickname, PageRequest.of(page, size));
+        subscribeService.findSubscribersByNickname(nickname, PageRequest.of(page, size));
     List<EntityModel<SubscribeResponse>> followerLists =
         followers.getContent().stream()
             .map(
