@@ -19,24 +19,24 @@ public class SubscribeService {
 
   public void subscribe(Long user_id, Long follow_id) {
     User user = userRepository.findById(user_id).orElseThrow(NotFoundUser::new);
-    User follower = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+    User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe newFollower = new Subscribe();
     newFollower.setUser(user);
-    newFollower.setSubscriber(follower);
+    newFollower.setSubscribe(subscribe);
     subscribeRepository.save(newFollower);
   }
 
   public void unsubscribe(Long user_id, Long follow_id) {
     User user = userRepository.findById(user_id).orElseThrow(NotFoundUser::new);
-    User follower = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+    User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
-    Subscribe followerToDelete = subscribeRepository.findByUserAndSubscriber(user, follower);
+    Subscribe followerToDelete = subscribeRepository.findByUserAndSubscribe(user, subscribe);
     subscribeRepository.delete(followerToDelete);
   }
 
-  public Page<Subscribe> findSubscribersByNickname(String nickname, Pageable pageable) {
-    Page<Subscribe> result = subscribeRepository.findFollowersByNickname(nickname, pageable);
+  public Page<Subscribe> findSubscribesByNickname(String nickname, Pageable pageable) {
+    Page<Subscribe> result = subscribeRepository.findSubscribeByNickname(nickname, pageable);
     if (result.isEmpty()) {
       throw new NotFoundUser();
     }

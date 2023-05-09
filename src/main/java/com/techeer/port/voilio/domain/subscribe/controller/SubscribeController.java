@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/subscribe")
+@RequestMapping("/api/v1/subscribes")
 public class SubscribeController {
   @Autowired private SubscribeService subscribeService;
   @Autowired private SubscribeMapper subscribeMapper;
@@ -41,7 +41,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> subscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.subscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
+    subscribeService.subscribe(subscribeRequest.getUser_id(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
@@ -53,7 +53,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.unsubscribe(subscribeRequest.getUserId(), subscribeRequest.getSubscriberId());
+    subscribeService.unsubscribe(subscribeRequest.getUser_id(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
@@ -67,7 +67,7 @@ public class SubscribeController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size) {
     Page<Subscribe> followers =
-        subscribeService.findSubscribersByNickname(nickname, PageRequest.of(page, size));
+        subscribeService.findSubscribesByNickname(nickname, PageRequest.of(page, size));
     List<EntityModel<SubscribeResponse>> followerLists =
         followers.getContent().stream()
             .map(

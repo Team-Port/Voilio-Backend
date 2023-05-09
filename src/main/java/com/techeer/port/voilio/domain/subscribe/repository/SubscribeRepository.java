@@ -10,11 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
 
-  Subscribe findByUserAndSubscriber(User user, User subscriber);
-
-  //    @Query("SELECT s.follower FROM Subscribe s WHERE s.user = :user")
-  //    Page<Subscribe> findAllFollowers(Pageable pageable);
+  Subscribe findByUserAndSubscribe(User user, User subscribe);
 
   @Query("SELECT s FROM Subscribe s WHERE s.user.nickname = :nickname")
-  Page<Subscribe> findFollowersByNickname(@Param("nickname") String nickname, Pageable pageable);
+  Page<Subscribe> findSubscribeByNickname(@Param("nickname") String nickname, Pageable pageable);
 }
