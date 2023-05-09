@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.subscribe.service;
 
-import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
