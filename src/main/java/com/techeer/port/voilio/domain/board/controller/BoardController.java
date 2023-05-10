@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -228,33 +229,25 @@ public class BoardController {
           String authorizationHeader) {
 
     Long currentLoginUserNickname = userService.getCurrentLoginUser(authorizationHeader);
-    Page<Board> boardPage;
 
     boolean isAuthenticated =
         !authorizationHeader.isEmpty()
             && currentLoginUserNickname.equals(userService.getUserByNickname(nickname));
 
-    if (isAuthenticated) {
-      boardPage =
-          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size));
-    } else {
-      boardPage = boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
-    }
+    Page<Board> boardPage = isAuthenticated
+        ? boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size))
+        : boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
 
-    List<EntityModel<BoardResponse>> boardLists =
-        boardPage.getContent().stream()
-            .map(
-                board ->
-                    EntityModel.of(
-                        boardMapper.toDto(board),
-                        isAuthenticated
-                            ? linkTo(
-                                    methodOn(BoardController.class)
-                                        .findBoardByIdExceptHide(board.getId(), nickname))
-                                .withSelfRel()
-                            : linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-                                .withSelfRel()))
-            .collect(Collectors.toList());
+    List<EntityModel<BoardResponse>> boardLists = boardPage.getContent().stream()
+        .map(board -> {
+          Link selfLink = isAuthenticated
+              ? linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board.getId(), nickname)).withSelfRel()
+              : linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel();
+          BoardResponse boardResponse = boardMapper.toDto(board);
+          boardResponse.setAuth(isAuthenticated);
+          return EntityModel.of(boardResponse, selfLink);
+        })
+        .collect(Collectors.toList());
 
     Pagination<EntityModel<BoardResponse>> result =
         new Pagination<>(
