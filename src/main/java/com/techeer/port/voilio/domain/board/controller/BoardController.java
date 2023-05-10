@@ -227,21 +227,7 @@ public class BoardController {
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
           String authorizationHeader) {
 
-    Long currentLoginUserNickname = null;
-
-    if (!authorizationHeader.isEmpty()) {
-      String accessToken = authorizationHeader.substring(7); // "Bearer " 이후의 값만 추출
-
-      // 토큰이 유효한지 검증
-      if (!jwtProvider.validateToken(accessToken)) {
-        throw new RuntimeException("유효하지 않은 토큰입니다.");
-      }
-
-      // 현재 로그인한 사용자 정보 가져오기
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      currentLoginUserNickname = Long.valueOf(userDetails.getUsername());
-    }
+    Long currentLoginUserNickname = userService.getCurrentLoginUser(authorizationHeader);
     Page<Board> boardPage;
 
     boolean isAuthenticated =
@@ -286,68 +272,6 @@ public class BoardController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
 
     return ResponseEntity.ok().body(resultResponse);
-
-    //    if ("".equals(authorizationHeader)
-    //        || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
-    //      Page<Board> boardPage =
-    //          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
-    //      List<EntityModel<BoardResponse>> boardLists =
-    //          boardPage.getContent().stream()
-    //              .map(
-    //                  board ->
-    //                      EntityModel.of(
-    //                          boardMapper.toDto(board),
-    //                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-    //                              .withSelfRel()))
-    //              .collect(Collectors.toList());
-    //
-    //      Pagination<EntityModel<BoardResponse>> resultNoAuth =
-    //          new Pagination<>(
-    //              boardLists,
-    //              boardPage.getNumber(),
-    //              boardPage.getSize(),
-    //              boardPage.getTotalElements(),
-    //              boardPage.getTotalPages(),
-    //              linkTo(
-    //                      methodOn(BoardController.class)
-    //                          .findBoardByUserId(nickname, page, size, authorizationHeader))
-    //                  .withSelfRel());
-    //
-    //      result = resultNoAuth;
-    //    } else {
-    //      Page<Board> boardPage =
-    //          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page,
-    // size));
-    //      List<EntityModel<BoardResponse>> boardLists =
-    //          boardPage.getContent().stream()
-    //              .map(
-    //                  board ->
-    //                      EntityModel.of(
-    //                          boardMapper.toDto(board),
-    //                          linkTo(
-    //                                  methodOn(BoardController.class)
-    //                                      .findBoardByIdExceptHide(board.getId(), nickname))
-    //                              .withSelfRel()))
-    //              .collect(Collectors.toList());
-    //
-    //      Pagination<EntityModel<BoardResponse>> resultAuth =
-    //          new Pagination<>(
-    //              boardLists,
-    //              boardPage.getNumber(),
-    //              boardPage.getSize(),
-    //              boardPage.getTotalElements(),
-    //              boardPage.getTotalPages(),
-    //              linkTo(
-    //                      methodOn(BoardController.class)
-    //                          .findBoardByUserId(nickname, page, size, authorizationHeader))
-    //                  .withSelfRel());
-    //
-    //      result = resultAuth;
-    //    }
-    //
-    //    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-    //        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-    //    return ResponseEntity.ok().body(resultResponse);
   }
 
   @PostMapping(value = "/files", consumes = "multipart/form-data")
