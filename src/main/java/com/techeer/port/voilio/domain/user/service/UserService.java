@@ -45,6 +45,12 @@ public class UserService {
     return user.getId();
   }
 
+  public Long getUserIdByBoardId(Long board_id) {
+    Long id = userRepository.findUserIdByBoardId(board_id);
+
+    return id;
+  }
+
   public void deleteUser(Long userId) {
     User user = getUser(userId);
     user.changeDeleted();
