@@ -9,7 +9,6 @@ import lombok.ToString;
 
 @Builder
 @Getter
-@Setter
 @ToString
 public class BoardResponse {
   private Long id;
@@ -23,5 +22,6 @@ public class BoardResponse {
   private LocalDateTime created_at;
   private Long user_id;
   private String nickname;
+  @Setter
   private boolean auth;
 }
