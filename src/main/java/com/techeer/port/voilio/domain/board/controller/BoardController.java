@@ -29,9 +29,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -234,20 +231,28 @@ public class BoardController {
         !authorizationHeader.isEmpty()
             && currentLoginUserNickname.equals(userService.getUserByNickname(nickname));
 
-    Page<Board> boardPage = isAuthenticated
-        ? boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size))
-        : boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+    Page<Board> boardPage =
+        isAuthenticated
+            ? boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size))
+            : boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
 
-    List<EntityModel<BoardResponse>> boardLists = boardPage.getContent().stream()
-        .map(board -> {
-          Link selfLink = isAuthenticated
-              ? linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board.getId(), nickname)).withSelfRel()
-              : linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel();
-          BoardResponse boardResponse = boardMapper.toDto(board);
-          boardResponse.setAuth(isAuthenticated);
-          return EntityModel.of(boardResponse, selfLink);
-        })
-        .collect(Collectors.toList());
+    List<EntityModel<BoardResponse>> boardLists =
+        boardPage.getContent().stream()
+            .map(
+                board -> {
+                  Link selfLink =
+                      isAuthenticated
+                          ? linkTo(
+                                  methodOn(BoardController.class)
+                                      .findBoardByIdExceptHide(board.getId(), nickname))
+                              .withSelfRel()
+                          : linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                              .withSelfRel();
+                  BoardResponse boardResponse = boardMapper.toDto(board);
+                  boardResponse.setAuth(isAuthenticated);
+                  return EntityModel.of(boardResponse, selfLink);
+                })
+            .collect(Collectors.toList());
 
     Pagination<EntityModel<BoardResponse>> result =
         new Pagination<>(
