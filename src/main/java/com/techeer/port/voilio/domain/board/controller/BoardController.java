@@ -44,13 +44,13 @@ public class BoardController {
   private final S3Manager s3Manager;
   private final JwtProvider jwtProvider;
   private final UserService userService;
-  
+
   @GetMapping("/{board_id}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
 
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
     boolean isAuthenticated =
@@ -65,11 +65,12 @@ public class BoardController {
       board = boardService.findBoardById(board_id);
     }
     ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
-    Link selfLink = linkTo(methodOn(BoardController.class).findBoardById(board_id, authorizationHeader)).withSelfRel();
+    Link selfLink =
+        linkTo(methodOn(BoardController.class).findBoardById(board_id, authorizationHeader))
+            .withSelfRel();
 
     return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(responseFormat, selfLink));
   }
-
 
   @PutMapping("/update/{boardId}")
   @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
@@ -97,20 +98,23 @@ public class BoardController {
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
       @RequestParam("search") String search,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     List<EntityModel<BoardResponse>> boards =
         boardService.findBoardByKeyword(search).stream()
             .map(
                 board ->
                     EntityModel.of(
                         board,
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId(), authorizationHeader))
+                        linkTo(
+                                methodOn(BoardController.class)
+                                    .findBoardById(board.getId(), authorizationHeader))
                             .withSelfRel()))
             .collect(Collectors.toList());
     ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
     resultResponse.add(
-        linkTo(methodOn(BoardController.class).findBoardByKeyword(search, authorizationHeader)).withSelfRel());
+        linkTo(methodOn(BoardController.class).findBoardByKeyword(search, authorizationHeader))
+            .withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
@@ -158,9 +162,10 @@ public class BoardController {
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "30") int size,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
         boardPage.getContent().stream()
@@ -168,7 +173,9 @@ public class BoardController {
                 board ->
                     EntityModel.of(
                         boardMapper.toDto(board),
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId(), authorizationHeader))
+                        linkTo(
+                                methodOn(BoardController.class)
+                                    .findBoardById(board.getId(), authorizationHeader))
                             .withSelfRel()))
             .collect(Collectors.toList());
 
@@ -179,7 +186,8 @@ public class BoardController {
             boardPage.getSize(),
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findAllBoard(page, size, authorizationHeader)).withSelfRel());
+            linkTo(methodOn(BoardController.class).findAllBoard(page, size, authorizationHeader))
+                .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
@@ -193,7 +201,7 @@ public class BoardController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     Category category1 = Category.valueOf(category.toUpperCase());
     Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
@@ -202,7 +210,9 @@ public class BoardController {
                 board ->
                     EntityModel.of(
                         boardMapper.toDto(board),
-                        linkTo(methodOn(BoardController.class).findBoardById(board.getId(), authorizationHeader))
+                        linkTo(
+                                methodOn(BoardController.class)
+                                    .findBoardById(board.getId(), authorizationHeader))
                             .withSelfRel()))
             .collect(Collectors.toList());
 
@@ -213,7 +223,9 @@ public class BoardController {
             boardPage.getSize(),
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findBoardByCategory(category, page, size, authorizationHeader))
+            linkTo(
+                    methodOn(BoardController.class)
+                        .findBoardByCategory(category, page, size, authorizationHeader))
                 .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
@@ -252,7 +264,9 @@ public class BoardController {
                                   methodOn(BoardController.class)
                                       .findBoardById(board.getId(), nickname))
                               .withSelfRel()
-                          : linkTo(methodOn(BoardController.class).findBoardById(board.getId(), authorizationHeader))
+                          : linkTo(
+                                  methodOn(BoardController.class)
+                                      .findBoardById(board.getId(), authorizationHeader))
                               .withSelfRel();
                   BoardResponse boardResponse = boardMapper.toDto(board);
                   boardResponse.setAuth(isAuthenticated);
