@@ -21,8 +21,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.text.html.parser.Entity;
-import javax.xml.transform.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -246,87 +244,110 @@ public class BoardController {
     }
     Page<Board> boardPage;
 
-    boolean isAuthenticated = !authorizationHeader.isEmpty() && currentLoginUserNickname.equals(userService.getUserByNickname(nickname));
+    boolean isAuthenticated =
+        !authorizationHeader.isEmpty()
+            && currentLoginUserNickname.equals(userService.getUserByNickname(nickname));
 
-    if(isAuthenticated) {
-      boardPage = boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size));
-    }
-    else {
+    if (isAuthenticated) {
+      boardPage =
+          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size));
+    } else {
       boardPage = boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
     }
 
-    List<EntityModel<BoardResponse>> boardLists = boardPage.getContent().stream()
-        .map(board -> EntityModel.of(boardMapper.toDto(board), isAuthenticated ?
-            linkTo(methodOn(BoardController.class).findBoardByIdExceptHide(board.getId(), nickname)).withSelfRel() :
-            linkTo(methodOn(BoardController.class).findBoardById(board.getId())).withSelfRel()))
-        .collect(Collectors.toList());
+    List<EntityModel<BoardResponse>> boardLists =
+        boardPage.getContent().stream()
+            .map(
+                board ->
+                    EntityModel.of(
+                        boardMapper.toDto(board),
+                        isAuthenticated
+                            ? linkTo(
+                                    methodOn(BoardController.class)
+                                        .findBoardByIdExceptHide(board.getId(), nickname))
+                                .withSelfRel()
+                            : linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+                                .withSelfRel()))
+            .collect(Collectors.toList());
 
-    Pagination<EntityModel<BoardResponse>> result = new Pagination<>(boardLists, boardPage.getNumber(), boardPage.getSize(), boardPage.getTotalElements(), boardPage.getTotalPages(), linkTo(methodOn(BoardController.class).findBoardByUserId(nickname, page, size, authorizationHeader)).withSelfRel());
+    Pagination<EntityModel<BoardResponse>> result =
+        new Pagination<>(
+            boardLists,
+            boardPage.getNumber(),
+            boardPage.getSize(),
+            boardPage.getTotalElements(),
+            boardPage.getTotalPages(),
+            linkTo(
+                    methodOn(BoardController.class)
+                        .findBoardByUserId(nickname, page, size, authorizationHeader))
+                .withSelfRel());
 
-    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse = new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
+        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
 
     return ResponseEntity.ok().body(resultResponse);
 
-//    if ("".equals(authorizationHeader)
-//        || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
-//      Page<Board> boardPage =
-//          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
-//      List<EntityModel<BoardResponse>> boardLists =
-//          boardPage.getContent().stream()
-//              .map(
-//                  board ->
-//                      EntityModel.of(
-//                          boardMapper.toDto(board),
-//                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
-//                              .withSelfRel()))
-//              .collect(Collectors.toList());
-//
-//      Pagination<EntityModel<BoardResponse>> resultNoAuth =
-//          new Pagination<>(
-//              boardLists,
-//              boardPage.getNumber(),
-//              boardPage.getSize(),
-//              boardPage.getTotalElements(),
-//              boardPage.getTotalPages(),
-//              linkTo(
-//                      methodOn(BoardController.class)
-//                          .findBoardByUserId(nickname, page, size, authorizationHeader))
-//                  .withSelfRel());
-//
-//      result = resultNoAuth;
-//    } else {
-//      Page<Board> boardPage =
-//          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page, size));
-//      List<EntityModel<BoardResponse>> boardLists =
-//          boardPage.getContent().stream()
-//              .map(
-//                  board ->
-//                      EntityModel.of(
-//                          boardMapper.toDto(board),
-//                          linkTo(
-//                                  methodOn(BoardController.class)
-//                                      .findBoardByIdExceptHide(board.getId(), nickname))
-//                              .withSelfRel()))
-//              .collect(Collectors.toList());
-//
-//      Pagination<EntityModel<BoardResponse>> resultAuth =
-//          new Pagination<>(
-//              boardLists,
-//              boardPage.getNumber(),
-//              boardPage.getSize(),
-//              boardPage.getTotalElements(),
-//              boardPage.getTotalPages(),
-//              linkTo(
-//                      methodOn(BoardController.class)
-//                          .findBoardByUserId(nickname, page, size, authorizationHeader))
-//                  .withSelfRel());
-//
-//      result = resultAuth;
-//    }
-//
-//    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-//        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-//    return ResponseEntity.ok().body(resultResponse);
+    //    if ("".equals(authorizationHeader)
+    //        || !currentLoginUserNickname.equals(userService.getUserByNickname(nickname))) {
+    //      Page<Board> boardPage =
+    //          boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
+    //      List<EntityModel<BoardResponse>> boardLists =
+    //          boardPage.getContent().stream()
+    //              .map(
+    //                  board ->
+    //                      EntityModel.of(
+    //                          boardMapper.toDto(board),
+    //                          linkTo(methodOn(BoardController.class).findBoardById(board.getId()))
+    //                              .withSelfRel()))
+    //              .collect(Collectors.toList());
+    //
+    //      Pagination<EntityModel<BoardResponse>> resultNoAuth =
+    //          new Pagination<>(
+    //              boardLists,
+    //              boardPage.getNumber(),
+    //              boardPage.getSize(),
+    //              boardPage.getTotalElements(),
+    //              boardPage.getTotalPages(),
+    //              linkTo(
+    //                      methodOn(BoardController.class)
+    //                          .findBoardByUserId(nickname, page, size, authorizationHeader))
+    //                  .withSelfRel());
+    //
+    //      result = resultNoAuth;
+    //    } else {
+    //      Page<Board> boardPage =
+    //          boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page,
+    // size));
+    //      List<EntityModel<BoardResponse>> boardLists =
+    //          boardPage.getContent().stream()
+    //              .map(
+    //                  board ->
+    //                      EntityModel.of(
+    //                          boardMapper.toDto(board),
+    //                          linkTo(
+    //                                  methodOn(BoardController.class)
+    //                                      .findBoardByIdExceptHide(board.getId(), nickname))
+    //                              .withSelfRel()))
+    //              .collect(Collectors.toList());
+    //
+    //      Pagination<EntityModel<BoardResponse>> resultAuth =
+    //          new Pagination<>(
+    //              boardLists,
+    //              boardPage.getNumber(),
+    //              boardPage.getSize(),
+    //              boardPage.getTotalElements(),
+    //              boardPage.getTotalPages(),
+    //              linkTo(
+    //                      methodOn(BoardController.class)
+    //                          .findBoardByUserId(nickname, page, size, authorizationHeader))
+    //                  .withSelfRel());
+    //
+    //      result = resultAuth;
+    //    }
+    //
+    //    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
+    //        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
+    //    return ResponseEntity.ok().body(resultResponse);
   }
 
   @PostMapping(value = "/files", consumes = "multipart/form-data")
