@@ -76,23 +76,25 @@ public class BoardController {
   @PutMapping("/update/{boardId}")
   @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
   public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest,
+      @PathVariable Long boardId,
+      @RequestBody BoardUpdateRequest boardUpdateRequest,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
     boolean isAuthenticated =
         !authorizationHeader.isEmpty()
             && currentLoginUserId.equals(userService.getUserIdByBoardId(boardId));
 
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       boardService.updateBoard(boardId, boardUpdateRequest);
       ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
       resultResponse.add(
-          linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest, authorizationHeader))
+          linkTo(
+                  methodOn(BoardController.class)
+                      .updateBoard(boardId, boardUpdateRequest, authorizationHeader))
               .withSelfRel());
       return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
-    else {
+    } else {
       throw new NoAuthority();
     }
   }
