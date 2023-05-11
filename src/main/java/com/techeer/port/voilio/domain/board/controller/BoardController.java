@@ -9,6 +9,7 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.exception.NoAuthority;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -75,13 +76,25 @@ public class BoardController {
   @PutMapping("/update/{boardId}")
   @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
   public ResponseEntity<ResultResponse> updateBoard(
-      @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest) {
-    boardService.updateBoard(boardId, boardUpdateRequest);
-    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest))
-            .withSelfRel());
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+      @PathVariable Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest,
+      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
+      String authorizationHeader) {
+    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
+    boolean isAuthenticated =
+        !authorizationHeader.isEmpty()
+            && currentLoginUserId.equals(userService.getUserIdByBoardId(boardId));
+
+    if(isAuthenticated) {
+      boardService.updateBoard(boardId, boardUpdateRequest);
+      ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
+      resultResponse.add(
+          linkTo(methodOn(BoardController.class).updateBoard(boardId, boardUpdateRequest, authorizationHeader))
+              .withSelfRel());
+      return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    }
+    else {
+      throw new NoAuthority();
+    }
   }
 
   @DeleteMapping("/{boardId}")
