@@ -22,5 +22,6 @@ public class BoardResponse {
   private LocalDateTime created_at;
   private Long user_id;
   private String nickname;
+  private boolean isPublic;
   @Setter private boolean auth;
 }
