@@ -35,8 +35,8 @@ public class UserService {
     return user;
   }
 
-  public User getUser(String email) {
-    User user = userRepository.findUserByEmail(email).orElseThrow(NotFoundUser::new);
+  public User getUser(String nickname) {
+    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
     return user;
   }
 
