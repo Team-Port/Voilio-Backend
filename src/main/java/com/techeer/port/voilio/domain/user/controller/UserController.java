@@ -65,10 +65,12 @@ public class UserController {
 
   @GetMapping("/nickname/{nickname}")
   @Operation(summary = "회원 조회2", description = "지정 회원을 조회하는 메서드입니다.")
-  public ResponseEntity<ResultResponse> getUserByNickname(@PathVariable("nickname") String nickname) {
+  public ResponseEntity<ResultResponse> getUserByNickname(
+      @PathVariable("nickname") String nickname) {
     User user = userService.getUser(nickname);
     ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
-    resultResponse.add(linkTo(methodOn(UserController.class).getUserByNickname(nickname)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(UserController.class).getUserByNickname(nickname)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
