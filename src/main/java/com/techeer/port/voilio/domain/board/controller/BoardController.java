@@ -83,7 +83,7 @@ public class BoardController {
       @RequestParam Category category2,
       @RequestParam MultipartFile thumbnailFile,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
     boolean isAuthenticated =
         !authorizationHeader.isEmpty()
@@ -91,26 +91,33 @@ public class BoardController {
 
     if (isAuthenticated) {
       UploadFileResponse updateFiles = boardService.updateFiles(thumbnailFile);
-      BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
-          .title(title)
-          .content(content)
-          .category1(category1)
-          .category2(category2)
-          .thumbnail_url(updateFiles.getThumbnail_url())
-          .build();
+      BoardUpdateRequest boardUpdateRequest =
+          BoardUpdateRequest.builder()
+              .title(title)
+              .content(content)
+              .category1(category1)
+              .category2(category2)
+              .thumbnail_url(updateFiles.getThumbnail_url())
+              .build();
       boardService.updateBoard(boardId, boardUpdateRequest);
       ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
       resultResponse.add(
           linkTo(
-              methodOn(BoardController.class)
-                  .updateBoard(boardId, title, content, category1, category2, thumbnailFile, authorizationHeader))
+                  methodOn(BoardController.class)
+                      .updateBoard(
+                          boardId,
+                          title,
+                          content,
+                          category1,
+                          category2,
+                          thumbnailFile,
+                          authorizationHeader))
               .withSelfRel());
       return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     } else {
       throw new NoAuthority();
     }
   }
-
 
   @DeleteMapping("/{boardId}")
   @Operation(summary = "게시물 삭제", description = "게시물 삭제 메서드입니다.")

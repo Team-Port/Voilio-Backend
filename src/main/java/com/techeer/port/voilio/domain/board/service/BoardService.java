@@ -125,8 +125,7 @@ public class BoardService {
 
   public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
     try {
-      return boardMapper.toDto(
-          s3Manager.upload(thumbnailFile, "thumbnail"));
+      return boardMapper.toDto(s3Manager.upload(thumbnailFile, "thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }

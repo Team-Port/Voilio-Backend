@@ -6,5 +6,5 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UpdateFileResponse {
-    private String thumbnail_url;
+  private String thumbnail_url;
 }
