@@ -73,7 +73,7 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(responseFormat, selfLink));
   }
 
-  @PutMapping("/update/{boardId}")
+  @PutMapping(value = "/update/{boardId}", consumes = "multipart/form-data")
   @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
   public ResponseEntity<ResultResponse> updateBoard(
       @PathVariable Long boardId,
