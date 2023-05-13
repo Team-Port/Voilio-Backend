@@ -33,4 +33,8 @@ public class BoardMapper {
   public UploadFileResponse toDto(String videoUrl, String thumbnailUrl) {
     return UploadFileResponse.builder().video_url(videoUrl).thumbnail_url(thumbnailUrl).build();
   }
+
+  public UploadFileResponse toDto(String thumbnailUrl) {
+    return UploadFileResponse.builder().thumbnail_url(thumbnailUrl).build();
+  }
 }

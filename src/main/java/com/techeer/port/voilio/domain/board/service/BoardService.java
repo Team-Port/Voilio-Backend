@@ -122,4 +122,13 @@ public class BoardService {
       throw new ConvertException();
     }
   }
+
+  public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
+    try {
+      return boardMapper.toDto(
+          s3Manager.upload(thumbnailFile, "thumbnail"));
+    } catch (IOException e) {
+      throw new ConvertException();
+    }
+  }
 }
