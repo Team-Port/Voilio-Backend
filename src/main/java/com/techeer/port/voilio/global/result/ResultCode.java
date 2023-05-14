@@ -28,7 +28,10 @@ public enum ResultCode {
   GET_COMMENT_SUCCESS("C004", "304", "댓글이 정상적으로 출력되었습니다."),
 
   FILE_UPLOAD_SUCCESS("F001", "201", "파일을 정상적으로 등록했습니다."),
-  ;
+
+  SUBSCRIBE_SUCCESS("S001", "200", "구독 하였습니다."),
+  UNSUBSCRIBE_SUCCESS("S002", "200", "구독을 취소하였습니다."),
+  SUBSCRIBE_FINDALL_SUCCESS("S003", "200", "구독자 목록입니다.");
 
   private final String code;
   private final String status;
