@@ -2,6 +2,8 @@ spring:
   profiles:
     active:
       - secret
+      - local
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/voilio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
@@ -23,6 +25,17 @@ spring:
     multipart:
       max-file-size: 3GB
       max-request-size: 3GB
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+    add-properties: false
+  freemarker:
+    cache: false
+    suffix: .ftl
+
 
 springdoc:
   default-consumes-media-type: application/json
