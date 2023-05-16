@@ -2,11 +2,11 @@ package com.techeer.port.voilio.domain.chat.controller;
 
 import com.techeer.port.voilio.domain.chat.model.ChatRoom;
 import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
