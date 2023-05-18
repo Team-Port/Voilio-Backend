@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.board.repository;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
@@ -88,7 +87,7 @@ public class BoardRepositoryTest {
                 .content("testContent3")
                 .category2(Category.IT)
                 .category1(Category.IT)
-                .isPublic(true)
+                .isPublic(false)
                 .video_url("https://www.naver.com/")
                 .thumbnail_url("https://www.naver.com")
                 .build());
@@ -345,6 +344,15 @@ public class BoardRepositoryTest {
   public void testFindBoardByUserNickname() {
     Pageable pageable = PageRequest.of(0, 10);
     Page<Board> result = boardRepository.findBoardByUserNickname("tester1", pageable);
+
+    assertThat(result.getContent()).containsExactly(board1, board2, board3);
+    assertThat(result).hasSize(2);
+  }
+
+  @Test
+  public void testFindBoardByUserNicknameExceptHide() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide("tester1", pageable);
 
     assertThat(result.getContent()).containsExactly(board1, board2, board3);
     assertThat(result).hasSize(3);
