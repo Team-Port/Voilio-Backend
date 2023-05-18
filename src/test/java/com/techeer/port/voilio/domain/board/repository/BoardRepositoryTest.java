@@ -9,6 +9,7 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -302,5 +303,30 @@ public class BoardRepositoryTest {
       assertEquals(expectedBoards.get(i).getCategory1(), actualBoards.get(i).getCategory1());
       assertEquals(expectedBoards.get(i).getCategory2(), actualBoards.get(i).getCategory2());
     }
+  }
+
+  @Test
+  @DisplayName("testFindBoardByIdExceptHide")
+  public void testFindBoardByIdExceptHide() {
+    Board board = Board.builder()
+        .user(user1)
+        .title("Test")
+        .content("Test")
+        .category1(Category.IT)
+        .category2(Category.IT)
+        .isPublic(true)
+        .video_url("https://www.naver.com/")
+        .thumbnail_url("https://www.naver.com/")
+        .build();
+
+    board = boardRepository.save(board);
+    Long boardId = board.getId();
+
+    Optional<Board> foundBoradOptional = boardRepository.findBoardByIdExceptHide(boardId);
+
+    assertTrue(foundBoradOptional.isPresent());
+    Board foundBoard = foundBoradOptional.get();
+    assertEquals(boardId, foundBoard.getId());
+    assertFalse(foundBoard.getIsDeleted());
   }
 }
