@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.repository;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -328,5 +331,13 @@ public class BoardRepositoryTest {
     Board foundBoard = foundBoradOptional.get();
     assertEquals(boardId, foundBoard.getId());
     assertFalse(foundBoard.getIsDeleted());
+  }
+
+  @Test
+  public void testFindBoardByCategory() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result = boardRepository.findBoardByCategory(Category.IT, Category.KOTLIN, pageable);
+
+    assertThat(result).hasSize(3);
   }
 }
