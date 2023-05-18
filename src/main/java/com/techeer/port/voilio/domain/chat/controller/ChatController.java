@@ -5,6 +5,9 @@ import com.techeer.port.voilio.domain.chat.pubsub.RedisPublisher;
 import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 
 @RequiredArgsConstructor
@@ -17,10 +20,17 @@ public class ChatController {
   /** websocket "/pub/chat/message"로 들어오는 메시징을 처리한다. */
   @MessageMapping("/chat/message")
   public void message(ChatMessage message) {
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    String senderNickname = userDetails.getUsername();
+
     if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
       chatRoomRepository.enterChatRoom(message.getRoomId());
-      message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+      message.setMessage(senderNickname + "님이 입장하셨습니다.");
+      message.setSender(senderNickname);
     }
+
     // Websocket에 발행된 메시지를 redis로 발행한다(publish)
     redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
   }
