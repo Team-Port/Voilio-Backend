@@ -32,23 +32,23 @@ public class ChatRoomController {
     return chatRoomRepository.findAllRoom();
   }
 
-//  @PostMapping("/room")
-//  @ResponseBody
-//  public ChatRoom createRoom(@RequestParam String name) {
-//    return chatRoomRepository.createChatRoom(name);
-//  }
+  //  @PostMapping("/room")
+  //  @ResponseBody
+  //  public ChatRoom createRoom(@RequestParam String name) {
+  //    return chatRoomRepository.createChatRoom(name);
+  //  }
 
   @PostMapping("/room")
   @ResponseBody
   public ChatRoom createRoom(@RequestParam String name, HttpServletRequest request) {
     String authorizationHeader = request.getHeader("Authorization");
 
-    if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
       throw new RuntimeException("Invalid token");
     }
     String accessToken = authorizationHeader.substring(7);
 
-    if(!jwtProvider.validateToken(accessToken)) {
+    if (!jwtProvider.validateToken(accessToken)) {
       throw new RuntimeException("유효하지 않은 토큰입니다.");
     }
 
@@ -58,46 +58,47 @@ public class ChatRoomController {
     return chatRoomRepository.createChatRoom(name);
   }
 
-//  @GetMapping("/room/enter/{roomId}")
-//  public String roomDetail(Model model, @PathVariable String roomId, HttpServletRequest request) {
-//    String authorizationHeader = request.getHeader("Authorization");
-//
-//    if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-//      throw new RuntimeException("Invalid token");
-//    }
-//    String accessToken = authorizationHeader.substring(7);
-//
-//    if(!jwtProvider.validateToken(accessToken)) {
-//      throw new RuntimeException("유효하지 않은 토큰입니다.");
-//    }
-//
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//
-//    model.addAttribute("roomId", roomId);
-//    return "/chat/roomdetail";
-//  }
-@GetMapping("/room/enter/{roomId}")
-public String roomDetail(Model model, @PathVariable String roomId, HttpServletRequest request) {
-  String authorizationHeader = request.getHeader("Authorization");
+  //  @GetMapping("/room/enter/{roomId}")
+  //  public String roomDetail(Model model, @PathVariable String roomId, HttpServletRequest request)
+  // {
+  //    String authorizationHeader = request.getHeader("Authorization");
+  //
+  //    if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+  //      throw new RuntimeException("Invalid token");
+  //    }
+  //    String accessToken = authorizationHeader.substring(7);
+  //
+  //    if(!jwtProvider.validateToken(accessToken)) {
+  //      throw new RuntimeException("유효하지 않은 토큰입니다.");
+  //    }
+  //
+  //    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  //    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+  //
+  //    model.addAttribute("roomId", roomId);
+  //    return "/chat/roomdetail";
+  //  }
+  @GetMapping("/room/enter/{roomId}")
+  public String roomDetail(Model model, @PathVariable String roomId, HttpServletRequest request) {
+    String authorizationHeader = request.getHeader("Authorization");
 
-  if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-    throw new RuntimeException("유효하지 않은 토큰입니다.");
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      throw new RuntimeException("유효하지 않은 토큰입니다.");
+    }
+    String accessToken = authorizationHeader.substring(7);
+
+    if (!jwtProvider.validateToken(accessToken)) {
+      throw new RuntimeException("유효하지 않은 토큰입니다.");
+    }
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+    model.addAttribute("roomId", roomId);
+    model.addAttribute("accessToken", accessToken); // 추가: 토큰 전달
+
+    return "/chat/roomdetail";
   }
-  String accessToken = authorizationHeader.substring(7);
-
-  if (!jwtProvider.validateToken(accessToken)) {
-    throw new RuntimeException("유효하지 않은 토큰입니다.");
-  }
-
-  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-  UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-  model.addAttribute("roomId", roomId);
-  model.addAttribute("accessToken", accessToken); // 추가: 토큰 전달
-
-  return "/chat/roomdetail";
-}
 
   @GetMapping("/room/{roomId}")
   @ResponseBody
