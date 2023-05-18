@@ -340,4 +340,13 @@ public class BoardRepositoryTest {
 
     assertThat(result).hasSize(3);
   }
+
+  @Test
+  public void testFindBoardByUserNickname() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result = boardRepository.findBoardByUserNickname("tester1", pageable);
+
+    assertThat(result.getContent()).containsExactly(board1, board2, board3);
+    assertThat(result).hasSize(3);
+  }
 }
