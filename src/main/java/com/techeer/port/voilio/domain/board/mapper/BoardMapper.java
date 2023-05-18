@@ -22,7 +22,7 @@ public class BoardMapper {
         .created_at(board.getCreateAt())
         .user_id(board.getUser().getId())
         .nickname(board.getUser().getNickname())
-        .isPublic(board.isPublic())
+        .isPublic(board.getIsPublic())
         .build();
   }
 

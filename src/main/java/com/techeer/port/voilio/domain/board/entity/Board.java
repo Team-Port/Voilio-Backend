@@ -92,4 +92,8 @@ public class Board extends BaseEntity {
   public void changePublic() {
     this.isPublic = !this.isPublic;
   }
+
+  public boolean getIsPublic() {
+    return this.isPublic;
+  }
 }
