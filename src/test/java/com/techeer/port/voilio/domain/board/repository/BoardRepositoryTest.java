@@ -180,16 +180,11 @@ public class BoardRepositoryTest {
       List<Board> expectBoards5 = expectBoards4;
 
       // when
-      List<Board> actualBoards =
-          boardRepository.findBoardByKeyword(keyword);
-      List<Board> actualBoards2 =
-          boardRepository.findBoardByKeyword(keyword2);
-      List<Board> actualBoards3 =
-          boardRepository.findBoardByKeyword(keyword3);
-      List<Board> actualBoards4 =
-          boardRepository.findBoardByKeyword(keyword4);
-      List<Board> actualBoards5 =
-          boardRepository.findBoardByKeyword(keyword5);
+      List<Board> actualBoards = boardRepository.findBoardByKeyword(keyword);
+      List<Board> actualBoards2 = boardRepository.findBoardByKeyword(keyword2);
+      List<Board> actualBoards3 = boardRepository.findBoardByKeyword(keyword3);
+      List<Board> actualBoards4 = boardRepository.findBoardByKeyword(keyword4);
+      List<Board> actualBoards5 = boardRepository.findBoardByKeyword(keyword5);
 
       // then
       assertEquals(expectBoards.size(), actualBoards.size());
@@ -210,10 +205,7 @@ public class BoardRepositoryTest {
       Board existedBoard2 = board2;
 
       // when
-      Board foundBoard1 =
-          boardRepository
-              .findById(existedBoard.getId())
-              .orElseThrow();
+      Board foundBoard1 = boardRepository.findById(existedBoard.getId()).orElseThrow();
 
       // then
       assertEquals(foundBoard1.getId(), existedBoard.getId());
@@ -232,9 +224,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findById(boardId + 1)
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(boardId + 1).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -252,9 +242,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findById(board1.getId())
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(board1.getId()).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -272,9 +260,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findById(board1.getId())
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(board1.getId()).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -292,6 +278,7 @@ public class BoardRepositoryTest {
       // when,then
     }
   }
+
   @Test
   @DisplayName("testFindAllBoard")
   public void testFindAllBoard() {
@@ -305,12 +292,13 @@ public class BoardRepositoryTest {
     List<Board> actualBoards = actualPage.getContent();
 
     assertEquals(expectedBoards.size(), actualBoards.size());
-    for(int i=0; i<expectedBoards.size(); i++) {
+    for (int i = 0; i < expectedBoards.size(); i++) {
       assertEquals(expectedBoards.get(i).getId(), actualBoards.get(i).getId());
       assertEquals(expectedBoards.get(i).getIsPublic(), actualBoards.get(i).getIsPublic());
       assertEquals(expectedBoards.get(i).getContent(), actualBoards.get(i).getContent());
       assertEquals(expectedBoards.get(i).getVideo_url(), actualBoards.get(i).getVideo_url());
-      assertEquals(expectedBoards.get(i).getThumbnail_url(), actualBoards.get(i).getThumbnail_url());
+      assertEquals(
+          expectedBoards.get(i).getThumbnail_url(), actualBoards.get(i).getThumbnail_url());
       assertEquals(expectedBoards.get(i).getCategory1(), actualBoards.get(i).getCategory1());
       assertEquals(expectedBoards.get(i).getCategory2(), actualBoards.get(i).getCategory2());
     }
