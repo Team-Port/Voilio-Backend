@@ -345,7 +345,7 @@ public class BoardRepositoryTest {
     Pageable pageable = PageRequest.of(0, 10);
     Page<Board> result = boardRepository.findBoardByUserNickname("tester1", pageable);
 
-    assertThat(result.getContent()).containsExactly(board1, board2, board3);
+    assertThat(result.getContent()).containsExactly(board1, board2);
     assertThat(result).hasSize(2);
   }
 
