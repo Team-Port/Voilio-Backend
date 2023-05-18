@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -178,15 +181,15 @@ public class BoardRepositoryTest {
 
       // when
       List<Board> actualBoards =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
+          boardRepository.findBoardByKeyword(keyword);
       List<Board> actualBoards2 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword2);
+          boardRepository.findBoardByKeyword(keyword2);
       List<Board> actualBoards3 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword3);
+          boardRepository.findBoardByKeyword(keyword3);
       List<Board> actualBoards4 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword4);
+          boardRepository.findBoardByKeyword(keyword4);
       List<Board> actualBoards5 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword5);
+          boardRepository.findBoardByKeyword(keyword5);
 
       // then
       assertEquals(expectBoards.size(), actualBoards.size());
@@ -209,7 +212,7 @@ public class BoardRepositoryTest {
       // when
       Board foundBoard1 =
           boardRepository
-              .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
+              .findById(existedBoard.getId())
               .orElseThrow();
 
       // then
@@ -230,7 +233,7 @@ public class BoardRepositoryTest {
               NotFoundBoard.class,
               () -> {
                 boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId + 1)
+                    .findById(boardId + 1)
                     .orElseThrow(NotFoundBoard::new);
               });
 
@@ -250,7 +253,7 @@ public class BoardRepositoryTest {
               NotFoundBoard.class,
               () -> {
                 boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
+                    .findById(board1.getId())
                     .orElseThrow(NotFoundBoard::new);
               });
 
@@ -270,7 +273,7 @@ public class BoardRepositoryTest {
               NotFoundBoard.class,
               () -> {
                 boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
+                    .findById(board1.getId())
                     .orElseThrow(NotFoundBoard::new);
               });
 
@@ -287,6 +290,29 @@ public class BoardRepositoryTest {
       boardRepository.save(board1);
 
       // when,then
+    }
+  }
+  @Test
+  @DisplayName("testFindAllBoard")
+  public void testFindAllBoard() {
+    List<Board> expectedBoards = new ArrayList<>();
+    expectedBoards.add(board1);
+    expectedBoards.add(board2);
+    expectedBoards.add(board3);
+
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> actualPage = boardRepository.findAllBoard(pageable);
+    List<Board> actualBoards = actualPage.getContent();
+
+    assertEquals(expectedBoards.size(), actualBoards.size());
+    for(int i=0; i<expectedBoards.size(); i++) {
+      assertEquals(expectedBoards.get(i).getId(), actualBoards.get(i).getId());
+      assertEquals(expectedBoards.get(i).getIsPublic(), actualBoards.get(i).getIsPublic());
+      assertEquals(expectedBoards.get(i).getContent(), actualBoards.get(i).getContent());
+      assertEquals(expectedBoards.get(i).getVideo_url(), actualBoards.get(i).getVideo_url());
+      assertEquals(expectedBoards.get(i).getThumbnail_url(), actualBoards.get(i).getThumbnail_url());
+      assertEquals(expectedBoards.get(i).getCategory1(), actualBoards.get(i).getCategory1());
+      assertEquals(expectedBoards.get(i).getCategory2(), actualBoards.get(i).getCategory2());
     }
   }
 }
