@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +35,20 @@ public class UserService {
     return user;
   }
 
-  public User getUser(String email) {
-    User user = userRepository.findUserByEmail(email).orElseThrow(NotFoundUser::new);
+  public User getUser(String nickname) {
+    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
     return user;
+  }
+
+  public Long getUserByNickname(String nickname) {
+    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
+    return user.getId();
+  }
+
+  public Long getUserIdByBoardId(Long board_id) {
+    Long id = userRepository.findUserIdByBoardId(board_id);
+
+    return id;
   }
 
   public void deleteUser(Long userId) {
@@ -48,5 +62,22 @@ public class UserService {
         .findById(SecurityUtil.getCurrentMemberId())
         .map(UserResponse::of)
         .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
+  }
+
+  public Long getCurrentLoginUser(String authorizationHeader) {
+    Long currentLoginUserNickname = null;
+
+    if (!authorizationHeader.isEmpty()) {
+      String accessToken = authorizationHeader.substring(7);
+
+      if (!jwtProvider.validateToken(accessToken)) {
+        throw new RuntimeException("유호하지 않은 토큰입니다.");
+      }
+
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      currentLoginUserNickname = Long.valueOf(userDetails.getUsername());
+    }
+    return currentLoginUserNickname;
   }
 }

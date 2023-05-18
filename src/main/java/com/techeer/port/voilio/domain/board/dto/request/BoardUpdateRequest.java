@@ -5,9 +5,11 @@ import com.techeer.port.voilio.global.common.Category;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;
 
+@Builder
 @Getter
 public class BoardUpdateRequest {
   @NotBlank private String title;

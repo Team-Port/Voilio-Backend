@@ -22,6 +22,7 @@ public class BoardMapper {
         .created_at(board.getCreateAt())
         .user_id(board.getUser().getId())
         .nickname(board.getUser().getNickname())
+        .isPublic(board.isPublic())
         .build();
   }
 
@@ -31,5 +32,9 @@ public class BoardMapper {
 
   public UploadFileResponse toDto(String videoUrl, String thumbnailUrl) {
     return UploadFileResponse.builder().video_url(videoUrl).thumbnail_url(thumbnailUrl).build();
+  }
+
+  public UploadFileResponse toDto(String thumbnailUrl) {
+    return UploadFileResponse.builder().thumbnail_url(thumbnailUrl).build();
   }
 }

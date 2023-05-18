@@ -23,6 +23,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       "SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false AND b.isPublic = true")
   Optional<Board> findBoardById(@Param("board_id") Long id);
 
+  @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false")
+  Optional<Board> findBoardByIdExceptHide(@Param("board_id") Long id);
+
   @Query(
       "SELECT b FROM Board b WHERE b.isDeleted is false AND b.isPublic is true ORDER BY"
           + " b.createAt DESC")
@@ -40,4 +43,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND b.user.nickname ="
           + " :nickname ORDER BY b.createAt DESC")
   Page<Board> findBoardByUserNickname(@Param("nickname") String nickname, Pageable pageable);
+
+  @Query(
+      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.user.nickname ="
+          + " :nickname ORDER BY b.createAt DESC")
+  Page<Board> findBoardByUserNicknameExceptHide(
+      @Param("nickname") String nickname, Pageable pageable);
 }

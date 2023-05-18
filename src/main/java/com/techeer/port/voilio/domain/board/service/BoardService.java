@@ -15,6 +15,7 @@ import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,11 @@ public class BoardService {
 
   public BoardResponse findBoardById(Long board_id) {
     Board board = boardRepository.findBoardById(board_id).orElseThrow(NotFoundBoard::new);
+    return boardMapper.toDto(board);
+  }
+
+  public BoardResponse findBoardByIdExceptHide(Long board_id) {
+    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
     return boardMapper.toDto(board);
   }
 
@@ -87,8 +93,19 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
-    User user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNickname(nickname);
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
+
+    if (result.isEmpty()) {
+      if (user == null) throw new NotFoundUser();
+      else throw new NotFoundBoard();
+    }
+    return result;
+  }
+
+  public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
+    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable);
 
     if (result.isEmpty()) {
       if (user == null) throw new NotFoundUser();
@@ -101,6 +118,14 @@ public class BoardService {
     try {
       return boardMapper.toDto(
           s3Manager.upload(videoFile, "video"), s3Manager.upload(thumbnailFile, "thumbnail"));
+    } catch (IOException e) {
+      throw new ConvertException();
+    }
+  }
+
+  public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
+    try {
+      return boardMapper.toDto(s3Manager.upload(thumbnailFile, "thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }
