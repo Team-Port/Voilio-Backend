@@ -236,4 +236,34 @@
           verify(boardRepository, never()).save(any(Board.class));
       }
   }
+  @Nested
+  class hideBoard {
+      @Test
+      public void hideBoard_whenBoardExists() {
+          //given
+          Long boardId = board1.getId();
+          given(boardRepository.findById(boardId))
+              .willReturn(Optional.of(board1));
+
+          //when
+          boardService.hideBoard(boardId);
+
+          //then
+          assertFalse(board1.getIsPublic());
+          verify(boardRepository).findById(boardId);
+          verify(boardRepository).save(board1);
+      }
+
+      @Test
+      public void hideBoard_whenBoardDoesNotExist() {
+          //given
+          Long boardId = 3L;
+          given(boardRepository.findById(boardId))
+              .willReturn(Optional.empty());
+
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.hideBoard(boardId));
+          verify(boardRepository).findById(boardId);
+      }
+  }
  }
