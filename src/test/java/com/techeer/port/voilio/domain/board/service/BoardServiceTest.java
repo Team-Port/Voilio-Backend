@@ -4,9 +4,11 @@
  import static org.mockito.BDDMockito.given;
  import static org.mockito.Mockito.*;
 
+ import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
  import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
  import com.techeer.port.voilio.domain.board.entity.Board;
  import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
+ import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
  import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
  import com.techeer.port.voilio.domain.board.repository.BoardRepository;
  import com.techeer.port.voilio.domain.user.entity.User;
@@ -22,6 +24,7 @@
  import org.mockito.Mock;
  import org.mockito.Spy;
  import org.mockito.junit.jupiter.MockitoExtension;
+ import org.springframework.mock.web.MockMultipartFile;
  import org.springframework.test.context.ActiveProfiles;
 
  import static org.hamcrest.MatcherAssert.*;
@@ -189,6 +192,48 @@
 
           //then
           assertEquals(boardId, actual.getId());
+      }
+  }
+
+  @Nested
+  class createBoard {
+      @Test
+      public void testCreateBoard() {
+          BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+              .user_id(user1.getId())
+              .title("Test")
+              .content("Test")
+              .category1(Category.IT)
+              .category2(Category.JAVA)
+              .video_url("https://www.naver.com/video.mp4")
+              .thumbnail_url("https://www.naver.com/thumbnail.jpg")
+              .build();
+
+          when(userRepository.findById(boardCreateRequest.getUser_id()))
+              .thenReturn(Optional.of(user1));
+
+          assertDoesNotThrow(() -> boardService.createBoard(boardCreateRequest));
+
+          verify(userRepository).findById(boardCreateRequest.getUser_id());
+          verify(boardRepository).save(any(Board.class));
+      }
+
+      @Test
+      public void testCreatedBoard_InvalidRequest_ThrowException() {
+          BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+              .user_id(123L)
+              .title("Test")
+              .content("Test")
+              .category1(Category.IT)
+              .category2(Category.JAVA)
+              .video_url("https://www.naver.com/video.mp4")
+              .thumbnail_url("https://www.naver.com/thumbnail.jpg")
+              .build();
+
+          assertThrows(NotFoundUser.class, () -> boardService.createBoard(boardCreateRequest));
+
+          verify(userRepository).findById(boardCreateRequest.getUser_id());
+          verify(boardRepository, never()).save(any(Board.class));
       }
   }
  }
