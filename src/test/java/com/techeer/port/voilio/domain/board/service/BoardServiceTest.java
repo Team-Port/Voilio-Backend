@@ -5,6 +5,7 @@
  import static org.mockito.Mockito.*;
 
  import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+ import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
  import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
  import com.techeer.port.voilio.domain.board.entity.Board;
  import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
@@ -24,6 +25,7 @@
  import org.mockito.Mock;
  import org.mockito.Spy;
  import org.mockito.junit.jupiter.MockitoExtension;
+ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
  import org.springframework.data.domain.Page;
  import org.springframework.data.domain.Pageable;
  import org.springframework.mock.web.MockMultipartFile;
@@ -306,6 +308,61 @@
           //when, then
           assertThrows(NotFoundBoard.class, () -> boardService.findAllBoard(pageable));
           verify(boardRepository).findAllBoard(pageable);
+      }
+  }
+
+  @Nested
+  class updateBoard {
+      @Test
+      public void updateBoard_whenBoardExists() {
+          //given
+          Long boardId = board1.getId();
+          BoardUpdateRequest request = BoardUpdateRequest.builder()
+              .title("updatedTitle")
+              .content("updatedContent")
+              .category1(Category.KOTLIN)
+              .category2(Category.PYTHON)
+              .thumbnail_url("https://www.naver.com.update/thumbnail.jpg")
+              .build();
+
+          given(boardRepository.findById(boardId))
+              .willReturn(Optional.of(board1));
+          given(boardRepository.save(any(Board.class)))
+              .willReturn(board1);
+
+          //when
+          Board updatedBoard = boardService.updateBoard(boardId, request);
+
+          //then
+          assertEquals(request.getTitle(), updatedBoard.getTitle());
+          assertEquals(request.getContent(), updatedBoard.getContent());
+          assertEquals(request.getCategory1(), updatedBoard.getCategory1());
+          assertEquals(request.getCategory2(), updatedBoard.getCategory2());
+          assertEquals(request.getThumbnail_url(), updatedBoard.getThumbnail_url());
+
+          verify(boardRepository).findById(boardId);
+          verify(boardRepository).save(any(Board.class));
+      }
+
+      @Test
+      public void updateBoard_whenBoardDoesNotExist() {
+          //given
+          Long boardId = 4L;
+          BoardUpdateRequest request = BoardUpdateRequest.builder()
+              .title("updatedTitle")
+              .content("updatedContent")
+              .category1(Category.KOTLIN)
+              .category2(Category.PYTHON)
+              .thumbnail_url("https://www.naver.com.update/thumbnail.jpg")
+              .build();
+
+          given(boardRepository.findById(boardId))
+              .willReturn(Optional.empty());
+
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.updateBoard(boardId, request));
+          verify(boardRepository).findById(boardId);
+          verifyNoMoreInteractions(boardRepository);
       }
   }
  }
