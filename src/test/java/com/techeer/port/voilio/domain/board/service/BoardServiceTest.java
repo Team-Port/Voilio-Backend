@@ -148,7 +148,7 @@
   }
 
   @Nested
-  class getBoardById {
+  class findBoardById {
       @Test
       public void findBoardById_whenBoardExists_shouldReturnBoard() {
           Long boardId = board1.getId();
@@ -175,6 +175,20 @@
 
           //then
           //예외가 발생하여 메서드 실행이 여기까지 도달하지 않음
+      }
+
+      @Test
+      public void testFindBoardByIdExceptHide() {
+          Long boardId = board2.getId();
+          when(boardRepository.findBoardByIdExceptHide(boardId))
+              .thenReturn(Optional.of(board2));
+
+          BoardResponse result = boardService.findBoardByIdExceptHide(boardId);
+          verify(boardRepository).findBoardByIdExceptHide(boardId);
+
+          verify(boardMapper).toDto(board2);
+
+          assertNotNull(result);
       }
   }
  }

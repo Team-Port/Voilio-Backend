@@ -337,7 +337,7 @@ public class BoardRepositoryTest {
     Pageable pageable = PageRequest.of(0, 10);
     Page<Board> result = boardRepository.findBoardByCategory(Category.IT, Category.KOTLIN, pageable);
 
-    assertThat(result).hasSize(3);
+    assertThat(result).hasSize(2);
   }
 
   @Test
