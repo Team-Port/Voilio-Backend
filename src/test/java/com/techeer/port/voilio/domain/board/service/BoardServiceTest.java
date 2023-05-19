@@ -164,6 +164,7 @@
 
           //then
           assertEquals(boardId, actual.getId());
+          verify(boardRepository).findBoardById(boardId);
       }
 
       @Test
@@ -173,11 +174,9 @@
           given(boardRepository.findBoardById(boardId))
               .willReturn(Optional.empty());
 
-          //when
-          boardService.findBoardById(boardId);
-
-          //then
-          //예외가 발생하여 메서드 실행이 여기까지 도달하지 않음
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.findBoardById(boardId));
+          verify(boardRepository).findBoardById(boardId);
       }
 
       @Test
@@ -192,6 +191,7 @@
 
           //then
           assertEquals(boardId, actual.getId());
+          verify(boardRepository).findBoardByIdExceptHide(boardId);
       }
   }
 
