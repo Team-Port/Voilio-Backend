@@ -24,6 +24,8 @@
  import org.mockito.Mock;
  import org.mockito.Spy;
  import org.mockito.junit.jupiter.MockitoExtension;
+ import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.Pageable;
  import org.springframework.mock.web.MockMultipartFile;
  import org.springframework.test.context.ActiveProfiles;
 
@@ -264,6 +266,46 @@
           //when, then
           assertThrows(NotFoundBoard.class, () -> boardService.hideBoard(boardId));
           verify(boardRepository).findById(boardId);
+      }
+  }
+
+  @Nested
+  class findAllBoard {
+      @Test
+      public void findAllBoard_whenBoardExists() {
+          //given
+          Pageable pageable = mock(Pageable.class);
+          List<Board> boards = List.of(board1, board2);
+          Page<Board> boardPage = mock(Page.class);
+
+          given(boardPage.getContent())
+              .willReturn(boards);
+          given(boardRepository.findAllBoard(pageable))
+              .willReturn(boardPage);
+
+          //when
+          Page<Board> result = boardService.findAllBoard(pageable);
+
+          //then
+          assertFalse(result.isEmpty());
+          assertEquals(boards, result.getContent());
+          verify(boardRepository).findAllBoard(pageable);
+      }
+
+      @Test
+      public void findAllBoard_whenBoardDoesNotExist() {
+          //given
+          Pageable pageable = mock(Pageable.class);
+          Page<Board> boardPage = mock(Page.class);
+
+          given(boardPage.isEmpty())
+              .willReturn(true);
+          given(boardRepository.findAllBoard(pageable))
+              .willReturn(boardPage);
+
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.findAllBoard(pageable));
+          verify(boardRepository).findAllBoard(pageable);
       }
   }
  }
