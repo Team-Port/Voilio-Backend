@@ -18,6 +18,7 @@
  import java.util.ArrayList;
  import java.util.List;
  import java.util.Optional;
+ import org.apache.commons.lang3.builder.ToStringExclude;
  import org.junit.jupiter.api.*;
  import org.junit.jupiter.api.extension.ExtendWith;
  import org.junit.jupiter.api.function.Executable;
@@ -27,6 +28,7 @@
  import org.mockito.junit.jupiter.MockitoExtension;
  import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
  import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageImpl;
  import org.springframework.data.domain.Pageable;
  import org.springframework.mock.web.MockMultipartFile;
  import org.springframework.test.context.ActiveProfiles;
@@ -363,6 +365,49 @@
           assertThrows(NotFoundBoard.class, () -> boardService.updateBoard(boardId, request));
           verify(boardRepository).findById(boardId);
           verifyNoMoreInteractions(boardRepository);
+      }
+  }
+
+  @Nested
+  class findBoardByCategory {
+      @Test
+      public void findBoardByCategory_whenBoardExists() {
+          //given
+          Category category = Category.IT;
+          Pageable pageable = mock(Pageable.class);
+
+          List<Board> boardList = new ArrayList<>();
+          boardList.add(board1);
+          boardList.add(board2);
+          Page<Board> boardPage = new PageImpl<>(boardList);
+
+          given(boardRepository.findBoardByCategory(category, category, pageable))
+              .willReturn(boardPage);
+
+          //when
+          Page<Board> result = boardService.findBoardByCategory(category, pageable);
+
+          //then
+          assertFalse(result.isEmpty());
+          assertEquals(2, result.getContent().size());
+
+          verify(boardRepository).findBoardByCategory(category, category, pageable);
+      }
+
+      @Test
+      public void findBoardByCategory_whenBoardDoesNotExist() {
+          //given
+          Category category = Category.KOTLIN;
+          Pageable pageable = mock(Pageable.class);
+
+          Page<Board> emptyBoardPage = new PageImpl<>(new ArrayList<>());
+
+          given(boardRepository.findBoardByCategory(category, category, pageable))
+              .willReturn(emptyBoardPage);
+
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category, pageable));
+          verify(boardRepository).findBoardByCategory(category, category, pageable);
       }
   }
  }
