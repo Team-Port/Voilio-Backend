@@ -180,15 +180,15 @@
       @Test
       public void testFindBoardByIdExceptHide() {
           Long boardId = board2.getId();
-          when(boardRepository.findBoardByIdExceptHide(boardId))
-              .thenReturn(Optional.of(board2));
+          //given
+          given(boardRepository.findBoardByIdExceptHide(boardId))
+              .willReturn(Optional.of(board2));
 
-          BoardResponse result = boardService.findBoardByIdExceptHide(boardId);
-          verify(boardRepository).findBoardByIdExceptHide(boardId);
+          //when
+          BoardResponse actual = boardService.findBoardByIdExceptHide(boardId);
 
-          verify(boardMapper).toDto(board2);
-
-          assertNotNull(result);
+          //then
+          assertEquals(boardId, actual.getId());
       }
   }
  }
