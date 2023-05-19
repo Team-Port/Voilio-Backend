@@ -30,6 +30,7 @@
  import org.springframework.data.domain.Page;
  import org.springframework.data.domain.PageImpl;
  import org.springframework.data.domain.Pageable;
+ import org.springframework.lang.Nullable;
  import org.springframework.mock.web.MockMultipartFile;
  import org.springframework.test.context.ActiveProfiles;
 
@@ -409,5 +410,71 @@
           assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category, pageable));
           verify(boardRepository).findBoardByCategory(category, category, pageable);
       }
+  }
+
+  @Nested
+  class findBoardByUserNickname {
+      @Test
+      public void findBoardByUserNickname_whenBoardExist() {
+          //given
+          String nickname = user1.getNickname();
+          Pageable pageable = mock(Pageable.class);
+
+          List<Board> boardList = new ArrayList<>();
+          boardList.add(board1);
+          Page<Board> boardPage = new PageImpl<>(boardList);
+
+          given(userRepository.findUserByNickname(nickname))
+              .willReturn(Optional.of(user1));
+          given(boardRepository.findBoardByUserNickname(nickname, pageable))
+              .willReturn(boardPage);
+
+          //when
+          Page<Board> result = boardService.findBoardByUserNickname(nickname, pageable);
+
+          //then
+          assertFalse(result.isEmpty());
+          assertEquals(1, result.getContent().size());
+
+          verify(userRepository).findUserByNickname(nickname);
+          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+      }
+
+      @Test
+      public void findBoardByUserNickname_whenBoardDoesNotExist() {
+          //given
+          String nickname = user1.getNickname();
+          Pageable pageable = mock(Pageable.class);
+
+          given(userRepository.findUserByNickname(nickname))
+              .willReturn(Optional.of(user1));
+          given(boardRepository.findBoardByUserNickname(nickname, pageable))
+              .willReturn(Page.empty());
+
+          //when, then
+          assertThrows(NotFoundBoard.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
+
+          verify(userRepository).findUserByNickname(nickname);
+          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+      }
+
+      @Test
+      public void findBoardByUserNickname_whenUserNotFound() {
+          //given
+          String nickname = "nonexistentNickname";
+          Pageable pageable = mock(Pageable.class);
+
+          when(userRepository.findUserByNickname(nickname))
+              .thenReturn(null);
+          given(boardRepository.findBoardByUserNickname(nickname, pageable))
+              .willReturn(Page.empty());
+
+          //when, then
+          assertThrows(NotFoundUser.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
+
+          verify(userRepository).findUserByNickname(nickname);
+          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+      }
+
   }
  }
