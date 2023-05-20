@@ -4,9 +4,12 @@
  import static org.mockito.BDDMockito.given;
  import static org.mockito.Mockito.*;
 
+ import com.amazonaws.services.s3.transfer.Upload;
  import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
  import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
  import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+ import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
+ import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
  import com.techeer.port.voilio.domain.board.entity.Board;
  import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
  import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
@@ -15,10 +18,14 @@
  import com.techeer.port.voilio.domain.user.entity.User;
  import com.techeer.port.voilio.domain.user.repository.UserRepository;
  import com.techeer.port.voilio.global.common.Category;
+ import com.techeer.port.voilio.s3.util.S3Manager;
+ import java.io.IOException;
  import java.util.ArrayList;
  import java.util.List;
  import java.util.Optional;
+ import net.minidev.asm.ex.ConvertException;
  import org.apache.commons.lang3.builder.ToStringExclude;
+ import org.hibernate.sql.Update;
  import org.junit.jupiter.api.*;
  import org.junit.jupiter.api.extension.ExtendWith;
  import org.junit.jupiter.api.function.Executable;
@@ -33,6 +40,7 @@
  import org.springframework.lang.Nullable;
  import org.springframework.mock.web.MockMultipartFile;
  import org.springframework.test.context.ActiveProfiles;
+ import org.springframework.web.multipart.MultipartFile;
 
  import static org.hamcrest.MatcherAssert.*;
  import static org.hamcrest.Matchers.is;
@@ -43,6 +51,8 @@
  public class BoardServiceTest {
   @Mock private BoardRepository boardRepository;
   @Mock private UserRepository userRepository;
+
+  @Mock private S3Manager s3Manager;
   @Spy private BoardMapper boardMapper;
 
   @InjectMocks private BoardService boardService;
@@ -500,8 +510,83 @@
 
           verify(userRepository).findUserByNickname(nickname);
           verify(boardRepository).findBoardByUserNicknameExceptHide(nickname, pageable);
+      }
+  }
+  @Nested
+  class uploadFiles {
+      @Test
+      public void uploadFiles() throws IOException {
+          //given
+          MultipartFile videoFile = mock(MultipartFile.class);
+          MultipartFile thumbnailFile = mock(MultipartFile.class);
+          String video_url = "https://www.naver.com/video.mp4";
+          String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
+          UploadFileResponse uploadFileResponse = new UploadFileResponse(video_url, thumbnail_url);
 
+          given(s3Manager.upload(videoFile, "video"))
+              .willReturn(video_url);
+          given(s3Manager.upload(thumbnailFile, "thumbnail"))
+              .willReturn(thumbnail_url);
 
+          //when
+          UploadFileResponse result = boardService.uploadFiles(videoFile, thumbnailFile);
+
+          //then
+          assertEquals(uploadFileResponse.getVideo_url(), result.getVideo_url());
+          assertEquals(uploadFileResponse.getThumbnail_url(), result.getThumbnail_url());
+
+          verify(s3Manager).upload(videoFile, "video");
+          verify(s3Manager).upload(thumbnailFile, "thumbnail");
+      }
+
+      @Test
+      public void uploadFiles_whenIOExceptionThrown() throws IOException {
+          //given
+          MultipartFile videoFile = mock(MultipartFile.class);
+          MultipartFile thumbnailFile = mock(MultipartFile.class);
+
+          given(s3Manager.upload(videoFile, "video"))
+              .willThrow(new IOException());
+
+          //when, then
+          assertThrows(ConvertException.class, () -> boardService.uploadFiles(videoFile, thumbnailFile));
+
+          verify(s3Manager).upload(videoFile, "video");
+      }
+  }
+  @Nested
+  class updateFiles {
+      @Test
+      public void updateFiles() throws IOException{
+          //given
+          MultipartFile thumbnailFile = mock(MultipartFile.class);
+          String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
+          UpdateFileResponse updateFileResponse = new UpdateFileResponse(thumbnail_url);
+
+          given(s3Manager.upload(thumbnailFile, "thumbnail"))
+              .willReturn(thumbnail_url);
+
+          //when
+          UploadFileResponse result = boardService.updateFiles(thumbnailFile);
+
+          //then
+          assertEquals(updateFileResponse.getThumbnail_url(), result.getThumbnail_url());
+
+          verify(s3Manager).upload(thumbnailFile, "thumbnail");
+      }
+
+      @Test
+      public void updateFiles_whenIOExceptionThrown() throws IOException {
+          //given
+          MultipartFile thumbnailFile = mock(MultipartFile.class);
+
+          given(s3Manager.upload(thumbnailFile, "thumbnail"))
+              .willThrow(new IOException());
+
+          //when, then
+          assertThrows(ConvertException.class, () -> boardService.updateFiles(thumbnailFile));
+
+          verify(s3Manager).upload(thumbnailFile, "thumbnail");
       }
   }
  }

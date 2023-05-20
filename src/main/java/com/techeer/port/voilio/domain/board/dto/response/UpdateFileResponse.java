@@ -7,4 +7,8 @@ import lombok.Getter;
 @Getter
 public class UpdateFileResponse {
   private String thumbnail_url;
+
+  public UpdateFileResponse(String thumbnail_url) {
+    this.thumbnail_url = thumbnail_url;
+  }
 }
