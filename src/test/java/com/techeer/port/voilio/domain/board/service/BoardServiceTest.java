@@ -464,8 +464,8 @@
           String nickname = "nonexistentNickname";
           Pageable pageable = mock(Pageable.class);
 
-          when(userRepository.findUserByNickname(nickname))
-              .thenReturn(null);
+          given(userRepository.findUserByNickname(nickname))
+              .willReturn(null);
           given(boardRepository.findBoardByUserNickname(nickname, pageable))
               .willReturn(Page.empty());
 
@@ -476,5 +476,32 @@
           verify(boardRepository).findBoardByUserNickname(nickname, pageable);
       }
 
+      @Test
+      public void findBoardByUserNicknameExceptHide_whenBoardExists() {
+          //given
+          String nickname = user1.getNickname();
+          Pageable pageable = mock(Pageable.class);
+
+          List<Board> boardList = new ArrayList<>();
+          boardList.add(board2);
+          Page<Board> boardPage = new PageImpl<>(boardList);
+
+          given(userRepository.findUserByNickname(nickname))
+              .willReturn(Optional.of(user1));
+          given(boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable))
+              .willReturn(boardPage);
+
+          //when
+          Page<Board> result = boardService.findBoardByUserNicknameExceptHide(nickname, pageable);
+
+          //then
+          assertFalse(result.isEmpty());
+          assertEquals(1, result.getContent().size());
+
+          verify(userRepository).findUserByNickname(nickname);
+          verify(boardRepository).findBoardByUserNicknameExceptHide(nickname, pageable);
+
+
+      }
   }
  }
