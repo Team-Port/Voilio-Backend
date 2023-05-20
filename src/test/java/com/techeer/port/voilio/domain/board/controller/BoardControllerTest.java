@@ -35,7 +35,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BoardController Test Start")
@@ -147,5 +149,47 @@ public class BoardControllerTest {
                 .header("Authorization", authorizationHeader))
         .andDo(print())
         .andExpect(status().isOk());
+  }
+  @Test
+  @DisplayName("게시물 생성 테스트")
+  public void testCreateBoard() throws Exception {
+    // Mock 데이터 설정
+    Long userId = 1L;
+    String title = "Test Title";
+    String content = "Test Content";
+    String videoUrl = "http://example.com/video.mp4";
+    String thumbnailUrl = "http://example.com/thumbnail.jpg";
+
+    MultipartFile videoFile = new MockMultipartFile("video", "video.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "test video".getBytes());
+    MultipartFile thumbnailFile = new MockMultipartFile("thumbnail", "thumbnail.jpg", MediaType.MULTIPART_FORM_DATA_VALUE, "test thumbnail".getBytes());
+
+    UploadFileResponse uploadFileResponse = UploadFileResponse.builder()
+        .video_url(videoUrl)
+        .thumbnail_url(thumbnailUrl)
+        .build();
+
+    when(boardService.uploadFiles(any(MultipartFile.class), any(MultipartFile.class)))
+        .thenReturn(uploadFileResponse);
+
+    doAnswer(invocation -> {
+      BoardCreateRequest argument = invocation.getArgument(0);
+      return null;
+    }).when(boardService).createBoard(any(BoardCreateRequest.class));
+
+    // MockMvc를 사용하여 API 테스트
+    mockMvc.perform(MockMvcRequestBuilders.multipart(BASE_PATH + "/create")
+            .file("video", videoFile.getBytes())
+            .file("thumbnail", thumbnailFile.getBytes())
+            .param("user_id", String.valueOf(userId))
+            .param("title", title)
+            .param("content", content)
+            .param("category1", Category.IT.toString())
+            .param("category2", Category.JAVA.toString()))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(print());
+
+    // 특정 메서드가 특정 인자로 호출되었는지 검증
+    verify(boardService, times(1)).uploadFiles(any(MultipartFile.class), any(MultipartFile.class));
+    verify(boardService, times(1)).createBoard(any(BoardCreateRequest.class));
   }
 }
