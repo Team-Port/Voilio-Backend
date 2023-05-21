@@ -14,11 +14,17 @@ import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
 import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +32,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +58,7 @@ public class BoardControllerTest {
   private BoardService boardService;
   @Mock
   private UserService userService;
+  @Mock private BoardMapper boardMapper;
 
   @InjectMocks
   private BoardController boardController;
@@ -191,5 +203,55 @@ public class BoardControllerTest {
     // 특정 메서드가 특정 인자로 호출되었는지 검증
     verify(boardService, times(1)).uploadFiles(any(MultipartFile.class), any(MultipartFile.class));
     verify(boardService, times(1)).createBoard(any(BoardCreateRequest.class));
+  }
+
+  @Test
+  public void findAllBoard() throws Exception{
+    //given
+    String authorizationHeader = "Bearer <token>";
+
+    User user = User.builder()
+        .email("tester1@example.com")
+        .password("testPassword")
+        .nickname("tester1")
+        .build();
+    Board board = Board.builder()
+        .user(user)
+        .title("Test Board")
+        .content("Test Content")
+        .category1(Category.IT)
+        .category2(Category.KOTLIN)
+        .video_url("http://example.com/video")
+        .thumbnail_url("http://example.com/thumbnail")
+        .isPublic(true)
+        .build();
+
+    List<Board> boardList = List.of(board);
+    Page<Board> boardPage = new PageImpl<>(boardList);
+
+    given(boardService.findAllBoard(any()))
+        .willReturn(boardPage);
+    given(boardMapper.toDto(any(Board.class)))
+        .willAnswer(invocation -> {
+          Board boardArg = invocation.getArgument(0);
+          return BoardResponse.builder()
+              .id(boardArg.getId())
+              .title(boardArg.getTitle())
+              .content(boardArg.getContent())
+              .category1(boardArg.getCategory1())
+              .category2(boardArg.getCategory2())
+              .video_url(boardArg.getVideo_url())
+              .thumbnail_url(boardArg.getThumbnail_url())
+              .isPublic(boardArg.getIsPublic())
+              .build();
+        });
+
+    //when
+    ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
+        boardController.findAllBoard(0, 30, authorizationHeader);
+    //then
+    mockMvc.perform(get(BASE_PATH + "/lists"))
+        .andDo(print())
+        .andExpect(status().isOk());
   }
 }
