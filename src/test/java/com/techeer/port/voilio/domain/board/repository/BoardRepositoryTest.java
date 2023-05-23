@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
@@ -22,8 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -310,16 +309,17 @@ public class BoardRepositoryTest {
   @Test
   @DisplayName("testFindBoardByIdExceptHide")
   public void testFindBoardByIdExceptHide() {
-    Board board = Board.builder()
-        .user(user1)
-        .title("Test")
-        .content("Test")
-        .category1(Category.IT)
-        .category2(Category.IT)
-        .isPublic(true)
-        .video_url("https://www.naver.com/")
-        .thumbnail_url("https://www.naver.com/")
-        .build();
+    Board board =
+        Board.builder()
+            .user(user1)
+            .title("Test")
+            .content("Test")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .isPublic(true)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com/")
+            .build();
 
     board = boardRepository.save(board);
     Long boardId = board.getId();
@@ -335,7 +335,8 @@ public class BoardRepositoryTest {
   @Test
   public void testFindBoardByCategory() {
     Pageable pageable = PageRequest.of(0, 10);
-    Page<Board> result = boardRepository.findBoardByCategory(Category.IT, Category.KOTLIN, pageable);
+    Page<Board> result =
+        boardRepository.findBoardByCategory(Category.IT, Category.KOTLIN, pageable);
 
     assertThat(result).hasSize(2);
   }

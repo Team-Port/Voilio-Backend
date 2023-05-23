@@ -1,54 +1,45 @@
- package com.techeer.port.voilio.domain.board.service;
+package com.techeer.port.voilio.domain.board.service;
 
- import static org.junit.jupiter.api.Assertions.*;
- import static org.mockito.BDDMockito.given;
- import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
- import com.amazonaws.services.s3.transfer.Upload;
- import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
- import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
- import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
- import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
- import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
- import com.techeer.port.voilio.domain.board.entity.Board;
- import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
- import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
- import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
- import com.techeer.port.voilio.domain.board.repository.BoardRepository;
- import com.techeer.port.voilio.domain.user.entity.User;
- import com.techeer.port.voilio.domain.user.repository.UserRepository;
- import com.techeer.port.voilio.global.common.Category;
- import com.techeer.port.voilio.s3.util.S3Manager;
- import java.io.IOException;
- import java.util.ArrayList;
- import java.util.List;
- import java.util.Optional;
- import net.minidev.asm.ex.ConvertException;
- import org.apache.commons.lang3.builder.ToStringExclude;
- import org.hibernate.sql.Update;
- import org.junit.jupiter.api.*;
- import org.junit.jupiter.api.extension.ExtendWith;
- import org.junit.jupiter.api.function.Executable;
- import org.mockito.InjectMocks;
- import org.mockito.Mock;
- import org.mockito.Spy;
- import org.mockito.junit.jupiter.MockitoExtension;
- import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
- import org.springframework.data.domain.Page;
- import org.springframework.data.domain.PageImpl;
- import org.springframework.data.domain.Pageable;
- import org.springframework.lang.Nullable;
- import org.springframework.mock.web.MockMultipartFile;
- import org.springframework.test.context.ActiveProfiles;
- import org.springframework.web.multipart.MultipartFile;
+import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
+import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
+import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
+import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
+import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.s3.util.S3Manager;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import net.minidev.asm.ex.ConvertException;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.multipart.MultipartFile;
 
- import static org.hamcrest.MatcherAssert.*;
- import static org.hamcrest.Matchers.is;
-
- @ExtendWith(MockitoExtension.class)
- @ActiveProfiles("test")
- @DisplayName("Board Service")
- public class BoardServiceTest {
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
+@DisplayName("Board Service")
+public class BoardServiceTest {
   @Mock private BoardRepository boardRepository;
   @Mock private UserRepository userRepository;
 
@@ -135,8 +126,7 @@
       boards.add(board1);
       boards.add(board2);
 
-      given(boardRepository.findBoardByKeyword(keyword))
-          .willReturn(boards);
+      given(boardRepository.findBoardByKeyword(keyword)).willReturn(boards);
 
       // when
       List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
@@ -146,8 +136,7 @@
       for (int i = 0; i < boards.size(); i++) {
         assertEquals(boards.get(i).getTitle(), foundBoards.get(i).getTitle());
       }
-      verify(boardRepository, times(1))
-          .findBoardByKeyword(keyword);
+      verify(boardRepository, times(1)).findBoardByKeyword(keyword);
     }
 
     @Test
@@ -155,68 +144,64 @@
     public void findBoardByKeyword_whenNotExistBoard() {
       // given
       String keyword = "no";
-      given(boardRepository.findBoardByKeyword(keyword))
-          .willReturn(new ArrayList<>());
+      given(boardRepository.findBoardByKeyword(keyword)).willReturn(new ArrayList<>());
 
       // when
       List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
 
       // then
-      verify(boardRepository, times(1))
-          .findBoardByKeyword(keyword);
+      verify(boardRepository, times(1)).findBoardByKeyword(keyword);
     }
   }
 
   @Nested
   class findBoardById {
-      @Test
-      public void findBoardById_whenBoardExists_shouldReturnBoard() {
-          Long boardId = board1.getId();
-          //given
-          given(boardRepository.findBoardById(boardId))
-              .willReturn(Optional.of(board1));
+    @Test
+    public void findBoardById_whenBoardExists_shouldReturnBoard() {
+      Long boardId = board1.getId();
+      // given
+      given(boardRepository.findBoardById(boardId)).willReturn(Optional.of(board1));
 
-          //when
-          BoardResponse actual = boardService.findBoardById(boardId);
+      // when
+      BoardResponse actual = boardService.findBoardById(boardId);
 
-          //then
-          assertEquals(boardId, actual.getId());
-          verify(boardRepository).findBoardById(boardId);
-      }
+      // then
+      assertEquals(boardId, actual.getId());
+      verify(boardRepository).findBoardById(boardId);
+    }
 
-      @Test
-      public void findBoardById_whenBoardDoesNotExist_shouldThrowException() {
-          //given
-          Long boardId = board1.getId();
-          given(boardRepository.findBoardById(boardId))
-              .willReturn(Optional.empty());
+    @Test
+    public void findBoardById_whenBoardDoesNotExist_shouldThrowException() {
+      // given
+      Long boardId = board1.getId();
+      given(boardRepository.findBoardById(boardId)).willReturn(Optional.empty());
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.findBoardById(boardId));
-          verify(boardRepository).findBoardById(boardId);
-      }
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.findBoardById(boardId));
+      verify(boardRepository).findBoardById(boardId);
+    }
 
-      @Test
-      public void testFindBoardByIdExceptHide() {
-          Long boardId = board2.getId();
-          //given
-          given(boardRepository.findBoardByIdExceptHide(boardId))
-              .willReturn(Optional.of(board2));
+    @Test
+    public void testFindBoardByIdExceptHide() {
+      Long boardId = board2.getId();
+      // given
+      given(boardRepository.findBoardByIdExceptHide(boardId)).willReturn(Optional.of(board2));
 
-          //when
-          BoardResponse actual = boardService.findBoardByIdExceptHide(boardId);
+      // when
+      BoardResponse actual = boardService.findBoardByIdExceptHide(boardId);
 
-          //then
-          assertEquals(boardId, actual.getId());
-          verify(boardRepository).findBoardByIdExceptHide(boardId);
-      }
+      // then
+      assertEquals(boardId, actual.getId());
+      verify(boardRepository).findBoardByIdExceptHide(boardId);
+    }
   }
 
   @Nested
   class createBoard {
-      @Test
-      public void testCreateBoard() {
-          BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+    @Test
+    public void testCreateBoard() {
+      BoardCreateRequest boardCreateRequest =
+          BoardCreateRequest.builder()
               .user_id(user1.getId())
               .title("Test")
               .content("Test")
@@ -226,18 +211,18 @@
               .thumbnail_url("https://www.naver.com/thumbnail.jpg")
               .build();
 
-          when(userRepository.findById(boardCreateRequest.getUser_id()))
-              .thenReturn(Optional.of(user1));
+      when(userRepository.findById(boardCreateRequest.getUser_id())).thenReturn(Optional.of(user1));
 
-          assertDoesNotThrow(() -> boardService.createBoard(boardCreateRequest));
+      assertDoesNotThrow(() -> boardService.createBoard(boardCreateRequest));
 
-          verify(userRepository).findById(boardCreateRequest.getUser_id());
-          verify(boardRepository).save(any(Board.class));
-      }
+      verify(userRepository).findById(boardCreateRequest.getUser_id());
+      verify(boardRepository).save(any(Board.class));
+    }
 
-      @Test
-      public void testCreatedBoard_InvalidRequest_ThrowException() {
-          BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+    @Test
+    public void testCreatedBoard_InvalidRequest_ThrowException() {
+      BoardCreateRequest boardCreateRequest =
+          BoardCreateRequest.builder()
               .user_id(123L)
               .title("Test")
               .content("Test")
@@ -247,90 +232,86 @@
               .thumbnail_url("https://www.naver.com/thumbnail.jpg")
               .build();
 
-          assertThrows(NotFoundUser.class, () -> boardService.createBoard(boardCreateRequest));
+      assertThrows(NotFoundUser.class, () -> boardService.createBoard(boardCreateRequest));
 
-          verify(userRepository).findById(boardCreateRequest.getUser_id());
-          verify(boardRepository, never()).save(any(Board.class));
-      }
+      verify(userRepository).findById(boardCreateRequest.getUser_id());
+      verify(boardRepository, never()).save(any(Board.class));
+    }
   }
+
   @Nested
   class hideBoard {
-      @Test
-      public void hideBoard_whenBoardExists() {
-          //given
-          Long boardId = board1.getId();
-          given(boardRepository.findById(boardId))
-              .willReturn(Optional.of(board1));
+    @Test
+    public void hideBoard_whenBoardExists() {
+      // given
+      Long boardId = board1.getId();
+      given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
 
-          //when
-          boardService.hideBoard(boardId);
+      // when
+      boardService.hideBoard(boardId);
 
-          //then
-          assertFalse(board1.getIsPublic());
-          verify(boardRepository).findById(boardId);
-          verify(boardRepository).save(board1);
-      }
+      // then
+      assertFalse(board1.getIsPublic());
+      verify(boardRepository).findById(boardId);
+      verify(boardRepository).save(board1);
+    }
 
-      @Test
-      public void hideBoard_whenBoardDoesNotExist() {
-          //given
-          Long boardId = 3L;
-          given(boardRepository.findById(boardId))
-              .willReturn(Optional.empty());
+    @Test
+    public void hideBoard_whenBoardDoesNotExist() {
+      // given
+      Long boardId = 3L;
+      given(boardRepository.findById(boardId)).willReturn(Optional.empty());
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.hideBoard(boardId));
-          verify(boardRepository).findById(boardId);
-      }
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.hideBoard(boardId));
+      verify(boardRepository).findById(boardId);
+    }
   }
 
   @Nested
   class findAllBoard {
-      @Test
-      public void findAllBoard_whenBoardExists() {
-          //given
-          Pageable pageable = mock(Pageable.class);
-          List<Board> boards = List.of(board1, board2);
-          Page<Board> boardPage = mock(Page.class);
+    @Test
+    public void findAllBoard_whenBoardExists() {
+      // given
+      Pageable pageable = mock(Pageable.class);
+      List<Board> boards = List.of(board1, board2);
+      Page<Board> boardPage = mock(Page.class);
 
-          given(boardPage.getContent())
-              .willReturn(boards);
-          given(boardRepository.findAllBoard(pageable))
-              .willReturn(boardPage);
+      given(boardPage.getContent()).willReturn(boards);
+      given(boardRepository.findAllBoard(pageable)).willReturn(boardPage);
 
-          //when
-          Page<Board> result = boardService.findAllBoard(pageable);
+      // when
+      Page<Board> result = boardService.findAllBoard(pageable);
 
-          //then
-          assertFalse(result.isEmpty());
-          assertEquals(boards, result.getContent());
-          verify(boardRepository).findAllBoard(pageable);
-      }
+      // then
+      assertFalse(result.isEmpty());
+      assertEquals(boards, result.getContent());
+      verify(boardRepository).findAllBoard(pageable);
+    }
 
-      @Test
-      public void findAllBoard_whenBoardDoesNotExist() {
-          //given
-          Pageable pageable = mock(Pageable.class);
-          Page<Board> boardPage = mock(Page.class);
+    @Test
+    public void findAllBoard_whenBoardDoesNotExist() {
+      // given
+      Pageable pageable = mock(Pageable.class);
+      Page<Board> boardPage = mock(Page.class);
 
-          given(boardPage.isEmpty())
-              .willReturn(true);
-          given(boardRepository.findAllBoard(pageable))
-              .willReturn(boardPage);
+      given(boardPage.isEmpty()).willReturn(true);
+      given(boardRepository.findAllBoard(pageable)).willReturn(boardPage);
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.findAllBoard(pageable));
-          verify(boardRepository).findAllBoard(pageable);
-      }
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.findAllBoard(pageable));
+      verify(boardRepository).findAllBoard(pageable);
+    }
   }
 
   @Nested
   class updateBoard {
-      @Test
-      public void updateBoard_whenBoardExists() {
-          //given
-          Long boardId = board1.getId();
-          BoardUpdateRequest request = BoardUpdateRequest.builder()
+    @Test
+    public void updateBoard_whenBoardExists() {
+      // given
+      Long boardId = board1.getId();
+      BoardUpdateRequest request =
+          BoardUpdateRequest.builder()
               .title("updatedTitle")
               .content("updatedContent")
               .category1(Category.KOTLIN)
@@ -338,30 +319,29 @@
               .thumbnail_url("https://www.naver.com.update/thumbnail.jpg")
               .build();
 
-          given(boardRepository.findById(boardId))
-              .willReturn(Optional.of(board1));
-          given(boardRepository.save(any(Board.class)))
-              .willReturn(board1);
+      given(boardRepository.findById(boardId)).willReturn(Optional.of(board1));
+      given(boardRepository.save(any(Board.class))).willReturn(board1);
 
-          //when
-          Board updatedBoard = boardService.updateBoard(boardId, request);
+      // when
+      Board updatedBoard = boardService.updateBoard(boardId, request);
 
-          //then
-          assertEquals(request.getTitle(), updatedBoard.getTitle());
-          assertEquals(request.getContent(), updatedBoard.getContent());
-          assertEquals(request.getCategory1(), updatedBoard.getCategory1());
-          assertEquals(request.getCategory2(), updatedBoard.getCategory2());
-          assertEquals(request.getThumbnail_url(), updatedBoard.getThumbnail_url());
+      // then
+      assertEquals(request.getTitle(), updatedBoard.getTitle());
+      assertEquals(request.getContent(), updatedBoard.getContent());
+      assertEquals(request.getCategory1(), updatedBoard.getCategory1());
+      assertEquals(request.getCategory2(), updatedBoard.getCategory2());
+      assertEquals(request.getThumbnail_url(), updatedBoard.getThumbnail_url());
 
-          verify(boardRepository).findById(boardId);
-          verify(boardRepository).save(any(Board.class));
-      }
+      verify(boardRepository).findById(boardId);
+      verify(boardRepository).save(any(Board.class));
+    }
 
-      @Test
-      public void updateBoard_whenBoardDoesNotExist() {
-          //given
-          Long boardId = 4L;
-          BoardUpdateRequest request = BoardUpdateRequest.builder()
+    @Test
+    public void updateBoard_whenBoardDoesNotExist() {
+      // given
+      Long boardId = 4L;
+      BoardUpdateRequest request =
+          BoardUpdateRequest.builder()
               .title("updatedTitle")
               .content("updatedContent")
               .category1(Category.KOTLIN)
@@ -369,224 +349,216 @@
               .thumbnail_url("https://www.naver.com.update/thumbnail.jpg")
               .build();
 
-          given(boardRepository.findById(boardId))
-              .willReturn(Optional.empty());
+      given(boardRepository.findById(boardId)).willReturn(Optional.empty());
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.updateBoard(boardId, request));
-          verify(boardRepository).findById(boardId);
-          verifyNoMoreInteractions(boardRepository);
-      }
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.updateBoard(boardId, request));
+      verify(boardRepository).findById(boardId);
+      verifyNoMoreInteractions(boardRepository);
+    }
   }
 
   @Nested
   class findBoardByCategory {
-      @Test
-      public void findBoardByCategory_whenBoardExists() {
-          //given
-          Category category = Category.IT;
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByCategory_whenBoardExists() {
+      // given
+      Category category = Category.IT;
+      Pageable pageable = mock(Pageable.class);
 
-          List<Board> boardList = new ArrayList<>();
-          boardList.add(board1);
-          boardList.add(board2);
-          Page<Board> boardPage = new PageImpl<>(boardList);
+      List<Board> boardList = new ArrayList<>();
+      boardList.add(board1);
+      boardList.add(board2);
+      Page<Board> boardPage = new PageImpl<>(boardList);
 
-          given(boardRepository.findBoardByCategory(category, category, pageable))
-              .willReturn(boardPage);
+      given(boardRepository.findBoardByCategory(category, category, pageable))
+          .willReturn(boardPage);
 
-          //when
-          Page<Board> result = boardService.findBoardByCategory(category, pageable);
+      // when
+      Page<Board> result = boardService.findBoardByCategory(category, pageable);
 
-          //then
-          assertFalse(result.isEmpty());
-          assertEquals(2, result.getContent().size());
+      // then
+      assertFalse(result.isEmpty());
+      assertEquals(2, result.getContent().size());
 
-          verify(boardRepository).findBoardByCategory(category, category, pageable);
-      }
+      verify(boardRepository).findBoardByCategory(category, category, pageable);
+    }
 
-      @Test
-      public void findBoardByCategory_whenBoardDoesNotExist() {
-          //given
-          Category category = Category.KOTLIN;
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByCategory_whenBoardDoesNotExist() {
+      // given
+      Category category = Category.KOTLIN;
+      Pageable pageable = mock(Pageable.class);
 
-          Page<Board> emptyBoardPage = new PageImpl<>(new ArrayList<>());
+      Page<Board> emptyBoardPage = new PageImpl<>(new ArrayList<>());
 
-          given(boardRepository.findBoardByCategory(category, category, pageable))
-              .willReturn(emptyBoardPage);
+      given(boardRepository.findBoardByCategory(category, category, pageable))
+          .willReturn(emptyBoardPage);
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category, pageable));
-          verify(boardRepository).findBoardByCategory(category, category, pageable);
-      }
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category, pageable));
+      verify(boardRepository).findBoardByCategory(category, category, pageable);
+    }
   }
 
   @Nested
   class findBoardByUserNickname {
-      @Test
-      public void findBoardByUserNickname_whenBoardExist() {
-          //given
-          String nickname = user1.getNickname();
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByUserNickname_whenBoardExist() {
+      // given
+      String nickname = user1.getNickname();
+      Pageable pageable = mock(Pageable.class);
 
-          List<Board> boardList = new ArrayList<>();
-          boardList.add(board1);
-          Page<Board> boardPage = new PageImpl<>(boardList);
+      List<Board> boardList = new ArrayList<>();
+      boardList.add(board1);
+      Page<Board> boardPage = new PageImpl<>(boardList);
 
-          given(userRepository.findUserByNickname(nickname))
-              .willReturn(Optional.of(user1));
-          given(boardRepository.findBoardByUserNickname(nickname, pageable))
-              .willReturn(boardPage);
+      given(userRepository.findUserByNickname(nickname)).willReturn(Optional.of(user1));
+      given(boardRepository.findBoardByUserNickname(nickname, pageable)).willReturn(boardPage);
 
-          //when
-          Page<Board> result = boardService.findBoardByUserNickname(nickname, pageable);
+      // when
+      Page<Board> result = boardService.findBoardByUserNickname(nickname, pageable);
 
-          //then
-          assertFalse(result.isEmpty());
-          assertEquals(1, result.getContent().size());
+      // then
+      assertFalse(result.isEmpty());
+      assertEquals(1, result.getContent().size());
 
-          verify(userRepository).findUserByNickname(nickname);
-          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
-      }
+      verify(userRepository).findUserByNickname(nickname);
+      verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+    }
 
-      @Test
-      public void findBoardByUserNickname_whenBoardDoesNotExist() {
-          //given
-          String nickname = user1.getNickname();
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByUserNickname_whenBoardDoesNotExist() {
+      // given
+      String nickname = user1.getNickname();
+      Pageable pageable = mock(Pageable.class);
 
-          given(userRepository.findUserByNickname(nickname))
-              .willReturn(Optional.of(user1));
-          given(boardRepository.findBoardByUserNickname(nickname, pageable))
-              .willReturn(Page.empty());
+      given(userRepository.findUserByNickname(nickname)).willReturn(Optional.of(user1));
+      given(boardRepository.findBoardByUserNickname(nickname, pageable)).willReturn(Page.empty());
 
-          //when, then
-          assertThrows(NotFoundBoard.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
+      // when, then
+      assertThrows(
+          NotFoundBoard.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
 
-          verify(userRepository).findUserByNickname(nickname);
-          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
-      }
+      verify(userRepository).findUserByNickname(nickname);
+      verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+    }
 
-      @Test
-      public void findBoardByUserNickname_whenUserNotFound() {
-          //given
-          String nickname = "nonexistentNickname";
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByUserNickname_whenUserNotFound() {
+      // given
+      String nickname = "nonexistentNickname";
+      Pageable pageable = mock(Pageable.class);
 
-          given(userRepository.findUserByNickname(nickname))
-              .willReturn(null);
-          given(boardRepository.findBoardByUserNickname(nickname, pageable))
-              .willReturn(Page.empty());
+      given(userRepository.findUserByNickname(nickname)).willReturn(null);
+      given(boardRepository.findBoardByUserNickname(nickname, pageable)).willReturn(Page.empty());
 
-          //when, then
-          assertThrows(NotFoundUser.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
+      // when, then
+      assertThrows(
+          NotFoundUser.class, () -> boardService.findBoardByUserNickname(nickname, pageable));
 
-          verify(userRepository).findUserByNickname(nickname);
-          verify(boardRepository).findBoardByUserNickname(nickname, pageable);
-      }
+      verify(userRepository).findUserByNickname(nickname);
+      verify(boardRepository).findBoardByUserNickname(nickname, pageable);
+    }
 
-      @Test
-      public void findBoardByUserNicknameExceptHide_whenBoardExists() {
-          //given
-          String nickname = user1.getNickname();
-          Pageable pageable = mock(Pageable.class);
+    @Test
+    public void findBoardByUserNicknameExceptHide_whenBoardExists() {
+      // given
+      String nickname = user1.getNickname();
+      Pageable pageable = mock(Pageable.class);
 
-          List<Board> boardList = new ArrayList<>();
-          boardList.add(board2);
-          Page<Board> boardPage = new PageImpl<>(boardList);
+      List<Board> boardList = new ArrayList<>();
+      boardList.add(board2);
+      Page<Board> boardPage = new PageImpl<>(boardList);
 
-          given(userRepository.findUserByNickname(nickname))
-              .willReturn(Optional.of(user1));
-          given(boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable))
-              .willReturn(boardPage);
+      given(userRepository.findUserByNickname(nickname)).willReturn(Optional.of(user1));
+      given(boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable))
+          .willReturn(boardPage);
 
-          //when
-          Page<Board> result = boardService.findBoardByUserNicknameExceptHide(nickname, pageable);
+      // when
+      Page<Board> result = boardService.findBoardByUserNicknameExceptHide(nickname, pageable);
 
-          //then
-          assertFalse(result.isEmpty());
-          assertEquals(1, result.getContent().size());
+      // then
+      assertFalse(result.isEmpty());
+      assertEquals(1, result.getContent().size());
 
-          verify(userRepository).findUserByNickname(nickname);
-          verify(boardRepository).findBoardByUserNicknameExceptHide(nickname, pageable);
-      }
+      verify(userRepository).findUserByNickname(nickname);
+      verify(boardRepository).findBoardByUserNicknameExceptHide(nickname, pageable);
+    }
   }
+
   @Nested
   class uploadFiles {
-      @Test
-      public void uploadFiles() throws IOException {
-          //given
-          MultipartFile videoFile = mock(MultipartFile.class);
-          MultipartFile thumbnailFile = mock(MultipartFile.class);
-          String video_url = "https://www.naver.com/video.mp4";
-          String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
-          UploadFileResponse uploadFileResponse = new UploadFileResponse(video_url, thumbnail_url);
+    @Test
+    public void uploadFiles() throws IOException {
+      // given
+      MultipartFile videoFile = mock(MultipartFile.class);
+      MultipartFile thumbnailFile = mock(MultipartFile.class);
+      String video_url = "https://www.naver.com/video.mp4";
+      String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
+      UploadFileResponse uploadFileResponse = new UploadFileResponse(video_url, thumbnail_url);
 
-          given(s3Manager.upload(videoFile, "video"))
-              .willReturn(video_url);
-          given(s3Manager.upload(thumbnailFile, "thumbnail"))
-              .willReturn(thumbnail_url);
+      given(s3Manager.upload(videoFile, "video")).willReturn(video_url);
+      given(s3Manager.upload(thumbnailFile, "thumbnail")).willReturn(thumbnail_url);
 
-          //when
-          UploadFileResponse result = boardService.uploadFiles(videoFile, thumbnailFile);
+      // when
+      UploadFileResponse result = boardService.uploadFiles(videoFile, thumbnailFile);
 
-          //then
-          assertEquals(uploadFileResponse.getVideo_url(), result.getVideo_url());
-          assertEquals(uploadFileResponse.getThumbnail_url(), result.getThumbnail_url());
+      // then
+      assertEquals(uploadFileResponse.getVideo_url(), result.getVideo_url());
+      assertEquals(uploadFileResponse.getThumbnail_url(), result.getThumbnail_url());
 
-          verify(s3Manager).upload(videoFile, "video");
-          verify(s3Manager).upload(thumbnailFile, "thumbnail");
-      }
+      verify(s3Manager).upload(videoFile, "video");
+      verify(s3Manager).upload(thumbnailFile, "thumbnail");
+    }
 
-      @Test
-      public void uploadFiles_whenIOExceptionThrown() throws IOException {
-          //given
-          MultipartFile videoFile = mock(MultipartFile.class);
-          MultipartFile thumbnailFile = mock(MultipartFile.class);
+    @Test
+    public void uploadFiles_whenIOExceptionThrown() throws IOException {
+      // given
+      MultipartFile videoFile = mock(MultipartFile.class);
+      MultipartFile thumbnailFile = mock(MultipartFile.class);
 
-          given(s3Manager.upload(videoFile, "video"))
-              .willThrow(new IOException());
+      given(s3Manager.upload(videoFile, "video")).willThrow(new IOException());
 
-          //when, then
-          assertThrows(ConvertException.class, () -> boardService.uploadFiles(videoFile, thumbnailFile));
+      // when, then
+      assertThrows(
+          ConvertException.class, () -> boardService.uploadFiles(videoFile, thumbnailFile));
 
-          verify(s3Manager).upload(videoFile, "video");
-      }
+      verify(s3Manager).upload(videoFile, "video");
+    }
   }
+
   @Nested
   class updateFiles {
-      @Test
-      public void updateFiles() throws IOException{
-          //given
-          MultipartFile thumbnailFile = mock(MultipartFile.class);
-          String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
-          UpdateFileResponse updateFileResponse = new UpdateFileResponse(thumbnail_url);
+    @Test
+    public void updateFiles() throws IOException {
+      // given
+      MultipartFile thumbnailFile = mock(MultipartFile.class);
+      String thumbnail_url = "https://www.naver.com/thumbnail.jpeg";
+      UpdateFileResponse updateFileResponse = new UpdateFileResponse(thumbnail_url);
 
-          given(s3Manager.upload(thumbnailFile, "thumbnail"))
-              .willReturn(thumbnail_url);
+      given(s3Manager.upload(thumbnailFile, "thumbnail")).willReturn(thumbnail_url);
 
-          //when
-          UploadFileResponse result = boardService.updateFiles(thumbnailFile);
+      // when
+      UploadFileResponse result = boardService.updateFiles(thumbnailFile);
 
-          //then
-          assertEquals(updateFileResponse.getThumbnail_url(), result.getThumbnail_url());
+      // then
+      assertEquals(updateFileResponse.getThumbnail_url(), result.getThumbnail_url());
 
-          verify(s3Manager).upload(thumbnailFile, "thumbnail");
-      }
+      verify(s3Manager).upload(thumbnailFile, "thumbnail");
+    }
 
-      @Test
-      public void updateFiles_whenIOExceptionThrown() throws IOException {
-          //given
-          MultipartFile thumbnailFile = mock(MultipartFile.class);
+    @Test
+    public void updateFiles_whenIOExceptionThrown() throws IOException {
+      // given
+      MultipartFile thumbnailFile = mock(MultipartFile.class);
 
-          given(s3Manager.upload(thumbnailFile, "thumbnail"))
-              .willThrow(new IOException());
+      given(s3Manager.upload(thumbnailFile, "thumbnail")).willThrow(new IOException());
 
-          //when, then
-          assertThrows(ConvertException.class, () -> boardService.updateFiles(thumbnailFile));
+      // when, then
+      assertThrows(ConvertException.class, () -> boardService.updateFiles(thumbnailFile));
 
-          verify(s3Manager).upload(thumbnailFile, "thumbnail");
-      }
+      verify(s3Manager).upload(thumbnailFile, "thumbnail");
+    }
   }
- }
+}

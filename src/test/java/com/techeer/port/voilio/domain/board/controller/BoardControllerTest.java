@@ -41,14 +41,11 @@ import org.springframework.web.multipart.MultipartFile;
 @DisplayName("BoardController Test Start")
 public class BoardControllerTest {
 
-  @Mock
-  private BoardService boardService;
-  @Mock
-  private UserService userService;
+  @Mock private BoardService boardService;
+  @Mock private UserService userService;
   @Mock private BoardMapper boardMapper;
 
-  @InjectMocks
-  private BoardController boardController;
+  @InjectMocks private BoardController boardController;
   private MockMvc mockMvc;
 
   private static String BASE_PATH = "http://localhost/api/v1/boards";
@@ -75,80 +72,76 @@ public class BoardControllerTest {
 
   @Test
   public void findBoardById_authenticatedUser() throws Exception {
-    //given
+    // given
     Long boardId = 1L;
     String authorizationHeader = "Bearer <token>";
     Long currentLoginUserId = 123L;
 
-    BoardResponse boardResponse = BoardResponse.builder()
-        .id(boardId)
-        .title("Test")
-        .content("Test")
-        .category1(Category.IT)
-        .category2(Category.JAVA)
-        .video_url("https://www.naver.com/video.mp4")
-        .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
-        .user_id(123L)
-        .nickname("tester")
-        .isPublic(false)
-        .build();
+    BoardResponse boardResponse =
+        BoardResponse.builder()
+            .id(boardId)
+            .title("Test")
+            .content("Test")
+            .category1(Category.IT)
+            .category2(Category.JAVA)
+            .video_url("https://www.naver.com/video.mp4")
+            .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
+            .user_id(123L)
+            .nickname("tester")
+            .isPublic(false)
+            .build();
 
-    given(boardService.findBoardByIdExceptHide(boardId))
-        .willReturn(boardResponse);
-    given(userService.getCurrentLoginUser(authorizationHeader))
-        .willReturn(currentLoginUserId);
-    given(userService.getUserIdByBoardId(boardId))
-        .willReturn(currentLoginUserId);
+    given(boardService.findBoardByIdExceptHide(boardId)).willReturn(boardResponse);
+    given(userService.getCurrentLoginUser(authorizationHeader)).willReturn(currentLoginUserId);
+    given(userService.getUserIdByBoardId(boardId)).willReturn(currentLoginUserId);
 
-    //when
-    ResponseEntity<EntityModel<ResultResponse<Board>>> responseEntity = boardController.findBoardById(
-        boardId, authorizationHeader);
+    // when
+    ResponseEntity<EntityModel<ResultResponse<Board>>> responseEntity =
+        boardController.findBoardById(boardId, authorizationHeader);
 
-    //then
+    // then
     mockMvc
         .perform(
-            get(BASE_PATH + "/{board_id}", boardId)
-                .header("Authorization", authorizationHeader))
+            get(BASE_PATH + "/{board_id}", boardId).header("Authorization", authorizationHeader))
         .andDo(print())
         .andExpect(status().isOk());
   }
 
   @Test
   public void findBoardById_unauthenticatedUser() throws Exception {
-    //given
+    // given
     Long boardId = 1L;
     String authorizationHeader = "";
 
-    BoardResponse boardResponse = BoardResponse.builder()
-        .id(boardId)
-        .title("Test")
-        .content("Test")
-        .category1(Category.IT)
-        .category2(Category.JAVA)
-        .video_url("https://www.naver.com/video.mp4")
-        .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
-        .user_id(123L)
-        .nickname("tester")
-        .isPublic(false)
-        .build();
+    BoardResponse boardResponse =
+        BoardResponse.builder()
+            .id(boardId)
+            .title("Test")
+            .content("Test")
+            .category1(Category.IT)
+            .category2(Category.JAVA)
+            .video_url("https://www.naver.com/video.mp4")
+            .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
+            .user_id(123L)
+            .nickname("tester")
+            .isPublic(false)
+            .build();
 
-    given(boardService.findBoardById(boardId))
-        .willReturn(boardResponse);
-    given(userService.getCurrentLoginUser(authorizationHeader))
-        .willReturn(null);
+    given(boardService.findBoardById(boardId)).willReturn(boardResponse);
+    given(userService.getCurrentLoginUser(authorizationHeader)).willReturn(null);
 
-    //when
-    ResponseEntity<EntityModel<ResultResponse<Board>>> responseEntity = boardController.findBoardById(
-        boardId, authorizationHeader);
+    // when
+    ResponseEntity<EntityModel<ResultResponse<Board>>> responseEntity =
+        boardController.findBoardById(boardId, authorizationHeader);
 
-    //then
+    // then
     mockMvc
         .perform(
-            get(BASE_PATH + "/{board_id}", boardId)
-                .header("Authorization", authorizationHeader))
+            get(BASE_PATH + "/{board_id}", boardId).header("Authorization", authorizationHeader))
         .andDo(print())
         .andExpect(status().isOk());
   }
+
   @Test
   @DisplayName("게시물 생성 테스트")
   public void testCreateBoard() throws Exception {
@@ -159,31 +152,41 @@ public class BoardControllerTest {
     String videoUrl = "http://example.com/video.mp4";
     String thumbnailUrl = "http://example.com/thumbnail.jpg";
 
-    MultipartFile videoFile = new MockMultipartFile("video", "video.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "test video".getBytes());
-    MultipartFile thumbnailFile = new MockMultipartFile("thumbnail", "thumbnail.jpg", MediaType.MULTIPART_FORM_DATA_VALUE, "test thumbnail".getBytes());
+    MultipartFile videoFile =
+        new MockMultipartFile(
+            "video", "video.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "test video".getBytes());
+    MultipartFile thumbnailFile =
+        new MockMultipartFile(
+            "thumbnail",
+            "thumbnail.jpg",
+            MediaType.MULTIPART_FORM_DATA_VALUE,
+            "test thumbnail".getBytes());
 
-    UploadFileResponse uploadFileResponse = UploadFileResponse.builder()
-        .video_url(videoUrl)
-        .thumbnail_url(thumbnailUrl)
-        .build();
+    UploadFileResponse uploadFileResponse =
+        UploadFileResponse.builder().video_url(videoUrl).thumbnail_url(thumbnailUrl).build();
 
     when(boardService.uploadFiles(any(MultipartFile.class), any(MultipartFile.class)))
         .thenReturn(uploadFileResponse);
 
-    doAnswer(invocation -> {
-      BoardCreateRequest argument = invocation.getArgument(0);
-      return null;
-    }).when(boardService).createBoard(any(BoardCreateRequest.class));
+    doAnswer(
+            invocation -> {
+              BoardCreateRequest argument = invocation.getArgument(0);
+              return null;
+            })
+        .when(boardService)
+        .createBoard(any(BoardCreateRequest.class));
 
     // MockMvc를 사용하여 API 테스트
-    mockMvc.perform(MockMvcRequestBuilders.multipart(BASE_PATH + "/create")
-            .file("video", videoFile.getBytes())
-            .file("thumbnail", thumbnailFile.getBytes())
-            .param("user_id", String.valueOf(userId))
-            .param("title", title)
-            .param("content", content)
-            .param("category1", Category.IT.toString())
-            .param("category2", Category.JAVA.toString()))
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.multipart(BASE_PATH + "/create")
+                .file("video", videoFile.getBytes())
+                .file("thumbnail", thumbnailFile.getBytes())
+                .param("user_id", String.valueOf(userId))
+                .param("title", title)
+                .param("content", content)
+                .param("category1", Category.IT.toString())
+                .param("category2", Category.JAVA.toString()))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(print());
 
@@ -193,54 +196,55 @@ public class BoardControllerTest {
   }
 
   @Test
-  public void findAllBoard() throws Exception{
-    //given
+  public void findAllBoard() throws Exception {
+    // given
     String authorizationHeader = "Bearer <token>";
 
-    User user = User.builder()
-        .email("tester1@example.com")
-        .password("testPassword")
-        .nickname("tester1")
-        .build();
-    Board board = Board.builder()
-        .user(user)
-        .title("Test Board")
-        .content("Test Content")
-        .category1(Category.IT)
-        .category2(Category.KOTLIN)
-        .video_url("http://example.com/video")
-        .thumbnail_url("http://example.com/thumbnail")
-        .isPublic(true)
-        .build();
+    User user =
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
+    Board board =
+        Board.builder()
+            .user(user)
+            .title("Test Board")
+            .content("Test Content")
+            .category1(Category.IT)
+            .category2(Category.KOTLIN)
+            .video_url("http://example.com/video")
+            .thumbnail_url("http://example.com/thumbnail")
+            .isPublic(true)
+            .build();
 
     List<Board> boardList = List.of(board);
     Page<Board> boardPage = new PageImpl<>(boardList);
 
-    given(boardService.findAllBoard(any()))
-        .willReturn(boardPage);
+    given(boardService.findAllBoard(any())).willReturn(boardPage);
     given(boardMapper.toDto(any(Board.class)))
-        .willAnswer(invocation -> {
-          Board boardArg = invocation.getArgument(0);
-          return BoardResponse.builder()
-              .id(boardArg.getId())
-              .title(boardArg.getTitle())
-              .content(boardArg.getContent())
-              .category1(boardArg.getCategory1())
-              .category2(boardArg.getCategory2())
-              .video_url(boardArg.getVideo_url())
-              .thumbnail_url(boardArg.getThumbnail_url())
-              .isPublic(boardArg.getIsPublic())
-              .build();
-        });
+        .willAnswer(
+            invocation -> {
+              Board boardArg = invocation.getArgument(0);
+              return BoardResponse.builder()
+                  .id(boardArg.getId())
+                  .title(boardArg.getTitle())
+                  .content(boardArg.getContent())
+                  .category1(boardArg.getCategory1())
+                  .category2(boardArg.getCategory2())
+                  .video_url(boardArg.getVideo_url())
+                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .isPublic(boardArg.getIsPublic())
+                  .build();
+            });
 
-    //when
+    // when
     ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
         boardController.findAllBoard(0, 30, authorizationHeader);
-    //then
-    mockMvc.perform(get(BASE_PATH + "/lists"))
-        .andDo(print())
-        .andExpect(status().isOk());
+    // then
+    mockMvc.perform(get(BASE_PATH + "/lists")).andDo(print()).andExpect(status().isOk());
   }
+
   @Test
   public void findBoardByCategory() throws Exception {
     // given
@@ -249,55 +253,60 @@ public class BoardControllerTest {
     int page = 0;
     int size = 30;
 
-    User user = User.builder()
-        .email("tester1@example.com")
-        .password("testPassword")
-        .nickname("tester1")
-        .build();
-    Board board = Board.builder()
-        .user(user)
-        .title("Test Board")
-        .content("Test Content")
-        .category1(Category.IT)
-        .category2(Category.KOTLIN)
-        .video_url("http://example.com/video")
-        .thumbnail_url("http://example.com/thumbnail")
-        .isPublic(true)
-        .build();
+    User user =
+        User.builder()
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname("tester1")
+            .build();
+    Board board =
+        Board.builder()
+            .user(user)
+            .title("Test Board")
+            .content("Test Content")
+            .category1(Category.IT)
+            .category2(Category.KOTLIN)
+            .video_url("http://example.com/video")
+            .thumbnail_url("http://example.com/thumbnail")
+            .isPublic(true)
+            .build();
 
     List<Board> boardList = List.of(board);
     Page<Board> boardPage = new PageImpl<>(boardList);
 
-    given(boardService.findBoardByCategory(any(), any()))
-        .willReturn(boardPage);
+    given(boardService.findBoardByCategory(any(), any())).willReturn(boardPage);
     given(boardMapper.toDto(any(Board.class)))
-        .willAnswer(invocation -> {
-          Board boardArg = invocation.getArgument(0);
-          return BoardResponse.builder()
-              .id(boardArg.getId())
-              .title(boardArg.getTitle())
-              .content(boardArg.getContent())
-              .category1(boardArg.getCategory1())
-              .category2(boardArg.getCategory2())
-              .video_url(boardArg.getVideo_url())
-              .thumbnail_url(boardArg.getThumbnail_url())
-              .isPublic(boardArg.getIsPublic())
-              .build();
-        });
+        .willAnswer(
+            invocation -> {
+              Board boardArg = invocation.getArgument(0);
+              return BoardResponse.builder()
+                  .id(boardArg.getId())
+                  .title(boardArg.getTitle())
+                  .content(boardArg.getContent())
+                  .category1(boardArg.getCategory1())
+                  .category2(boardArg.getCategory2())
+                  .video_url(boardArg.getVideo_url())
+                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .isPublic(boardArg.getIsPublic())
+                  .build();
+            });
 
     // when
     ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
         boardController.findBoardByCategory(category, page, size, authorizationHeader);
 
     // then
-    mockMvc.perform(get(BASE_PATH + "/lists/category")
-            .param("category", category)
-            .param("page", String.valueOf(page))
-            .param("size", String.valueOf(size))
-            .header("Authorization", authorizationHeader))
+    mockMvc
+        .perform(
+            get(BASE_PATH + "/lists/category")
+                .param("category", category)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
+                .header("Authorization", authorizationHeader))
         .andDo(print())
         .andExpect(status().isOk());
   }
+
   @Test
   public void findBoardByUserNickname() throws Exception {
     // given
@@ -306,56 +315,59 @@ public class BoardControllerTest {
     int page = 0;
     int size = 30;
 
-    User user = User.builder()
-        .id(1L)
-        .email("tester1@example.com")
-        .password("testPassword")
-        .nickname(nickname)
-        .build();
-    Board board = Board.builder()
-        .user(user)
-        .title("Test Board")
-        .content("Test Content")
-        .category1(Category.IT)
-        .category2(Category.KOTLIN)
-        .video_url("http://example.com/video")
-        .thumbnail_url("http://example.com/thumbnail")
-        .isPublic(true)
-        .build();
+    User user =
+        User.builder()
+            .id(1L)
+            .email("tester1@example.com")
+            .password("testPassword")
+            .nickname(nickname)
+            .build();
+    Board board =
+        Board.builder()
+            .user(user)
+            .title("Test Board")
+            .content("Test Content")
+            .category1(Category.IT)
+            .category2(Category.KOTLIN)
+            .video_url("http://example.com/video")
+            .thumbnail_url("http://example.com/thumbnail")
+            .isPublic(true)
+            .build();
 
     List<Board> boardList = List.of(board);
     Page<Board> boardPage = new PageImpl<>(boardList);
 
-    given(boardService.findBoardByUserNickname(eq(nickname), any()))
-        .willReturn(boardPage);
-    given(userService.getUserByNickname(eq(nickname)))
-        .willReturn(user.getId());
+    given(boardService.findBoardByUserNickname(eq(nickname), any())).willReturn(boardPage);
+    given(userService.getUserByNickname(eq(nickname))).willReturn(user.getId());
     given(boardMapper.toDto(eq(board)))
-        .willAnswer(invocation -> {
-          Board boardArg = invocation.getArgument(0);
-          return BoardResponse.builder()
-              .id(boardArg.getId())
-              .title(boardArg.getTitle())
-              .content(boardArg.getContent())
-              .category1(boardArg.getCategory1())
-              .category2(boardArg.getCategory2())
-              .video_url(boardArg.getVideo_url())
-              .thumbnail_url(boardArg.getThumbnail_url())
-              .isPublic(boardArg.getIsPublic())
-              .user_id(boardArg.getUser().getId())
-              .nickname(boardArg.getUser().getNickname())
-              .build();
-        });
+        .willAnswer(
+            invocation -> {
+              Board boardArg = invocation.getArgument(0);
+              return BoardResponse.builder()
+                  .id(boardArg.getId())
+                  .title(boardArg.getTitle())
+                  .content(boardArg.getContent())
+                  .category1(boardArg.getCategory1())
+                  .category2(boardArg.getCategory2())
+                  .video_url(boardArg.getVideo_url())
+                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .isPublic(boardArg.getIsPublic())
+                  .user_id(boardArg.getUser().getId())
+                  .nickname(boardArg.getUser().getNickname())
+                  .build();
+            });
 
     // when
     ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
         boardController.findBoardByUserId(nickname, page, size, authorizationHeader);
 
     // then
-    mockMvc.perform(get(BASE_PATH + "/lists/@{nickname}", nickname)
-            .param("page", String.valueOf(page))
-            .param("size", String.valueOf(size))
-            .header("Authorization", authorizationHeader))
+    mockMvc
+        .perform(
+            get(BASE_PATH + "/lists/@{nickname}", nickname)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
+                .header("Authorization", authorizationHeader))
         .andDo(print())
         .andExpect(status().isOk());
   }
