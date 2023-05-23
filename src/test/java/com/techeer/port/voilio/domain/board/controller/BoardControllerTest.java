@@ -4,14 +4,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
-import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
@@ -21,9 +17,6 @@ import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,20 +24,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -254,4 +241,62 @@ public class BoardControllerTest {
         .andDo(print())
         .andExpect(status().isOk());
   }
+  @Test
+  public void findBoardByCategory() throws Exception {
+    // given
+    String authorizationHeader = "Bearer <token>";
+    String category = "IT";
+    int page = 0;
+    int size = 30;
+
+    User user = User.builder()
+        .email("tester1@example.com")
+        .password("testPassword")
+        .nickname("tester1")
+        .build();
+    Board board = Board.builder()
+        .user(user)
+        .title("Test Board")
+        .content("Test Content")
+        .category1(Category.IT)
+        .category2(Category.KOTLIN)
+        .video_url("http://example.com/video")
+        .thumbnail_url("http://example.com/thumbnail")
+        .isPublic(true)
+        .build();
+
+    List<Board> boardList = List.of(board);
+    Page<Board> boardPage = new PageImpl<>(boardList);
+
+    given(boardService.findBoardByCategory(any(), any()))
+        .willReturn(boardPage);
+    given(boardMapper.toDto(any(Board.class)))
+        .willAnswer(invocation -> {
+          Board boardArg = invocation.getArgument(0);
+          return BoardResponse.builder()
+              .id(boardArg.getId())
+              .title(boardArg.getTitle())
+              .content(boardArg.getContent())
+              .category1(boardArg.getCategory1())
+              .category2(boardArg.getCategory2())
+              .video_url(boardArg.getVideo_url())
+              .thumbnail_url(boardArg.getThumbnail_url())
+              .isPublic(boardArg.getIsPublic())
+              .build();
+        });
+
+    // when
+    ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
+        boardController.findBoardByCategory(category, page, size, authorizationHeader);
+
+    // then
+    mockMvc.perform(get(BASE_PATH + "/lists/category")
+            .param("category", category)
+            .param("page", String.valueOf(page))
+            .param("size", String.valueOf(size))
+            .header("Authorization", authorizationHeader))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
+
 }
