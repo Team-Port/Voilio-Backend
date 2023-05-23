@@ -298,5 +298,65 @@ public class BoardControllerTest {
         .andDo(print())
         .andExpect(status().isOk());
   }
+  @Test
+  public void findBoardByUserNickname() throws Exception {
+    // given
+    String authorizationHeader = "Bearer <token>";
+    String nickname = "tester";
+    int page = 0;
+    int size = 30;
 
+    User user = User.builder()
+        .id(1L)
+        .email("tester1@example.com")
+        .password("testPassword")
+        .nickname(nickname)
+        .build();
+    Board board = Board.builder()
+        .user(user)
+        .title("Test Board")
+        .content("Test Content")
+        .category1(Category.IT)
+        .category2(Category.KOTLIN)
+        .video_url("http://example.com/video")
+        .thumbnail_url("http://example.com/thumbnail")
+        .isPublic(true)
+        .build();
+
+    List<Board> boardList = List.of(board);
+    Page<Board> boardPage = new PageImpl<>(boardList);
+
+    given(boardService.findBoardByUserNickname(eq(nickname), any()))
+        .willReturn(boardPage);
+    given(userService.getUserByNickname(eq(nickname)))
+        .willReturn(user.getId());
+    given(boardMapper.toDto(eq(board)))
+        .willAnswer(invocation -> {
+          Board boardArg = invocation.getArgument(0);
+          return BoardResponse.builder()
+              .id(boardArg.getId())
+              .title(boardArg.getTitle())
+              .content(boardArg.getContent())
+              .category1(boardArg.getCategory1())
+              .category2(boardArg.getCategory2())
+              .video_url(boardArg.getVideo_url())
+              .thumbnail_url(boardArg.getThumbnail_url())
+              .isPublic(boardArg.getIsPublic())
+              .user_id(boardArg.getUser().getId())
+              .nickname(boardArg.getUser().getNickname())
+              .build();
+        });
+
+    // when
+    ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> responseEntity =
+        boardController.findBoardByUserId(nickname, page, size, authorizationHeader);
+
+    // then
+    mockMvc.perform(get(BASE_PATH + "/lists/@{nickname}", nickname)
+            .param("page", String.valueOf(page))
+            .param("size", String.valueOf(size))
+            .header("Authorization", authorizationHeader))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
 }
