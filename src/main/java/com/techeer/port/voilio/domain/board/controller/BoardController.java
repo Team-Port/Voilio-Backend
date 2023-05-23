@@ -81,7 +81,7 @@ public class BoardController {
       @RequestParam String content,
       @RequestParam Category category1,
       @RequestParam Category category2,
-      @RequestParam MultipartFile thumbnailFile,
+      @RequestParam(value = "thumbnail") MultipartFile thumbnailFile,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
           String authorizationHeader) {
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
