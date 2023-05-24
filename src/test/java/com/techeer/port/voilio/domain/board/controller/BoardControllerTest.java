@@ -374,22 +374,28 @@ public class BoardControllerTest {
 
   @Test
   public void uploadVideo() throws Exception {
-    //given
-    MockMultipartFile videoFile = new MockMultipartFile("video", "video.mp4", "video/mp4", "video data".getBytes());
-    MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnail", "thumbnail.jpeg", "image/jpeg", "thumbnail data".getBytes());
+    // given
+    MockMultipartFile videoFile =
+        new MockMultipartFile("video", "video.mp4", "video/mp4", "video data".getBytes());
+    MockMultipartFile thumbnailFile =
+        new MockMultipartFile(
+            "thumbnail", "thumbnail.jpeg", "image/jpeg", "thumbnail data".getBytes());
 
-    UploadFileResponse uploadFileResponse = UploadFileResponse.builder()
-        .video_url("http://voilio.com/video.mp4")
-        .thumbnail_url("http://voilio.com/thumbnail.jpeg")
-        .build();
+    UploadFileResponse uploadFileResponse =
+        UploadFileResponse.builder()
+            .video_url("http://voilio.com/video.mp4")
+            .thumbnail_url("http://voilio.com/thumbnail.jpeg")
+            .build();
 
     given(boardService.uploadFiles(any(MultipartFile.class), any(MultipartFile.class)))
         .willReturn(uploadFileResponse);
 
-    //when, then
-    mockMvc.perform(MockMvcRequestBuilders.multipart(BASE_PATH + "/files")
-        .file(videoFile)
-        .file(thumbnailFile))
+    // when, then
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.multipart(BASE_PATH + "/files")
+                .file(videoFile)
+                .file(thumbnailFile))
         .andExpect(status().isCreated())
         .andDo(print());
   }
