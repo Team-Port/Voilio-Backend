@@ -88,7 +88,7 @@ public class BoardServiceTest {
   @Nested
   class softDeleteBoard {
     @Test
-    @DisplayName("mockito service test")
+    @DisplayName("게시물 삭제 테스트 - 게시물이 존재할 때")
     void softDeleteBoard_whenBoardExists_shouldDeleteBoard() {
       // given
       Long boardId = board1.getId();
@@ -103,7 +103,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("deleteBoard_whenBoardNotFound_shouldThrowNotFoundException")
+    @DisplayName("게시물 삭제 테스트 - 게시물이 존재하지 않을 때")
     public void deleteBoard_whenBoardNotFound_shouldThrowNotFoundException() {
       // given
       Long boardId = board1.getId();
@@ -117,7 +117,7 @@ public class BoardServiceTest {
   @Nested
   class findBoardByKeyword {
     @Test
-    @DisplayName("findBoardByKeyword_whenExistBoard")
+    @DisplayName("키워드로 게시물 검색 - 게시물이 존재할 떄")
     public void findBoardByKeyword_whenExistBoard() {
       // given
       String keyword = "test";
@@ -140,16 +140,14 @@ public class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("findBoardByKeyword_whenNotExistBoard")
+    @DisplayName("키워드로 게시물 검색 - 게시물이 존재때지 않을 때")
     public void findBoardByKeyword_whenNotExistBoard() {
       // given
       String keyword = "no";
       given(boardRepository.findBoardByKeyword(keyword)).willReturn(new ArrayList<>());
 
-      // when
-      List<BoardResponse> foundBoards = boardService.findBoardByKeyword(keyword);
-
-      // then
+      // when, then
+      assertThrows(NotFoundBoard.class, () -> boardService.findBoardByKeyword(keyword));
       verify(boardRepository, times(1)).findBoardByKeyword(keyword);
     }
   }
@@ -157,6 +155,7 @@ public class BoardServiceTest {
   @Nested
   class findBoardById {
     @Test
+    @DisplayName("ID로 게시물 검색 - 게시물이 존재할 때")
     public void findBoardById_whenBoardExists_shouldReturnBoard() {
       Long boardId = board1.getId();
       // given
@@ -171,6 +170,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("ID로 게시물 검색 - 게시물이 존재하지 않을 때")
     public void findBoardById_whenBoardDoesNotExist_shouldThrowException() {
       // given
       Long boardId = board1.getId();
@@ -182,6 +182,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("ID로 게시물 검색 - 게시물이 존재하지만 public = false일 때")
     public void testFindBoardByIdExceptHide() {
       Long boardId = board2.getId();
       // given
@@ -199,6 +200,7 @@ public class BoardServiceTest {
   @Nested
   class createBoard {
     @Test
+    @DisplayName("게시물 생성")
     public void testCreateBoard() {
       BoardCreateRequest boardCreateRequest =
           BoardCreateRequest.builder()
@@ -220,6 +222,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시물 생성 - 잘못된 파라미터")
     public void testCreatedBoard_InvalidRequest_ThrowException() {
       BoardCreateRequest boardCreateRequest =
           BoardCreateRequest.builder()
@@ -242,6 +245,7 @@ public class BoardServiceTest {
   @Nested
   class hideBoard {
     @Test
+    @DisplayName("게시물 숨기기 - 게시물이 존재할 때")
     public void hideBoard_whenBoardExists() {
       // given
       Long boardId = board1.getId();
@@ -257,6 +261,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시물 숨기기 - 게시물이 존재하지 않을 때")
     public void hideBoard_whenBoardDoesNotExist() {
       // given
       Long boardId = 3L;
@@ -271,6 +276,7 @@ public class BoardServiceTest {
   @Nested
   class findAllBoard {
     @Test
+    @DisplayName("모든 게시물 조회 - 게시물이 존재할 때")
     public void findAllBoard_whenBoardExists() {
       // given
       Pageable pageable = mock(Pageable.class);
@@ -290,6 +296,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("모든 게시물 조회 - 게시물이 존재하지 않을 때")
     public void findAllBoard_whenBoardDoesNotExist() {
       // given
       Pageable pageable = mock(Pageable.class);
@@ -307,6 +314,7 @@ public class BoardServiceTest {
   @Nested
   class updateBoard {
     @Test
+    @DisplayName("게시물 수정 - 게시물이 존재할 때")
     public void updateBoard_whenBoardExists() {
       // given
       Long boardId = board1.getId();
@@ -337,6 +345,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시물 수정 - 게시물이 존재하지 않을 때")
     public void updateBoard_whenBoardDoesNotExist() {
       // given
       Long boardId = 4L;
@@ -361,6 +370,7 @@ public class BoardServiceTest {
   @Nested
   class findBoardByCategory {
     @Test
+    @DisplayName("카테고리별 게시물 조회 - 게시물이 존재할 때")
     public void findBoardByCategory_whenBoardExists() {
       // given
       Category category = Category.IT;
@@ -385,6 +395,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리별 게시물 조회 - 게시물이 존재하지 않을 때")
     public void findBoardByCategory_whenBoardDoesNotExist() {
       // given
       Category category = Category.KOTLIN;
@@ -404,6 +415,7 @@ public class BoardServiceTest {
   @Nested
   class findBoardByUserNickname {
     @Test
+    @DisplayName("유저 닉네임으로 게시물 조회 - 게시물이 존재할 때")
     public void findBoardByUserNickname_whenBoardExist() {
       // given
       String nickname = user1.getNickname();
@@ -428,6 +440,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("유저 닉네임으로 게시물 조회 - 게시물이 존재하지 않을 때")
     public void findBoardByUserNickname_whenBoardDoesNotExist() {
       // given
       String nickname = user1.getNickname();
@@ -445,6 +458,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("유저 닉네임으로 게시물 조회 - 유저가 존재하지 않을 때")
     public void findBoardByUserNickname_whenUserNotFound() {
       // given
       String nickname = "nonexistentNickname";
@@ -462,6 +476,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("유저 닉네임으로 숨김게시물까지 조회 - 게시물이 존재할 때")
     public void findBoardByUserNicknameExceptHide_whenBoardExists() {
       // given
       String nickname = user1.getNickname();
@@ -490,6 +505,7 @@ public class BoardServiceTest {
   @Nested
   class uploadFiles {
     @Test
+    @DisplayName("파일 업로드")
     public void uploadFiles() throws IOException {
       // given
       MultipartFile videoFile = mock(MultipartFile.class);
@@ -513,6 +529,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("파일 업로드 - IOException 오류가 뜰 때")
     public void uploadFiles_whenIOExceptionThrown() throws IOException {
       // given
       MultipartFile videoFile = mock(MultipartFile.class);
@@ -531,6 +548,7 @@ public class BoardServiceTest {
   @Nested
   class updateFiles {
     @Test
+    @DisplayName("파일 업데이트")
     public void updateFiles() throws IOException {
       // given
       MultipartFile thumbnailFile = mock(MultipartFile.class);
@@ -549,6 +567,7 @@ public class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("파일 업데이트 - IOException 오류가 뜰 때")
     public void updateFiles_whenIOExceptionThrown() throws IOException {
       // given
       MultipartFile thumbnailFile = mock(MultipartFile.class);
