@@ -4,9 +4,11 @@ import com.techeer.port.voilio.domain.chat.model.ChatMessage;
 import com.techeer.port.voilio.domain.chat.pubsub.RedisPublisher;
 import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
@@ -21,6 +23,7 @@ public class ChatController {
       chatRoomRepository.enterChatRoom(message.getRoomId());
       message.setMessage(message.getSender() + "님이 입장하셨습니다.");
     }
+    log.info(message.toString());
     // Websocket에 발행된 메시지를 redis로 발행한다(publish)
     redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
   }

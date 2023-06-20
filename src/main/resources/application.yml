@@ -14,7 +14,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create #update
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -53,10 +53,11 @@ springdoc:
   paths-to-match:
     - /**
 
+
 logging:
   level:
-    org:
-      hibernate: info
+    org.springframework: info
+    com.techeer.port.voilio : debug
 
 jwt:
   secret: masdfafqawf65wdsadadcdwgzqpfoqmdyrkvuapfcjTTOwkfpOEsdcafafafaFEFFA1dfefaefGeAOgegIge3edw2ewfaffefa

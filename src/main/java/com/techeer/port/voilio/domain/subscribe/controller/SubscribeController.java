@@ -11,40 +11,41 @@ import com.techeer.port.voilio.domain.subscribe.dto.response.SubscribeResponse;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
 import com.techeer.port.voilio.domain.subscribe.service.SubscribeService;
+import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/subscribes")
 public class SubscribeController {
   @Autowired private SubscribeService subscribeService;
+  @Autowired private UserService userService;
   @Autowired private SubscribeMapper subscribeMapper;
 
-  @PostMapping("/")
+  @PostMapping("/{subscribeUserId}")
   public ResponseEntity<ResultResponse> subscribe(
-      @Valid @RequestBody SubscribeRequest subscribeRequest) {
+      @PathVariable Long subscribeUserId,
+      @RequestHeader("Authorization") String authorizationHeader) {
 
-    subscribeService.subscribe(subscribeRequest.getUser_id(), subscribeRequest.getSubscribe_id());
+    Long userId = userService.getCurrentLoginUser(authorizationHeader);
+    log.info("authorizationHeader : {}, userId : {}",authorizationHeader,userId);
+    subscribeService.subscribe(userId, subscribeUserId);
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
+        linkTo(methodOn(SubscribeController.class).subscribe(subscribeUserId,authorizationHeader)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

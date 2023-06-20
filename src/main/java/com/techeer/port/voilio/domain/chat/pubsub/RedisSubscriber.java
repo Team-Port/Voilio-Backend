@@ -28,6 +28,7 @@ public class RedisSubscriber implements MessageListener {
           (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
       // ChatMessage 객채로 맵핑
       ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
+      log.info(roomMessage.toString());
       // Websocket 구독자에게 채팅 메시지 Send
       messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
     } catch (Exception e) {
