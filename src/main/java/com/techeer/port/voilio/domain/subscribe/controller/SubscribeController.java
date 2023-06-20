@@ -17,7 +17,6 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,11 +40,12 @@ public class SubscribeController {
       @RequestHeader("Authorization") String authorizationHeader) {
 
     Long userId = userService.getCurrentLoginUser(authorizationHeader);
-    log.info("authorizationHeader : {}, userId : {}",authorizationHeader,userId);
+    log.info("authorizationHeader : {}, userId : {}", authorizationHeader, userId);
     subscribeService.subscribe(userId, subscribeUserId);
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).subscribe(subscribeUserId,authorizationHeader)).withSelfRel());
+        linkTo(methodOn(SubscribeController.class).subscribe(subscribeUserId, authorizationHeader))
+            .withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

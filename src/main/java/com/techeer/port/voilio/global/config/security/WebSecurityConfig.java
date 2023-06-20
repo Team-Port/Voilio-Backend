@@ -50,7 +50,7 @@ public class WebSecurityConfig {
             "/v3/api-docs/**",
             "/v3/api-docs/swagger-config/**")
         .permitAll()
-        .antMatchers("/chat/**", "/webjars/**", "/ws-stomp/**","**/pub/**")
+        .antMatchers("/chat/**", "/webjars/**", "/ws-stomp/**", "**/pub/**")
         .permitAll()
         .anyRequest()
         .authenticated()
