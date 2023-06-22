@@ -36,13 +36,7 @@ public class AuthService {
   }
 
   public TokenDto login(UserLoginRequest userLoginRequest) {
-
-    User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-    if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-    }
+    User user = validateAccount(userLoginRequest);
 
     // 로그인 성공 후, 추가 작업 - 토큰 생성
     user.setActivatedAt(LocalDateTime.now());
@@ -50,6 +44,16 @@ public class AuthService {
     Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
     return jwtProvider.generateTokenDto(authentication);
+  }
+
+  private User validateAccount(UserLoginRequest userLoginRequest){
+    User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+    if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    }
+    return user;
   }
 
 }
