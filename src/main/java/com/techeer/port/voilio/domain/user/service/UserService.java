@@ -64,14 +64,14 @@ public class UserService {
         .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
   }
 
-  public Long getCurrentLoginUser(String authorizationHeader) {
+  public Long getCurrentL와oginUser(String authorizationHeader) {
     Long currentLoginUserNickname = null;
 
     if (!authorizationHeader.isEmpty()) {
       String accessToken = authorizationHeader.substring(7);
 
       if (!jwtProvider.validateToken(accessToken)) {
-        throw new RuntimeException("유호하지 않은 토큰입니다.");
+        throw new RuntimeException("유효하지 않은 토큰입니다.");
       }
 
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
