@@ -8,11 +8,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class UserLoginRequest {
-    private String email;
-    private String password;
+  private String email;
+  private String password;
 
-    public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email, password);
-    }
+  public UsernamePasswordAuthenticationToken toAuthentication() {
+    return new UsernamePasswordAuthenticationToken(email, password);
+  }
 }
-

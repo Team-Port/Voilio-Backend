@@ -28,22 +28,24 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<ResultResponse<UserResponse>> signup(@RequestBody UserSignUpRequest userSignUpRequest)
-      throws AlreadyBoundException {
+  public ResponseEntity<ResultResponse<UserResponse>> signup(
+      @RequestBody UserSignUpRequest userSignUpRequest) throws AlreadyBoundException {
     UserResponse userResponse = authService.signup(userSignUpRequest);
     ResultResponse<UserResponse> resultResponse =
         new ResultResponse<>(USER_REGISTRATION_SUCCESS, userResponse);
-    resultResponse.add(linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ResultResponse<TokenDto>> login(@RequestBody UserLoginRequest userLoginRequest)
-      throws AlreadyBoundException {
+  public ResponseEntity<ResultResponse<TokenDto>> login(
+      @RequestBody UserLoginRequest userLoginRequest) throws AlreadyBoundException {
     TokenDto tokenDto = authService.login(userLoginRequest);
     ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
-    resultResponse.add(linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

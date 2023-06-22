@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.user.entity;
 
 import com.techeer.port.voilio.global.common.BaseEntity;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.persistence.*;

@@ -2,11 +2,9 @@ package com.techeer.port.voilio.domain.user.dto.request;
 
 import com.techeer.port.voilio.domain.user.entity.Authority;
 import com.techeer.port.voilio.domain.user.entity.User;
-import lombok.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDateTime;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

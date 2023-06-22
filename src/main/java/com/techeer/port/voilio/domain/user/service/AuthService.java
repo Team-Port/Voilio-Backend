@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
@@ -49,8 +48,10 @@ public class AuthService {
     return jwtProvider.generateTokenDto(authentication);
   }
 
-  private User validateAccount(UserLoginRequest userLoginRequest){
-    User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+  private User validateAccount(UserLoginRequest userLoginRequest) {
+    User user =
+        userRepository
+            .findUserByEmail(userLoginRequest.getEmail())
             .orElseThrow(NotFoundUserException::new);
 
     if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
@@ -58,5 +59,4 @@ public class AuthService {
     }
     return user;
   }
-
 }
