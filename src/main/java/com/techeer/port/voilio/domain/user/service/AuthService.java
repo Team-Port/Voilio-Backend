@@ -1,9 +1,12 @@
 package com.techeer.port.voilio.domain.user.service;
 
+import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
+import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
@@ -48,10 +51,10 @@ public class AuthService {
 
   private User validateAccount(UserLoginRequest userLoginRequest){
     User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(NotFoundUserException::new);
 
     if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+      throw new InvalidPassword();
     }
     return user;
   }
