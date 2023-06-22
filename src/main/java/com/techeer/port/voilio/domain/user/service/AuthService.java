@@ -7,6 +7,7 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
 import java.rmi.AlreadyBoundException;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +37,9 @@ public class AuthService {
   public TokenDto login(UserRequest requestDto) {
     UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
     Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+
+    User user = userRepository.findUserByEmail(requestDto.getEmail()).orElseThrow();
+    user.setActivatedAt(LocalDateTime.now());
 
     return jwtProvider.generateTokenDto(authentication);
   }

@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,6 +17,7 @@ public class UserRequest {
   private String email;
   private String password;
   private String nickname;
+  private LocalDateTime activatedAt;
 
   public User toEntity() {
     return User.builder()
@@ -22,6 +25,7 @@ public class UserRequest {
         .email(email)
         .password(password)
         .nickname(nickname)
+        .activatedAt(LocalDateTime.now())
         .authority(Authority.ROLE_USER)
         .build();
   }
@@ -32,6 +36,7 @@ public class UserRequest {
         .email(email)
         .password(passwordEncoder.encode(password))
         .nickname(nickname)
+        .activatedAt(LocalDateTime.now())
         .authority(Authority.ROLE_USER)
         .build();
   }
