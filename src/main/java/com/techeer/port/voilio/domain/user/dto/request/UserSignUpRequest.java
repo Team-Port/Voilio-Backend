@@ -12,23 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class UserRequest {
+public class UserSignUpRequest {
   private Long id;
   private String email;
   private String password;
   private String nickname;
   private LocalDateTime activatedAt;
-
-  public User toEntity() {
-    return User.builder()
-        .id(id)
-        .email(email)
-        .password(password)
-        .nickname(nickname)
-        .activatedAt(LocalDateTime.now())
-        .authority(Authority.ROLE_USER)
-        .build();
-  }
 
   public User toEntity(PasswordEncoder passwordEncoder) {
     return User.builder()
@@ -39,13 +28,5 @@ public class UserRequest {
         .activatedAt(LocalDateTime.now())
         .authority(Authority.ROLE_USER)
         .build();
-  }
-
-  public void setUserPassword(String encodedPassword) {
-    this.password = encodedPassword;
-  }
-
-  public UsernamePasswordAuthenticationToken toAuthentication() {
-    return new UsernamePasswordAuthenticationToken(email, password);
   }
 }

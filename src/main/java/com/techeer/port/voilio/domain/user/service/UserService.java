@@ -64,7 +64,7 @@ public class UserService {
         .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
   }
 
-  public Long getCurrentL와oginUser(String authorizationHeader) {
+  public Long getCurrentLoginUser(String authorizationHeader) {
     Long currentLoginUserNickname = null;
 
     if (!authorizationHeader.isEmpty()) {
