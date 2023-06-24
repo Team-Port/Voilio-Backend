@@ -6,6 +6,7 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class SaveUserTasklet implements Tasklet {
     private final UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     public SaveUserTasklet(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -70,7 +72,7 @@ public class SaveUserTasklet implements Tasklet {
         for (int i = 400 ; i< 500; i++) {
             users.add(User.builder()
                     .email("test@" + i)
-                    .password("testPwd@" + i)
+                    .password(passwordEncoder.encode("testPwd@" + i))
                     .nickname("testNick@" + i)
                     .activatedAt(LocalDateTime.now().minusDays(500))
                     .build());
