@@ -3,6 +3,7 @@ package com.techeer.port.voilio.domain.user.entity;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.*;
@@ -78,4 +79,16 @@ public class User extends BaseEntity implements UserDetails {
   public void setActivatedAt(LocalDateTime activatedAt) {
     this.activatedAt = activatedAt;
   }
+
+  public boolean checkSleeperUser() {
+    return User.checkSleeperUser(this.getActivatedAt());
+  }
+
+  private static boolean checkSleeperUser(LocalDateTime activatedAt) {
+    if(Objects.isNull(activatedAt)){
+      return false;
+    }
+      return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
+  }
+
 }
