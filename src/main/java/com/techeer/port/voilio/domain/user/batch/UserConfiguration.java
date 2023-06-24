@@ -42,11 +42,13 @@ public class UserConfiguration {
   }
 
   @Bean
-  public Job userJob() {
+  public Job userJob() throws Exception {
     return this.jobBuilderFactory
         .get("userJob")
         .incrementer(new RunIdIncrementer())
-        .start(this.saveUserStep())
+//        .start(this.saveUserStep())
+        .start(this.sleeperUserStep())
+//        .next(this.sleeperUserStep())
         .build();
   }
 

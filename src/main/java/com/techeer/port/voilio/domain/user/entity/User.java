@@ -90,4 +90,12 @@ public class User extends BaseEntity implements UserDetails {
     }
     return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
   }
+
+  public void setStopped(boolean stopped) {
+    isStopped = stopped;
+  }
+
+  public void changeSleeperUser() {
+    this.setStopped(true);
+  }
 }
