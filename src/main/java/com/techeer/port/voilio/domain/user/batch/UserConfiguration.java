@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.batch;
 
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import javax.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,83 +18,86 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.EntityManagerFactory;
-
 @Slf4j
 @Configuration
 public class UserConfiguration {
 
-    private final JobBuilderFactory jobBuilderFactory;
-    private final StepBuilderFactory stepBuilderFactory;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final EntityManagerFactory entityManagerFactory;
+  private final JobBuilderFactory jobBuilderFactory;
+  private final StepBuilderFactory stepBuilderFactory;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final EntityManagerFactory entityManagerFactory;
 
-    public UserConfiguration(JobBuilderFactory jobBuilderFactory,
-                             StepBuilderFactory stepBuilderFactory,
-                             UserRepository userRepository,
-                             PasswordEncoder passwordEncoder,
-                             EntityManagerFactory entityManagerFactory) {
-        this.jobBuilderFactory = jobBuilderFactory;
-        this.stepBuilderFactory = stepBuilderFactory;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.entityManagerFactory = entityManagerFactory;
-    }
+  public UserConfiguration(
+      JobBuilderFactory jobBuilderFactory,
+      StepBuilderFactory stepBuilderFactory,
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      EntityManagerFactory entityManagerFactory) {
+    this.jobBuilderFactory = jobBuilderFactory;
+    this.stepBuilderFactory = stepBuilderFactory;
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.entityManagerFactory = entityManagerFactory;
+  }
 
-    @Bean
-    public Job userJob(){
-        return this.jobBuilderFactory.get("userJob")
-                .incrementer(new RunIdIncrementer())
-                .start(this.saveUserStep())
-                .build();
-    }
+  @Bean
+  public Job userJob() {
+    return this.jobBuilderFactory
+        .get("userJob")
+        .incrementer(new RunIdIncrementer())
+        .start(this.saveUserStep())
+        .build();
+  }
 
-    @Bean
-    public Step saveUserStep() {
-        return this.stepBuilderFactory.get("saveUserStep")
-                .tasklet(new SaveUserTasklet(userRepository, passwordEncoder))
-                .build();
-    }
+  @Bean
+  public Step saveUserStep() {
+    return this.stepBuilderFactory
+        .get("saveUserStep")
+        .tasklet(new SaveUserTasklet(userRepository, passwordEncoder))
+        .build();
+  }
 
-    @Bean
-    public Step sleeperUserStep() throws Exception {
-        return this.stepBuilderFactory.get("sleeperUserStep")
-                .<User, User>chunk(100)
-                .reader(userReader())
-                .processor(userProcessor())
-                .writer(userWriter())
-                .build();
-    }
+  @Bean
+  public Step sleeperUserStep() throws Exception {
+    return this.stepBuilderFactory
+        .get("sleeperUserStep")
+        .<User, User>chunk(100)
+        .reader(userReader())
+        .processor(userProcessor())
+        .writer(userWriter())
+        .build();
+  }
 
-    private ItemReader<? extends User> userReader() throws Exception {
-        JpaPagingItemReader<User> userReader =  new JpaPagingItemReaderBuilder<User>()
-                .queryString("select u from User u")
-                .entityManagerFactory(entityManagerFactory)
-                .pageSize(100)
-                .name("userItemReader")
-                .build();
+  private ItemReader<? extends User> userReader() throws Exception {
+    JpaPagingItemReader<User> userReader =
+        new JpaPagingItemReaderBuilder<User>()
+            .queryString("select u from User u")
+            .entityManagerFactory(entityManagerFactory)
+            .pageSize(100)
+            .name("userItemReader")
+            .build();
 
-        userReader.afterPropertiesSet();
-        return userReader;
-    }
+    userReader.afterPropertiesSet();
+    return userReader;
+  }
 
-    private ItemProcessor<? super User,? extends User> userProcessor() {
-        return user -> {
-            if(user.checkSleeperUser()) {
-                return user;
-            }
-            return null;
-        };
-    }
+  private ItemProcessor<? super User, ? extends User> userProcessor() {
+    return user -> {
+      if (user.checkSleeperUser()) {
+        return user;
+      }
+      return null;
+    };
+  }
 
-    private ItemWriter<? super User> userWriter() {
-        return users -> {
-            users.forEach(x -> {
-                x.changeSleeperUser();
-                userRepository.save(x);
-            });
-        };
-    }
-
+  private ItemWriter<? super User> userWriter() {
+    return users -> {
+      users.forEach(
+          x -> {
+            x.changeSleeperUser();
+            userRepository.save(x);
+          });
+    };
+  }
 }

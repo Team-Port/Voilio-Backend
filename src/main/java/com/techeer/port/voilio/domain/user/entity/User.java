@@ -85,10 +85,9 @@ public class User extends BaseEntity implements UserDetails {
   }
 
   private static boolean checkSleeperUser(LocalDateTime activatedAt) {
-    if(Objects.isNull(activatedAt)){
+    if (Objects.isNull(activatedAt)) {
       return false;
     }
-      return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
+    return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
   }
-
 }
