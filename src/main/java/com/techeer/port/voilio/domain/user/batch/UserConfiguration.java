@@ -1,8 +1,10 @@
 package com.techeer.port.voilio.domain.user.batch;
 
+import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import javax.persistence.EntityManagerFactory;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -21,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Slf4j
 @Configuration
 public class UserConfiguration {
+
+  private EmailService emailService;
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
@@ -98,6 +102,7 @@ public class UserConfiguration {
       users.forEach(
           x -> {
             x.changeSleeperUser();
+            emailService.sendEmailToSleeperUser(x);
             userRepository.save(x);
           });
     };
