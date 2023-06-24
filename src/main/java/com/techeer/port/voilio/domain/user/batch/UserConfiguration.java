@@ -4,7 +4,6 @@ import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import javax.persistence.EntityManagerFactory;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -50,9 +49,9 @@ public class UserConfiguration {
     return this.jobBuilderFactory
         .get("userJob")
         .incrementer(new RunIdIncrementer())
-//        .start(this.saveUserStep())
+        //        .start(this.saveUserStep())
         .start(this.sleeperUserStep())
-//        .next(this.sleeperUserStep())
+        //        .next(this.sleeperUserStep())
         .build();
   }
 
