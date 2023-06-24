@@ -87,4 +87,13 @@ public class UserConfiguration {
         };
     }
 
+    private ItemWriter<? super User> userWriter() {
+        return users -> {
+            users.forEach(x -> {
+                x.changeSleeperUser();
+                userRepository.save(x);
+            });
+        };
+    }
+
 }
