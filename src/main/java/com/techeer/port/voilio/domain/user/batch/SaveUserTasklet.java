@@ -15,11 +15,13 @@ import java.util.List;
 
 public class SaveUserTasklet implements Tasklet {
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public SaveUserTasklet(UserRepository userRepository) {
+    public SaveUserTasklet(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -36,7 +38,7 @@ public class SaveUserTasklet implements Tasklet {
         for (int i = 0 ; i< 100; i++) {
             users.add(User.builder()
                     .email("test@" + i)
-                    .password("testPwd@" + i)
+                    .password(passwordEncoder.encode("testPwd@" + i))
                     .nickname("testNick@" + i)
                     .activatedAt(LocalDateTime.now())
                     .build());
@@ -45,7 +47,7 @@ public class SaveUserTasklet implements Tasklet {
         for (int i = 100 ; i< 200; i++) {
             users.add(User.builder()
                     .email("test@" + i)
-                    .password("testPwd@" + i)
+                    .password(passwordEncoder.encode("testPwd@" + i))
                     .nickname("testNick@" + i)
                     .activatedAt(LocalDateTime.now().minusDays(100))
                     .build());
@@ -54,7 +56,7 @@ public class SaveUserTasklet implements Tasklet {
         for (int i = 200 ; i< 300; i++) {
             users.add(User.builder()
                     .email("test@" + i)
-                    .password("testPwd@" + i)
+                    .password(passwordEncoder.encode("testPwd@" + i))
                     .nickname("testNick@" + i)
                     .activatedAt(LocalDateTime.now().minusDays(200))
                     .build());
@@ -63,7 +65,7 @@ public class SaveUserTasklet implements Tasklet {
         for (int i = 300 ; i< 400; i++) {
             users.add(User.builder()
                     .email("test@" + i)
-                    .password("testPwd@" + i)
+                    .password(passwordEncoder.encode("testPwd@" + i))
                     .nickname("testNick@" + i)
                     .activatedAt(LocalDateTime.now().minusYears(1))
                     .build());
@@ -78,6 +80,6 @@ public class SaveUserTasklet implements Tasklet {
                     .build());
         }
 
-        return null;
+        return users;
     }
 }

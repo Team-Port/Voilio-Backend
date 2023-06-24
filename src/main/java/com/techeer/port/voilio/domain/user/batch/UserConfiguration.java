@@ -1,0 +1,45 @@
+package com.techeer.port.voilio.domain.user.batch;
+
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Slf4j
+@Configuration
+public class UserConfiguration {
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.jobBuilderFactory = jobBuilderFactory;
+        this.stepBuilderFactory = stepBuilderFactory;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Bean
+    public Job userJob(){
+        return this.jobBuilderFactory.get("userJob")
+                .incrementer(new RunIdIncrementer())
+                .start(this.saveUserStep())
+                .build();
+    }
+
+    @Bean
+    public Step saveUserStep() {
+        return this.stepBuilderFactory.get("saveUserStep")
+                .tasklet(new SaveUserTasklet(userRepository, passwordEncoder))
+                .build();
+    }
+
+}
