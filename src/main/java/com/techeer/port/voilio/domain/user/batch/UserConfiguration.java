@@ -8,7 +8,9 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -27,22 +29,16 @@ public class UserConfiguration {
     private final PasswordEncoder passwordEncoder;
     private final EntityManagerFactory entityManagerFactory;
 
-    public UserConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, UserRepository userRepository, PasswordEncoder passwordEncoder, EntityManagerFactory entityManagerFactory) {
+    public UserConfiguration(JobBuilderFactory jobBuilderFactory,
+                             StepBuilderFactory stepBuilderFactory,
+                             UserRepository userRepository,
+                             PasswordEncoder passwordEncoder,
+                             EntityManagerFactory entityManagerFactory) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.entityManagerFactory = entityManagerFactory;
-    }
-
-    public UserConfiguration(JobBuilderFactory jobBuilderFactory,
-                             StepBuilderFactory stepBuilderFactory,
-                             UserRepository userRepository,
-                             PasswordEncoder passwordEncoder) {
-        this.jobBuilderFactory = jobBuilderFactory;
-        this.stepBuilderFactory = stepBuilderFactory;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -80,6 +76,15 @@ public class UserConfiguration {
 
         userReader.afterPropertiesSet();
         return userReader;
+    }
+
+    private ItemProcessor<? super User,? extends User> userProcessor() {
+        return user -> {
+            if(user.checkSleeperUser()) {
+                return user;
+            }
+            return null;
+        };
     }
 
 }
