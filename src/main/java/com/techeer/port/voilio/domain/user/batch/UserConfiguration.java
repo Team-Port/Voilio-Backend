@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.user.batch;
 
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -39,6 +40,16 @@ public class UserConfiguration {
     public Step saveUserStep() {
         return this.stepBuilderFactory.get("saveUserStep")
                 .tasklet(new SaveUserTasklet(userRepository, passwordEncoder))
+                .build();
+    }
+
+    @Bean
+    public Step sleeperUserStep() {
+        return this.stepBuilderFactory.get("sleeperUserStep")
+                .<User, User>chunk(100)
+                .reader(userReader())
+                .processor(userProcessor())
+                .writer(userWriter())
                 .build();
     }
 
