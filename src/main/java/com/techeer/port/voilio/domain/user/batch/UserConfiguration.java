@@ -3,9 +3,8 @@ package com.techeer.port.voilio.domain.user.batch;
 import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import javax.persistence.EntityManagerFactory;
-
 import com.techeer.port.voilio.domain.user.service.UserService;
+import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
