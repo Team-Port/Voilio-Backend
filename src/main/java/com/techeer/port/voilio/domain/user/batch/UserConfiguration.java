@@ -32,11 +32,12 @@ public class UserConfiguration {
   private final EntityManagerFactory entityManagerFactory;
 
   public UserConfiguration(
-          EmailService emailService, JobBuilderFactory jobBuilderFactory,
-          StepBuilderFactory stepBuilderFactory,
-          UserRepository userRepository,
-          PasswordEncoder passwordEncoder,
-          EntityManagerFactory entityManagerFactory) {
+      EmailService emailService,
+      JobBuilderFactory jobBuilderFactory,
+      StepBuilderFactory stepBuilderFactory,
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      EntityManagerFactory entityManagerFactory) {
     this.emailService = emailService;
     this.jobBuilderFactory = jobBuilderFactory;
     this.stepBuilderFactory = stepBuilderFactory;
@@ -50,9 +51,9 @@ public class UserConfiguration {
     return this.jobBuilderFactory
         .get("sleeperUserJob")
         .incrementer(new RunIdIncrementer())
-//                .start(this.saveUserStep())
+        //                .start(this.saveUserStep())
         .start(this.sleeperUserStep())
-//                .next(this.sleeperUserStep())
+        //                .next(this.sleeperUserStep())
         .build();
   }
 
