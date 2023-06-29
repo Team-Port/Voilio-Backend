@@ -60,7 +60,7 @@ public class SaveUserTasklet implements Tasklet {
               .email("test@" + i)
               .password(passwordEncoder.encode("testPwd@" + i))
               .nickname("testNick@" + i)
-              .activatedAt(LocalDateTime.now().minusDays(200))
+              .activatedAt(LocalDateTime.now().minusDays(1))
               .build());
     }
 
@@ -70,17 +70,7 @@ public class SaveUserTasklet implements Tasklet {
               .email("test@" + i)
               .password(passwordEncoder.encode("testPwd@" + i))
               .nickname("testNick@" + i)
-              .activatedAt(LocalDateTime.now().minusYears(1))
-              .build());
-    }
-
-    for (int i = 400; i < 500; i++) {
-      users.add(
-          User.builder()
-              .email("test@" + i)
-              .password(passwordEncoder.encode("testPwd@" + i))
-              .nickname("testNick@" + i)
-              .activatedAt(LocalDateTime.now().minusDays(500))
+              .activatedAt(LocalDateTime.now().minusYears(2))
               .build());
     }
 
