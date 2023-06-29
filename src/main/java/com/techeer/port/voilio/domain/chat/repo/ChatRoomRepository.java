@@ -1,62 +1,19 @@
 package com.techeer.port.voilio.domain.chat.repo;
 
-import com.techeer.port.voilio.domain.chat.model.ChatRoom;
-import com.techeer.port.voilio.domain.chat.pubsub.RedisSubscriber;
-import java.util.HashMap;
+import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
+import com.techeer.port.voilio.domain.chat.entity.ChatRoomId;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-@RequiredArgsConstructor
-@Repository
-public class ChatRoomRepository {
-  // 채팅방(topic)에 발행되는 메시지를 처리할 Listner
-  private final RedisMessageListenerContainer redisMessageListener;
-  // 구독 처리 서비스
-  private final RedisSubscriber redisSubscriber;
-  // Redis
-  private static final String CHAT_ROOMS = "CHAT_ROOM";
-  private final RedisTemplate<String, Object> redisTemplate;
-  private HashOperations<String, String, ChatRoom> opsHashChatRoom;
-  // 채팅방의 대화 메시지를 발행하기 위한 redis topic 정보. 서버별로 채팅방에 매치되는 topic정보를 Map에 넣어 roomId로 찾을수 있도록 한다.
-  private Map<String, ChannelTopic> topics;
+public interface ChatRoomRepository extends JpaRepository<ChatRoom,ChatRoomId> {
 
-  @PostConstruct
-  private void init() {
-    opsHashChatRoom = redisTemplate.opsForHash();
-    topics = new HashMap<>();
-  }
+    @Query("SELECT c FROM ChatRoom c WHERE c.user1.id = :userId OR c.user2.id = :userId")
+    List<ChatRoom> findAllByUserId(@Param("userId")long userId);
 
-  public List<ChatRoom> findAllRoom() {
-    return opsHashChatRoom.values(CHAT_ROOMS);
-  }
-
-  public ChatRoom findRoomById(String id) {
-    return opsHashChatRoom.get(CHAT_ROOMS, id);
-  }
-
-  /** 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다. */
-  public ChatRoom createChatRoom(String name) {
-    ChatRoom chatRoom = ChatRoom.create(name);
-    opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
-    return chatRoom;
-  }
-
-  /** 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다. */
-  public void enterChatRoom(String roomId) {
-    ChannelTopic topic = topics.get(roomId);
-    if (topic == null) topic = new ChannelTopic(roomId);
-    redisMessageListener.addMessageListener(redisSubscriber, topic);
-    topics.put(roomId, topic);
-  }
-
-  public ChannelTopic getTopic(String roomId) {
-    return topics.get(roomId);
-  }
+    @Query("SELECT c FROM ChatRoom c WHERE (c.user1.id = :user1Id AND c.user2.id = :user2Id) OR (c.user1.id = :user2Id AND c.user2.id = :user1Id)")
+    Optional<ChatRoom> findByUser1AndUser2(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
 }

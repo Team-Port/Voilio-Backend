@@ -1,46 +1,50 @@
 package com.techeer.port.voilio.domain.chat.controller;
 
-import com.techeer.port.voilio.domain.chat.model.ChatRoom;
-import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
+import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
+import com.techeer.port.voilio.domain.chat.dto.response.GetChatRoomResponse;
+
 import java.util.List;
+import java.util.UUID;
+
+import com.techeer.port.voilio.domain.chat.service.ChatRoomService;
+import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 @RequiredArgsConstructor
-@Controller
-@RequestMapping("/chat")
+@RestController
+@RequestMapping("api/v1/chatRooms")
 public class ChatRoomController {
 
-  private final ChatRoomRepository chatRoomRepository;
+  private final ChatRoomService chatRoomService;
+  private final UserService userService;
 
-  @GetMapping("/room")
-  public String rooms(Model model) {
-    return "/chat/room";
+  @GetMapping
+  public ResponseEntity<EntityModel<ResultResponse<List<GetChatRoomResponse>>>> getRoom(@RequestHeader(value = "Authorization") String authorizationHeader) {
+    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
+    List<GetChatRoomResponse> response = chatRoomService.getChatRoomAll(currentLoginUserId);
+    return ResponseEntity.ok(EntityModel.of(new ResultResponse<>(API_SUCCESS_GET_ALL_CHATROOM,response)));
   }
 
-  @GetMapping("/rooms")
-  @ResponseBody
-  public List<ChatRoom> room() {
-    return chatRoomRepository.findAllRoom();
+  @PostMapping
+  public ResponseEntity<EntityModel<ResultResponse>> createRoom(@Valid @RequestBody CreateChatRoomRequest request) {
+    chatRoomService.createChatRoom(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(EntityModel.of(new ResultResponse<>(API_SUCCESS_CREATE_CHATROOM)));
   }
 
-  @PostMapping("/room")
-  @ResponseBody
-  public ChatRoom createRoom(@RequestParam String name) {
-    return chatRoomRepository.createChatRoom(name);
+  @GetMapping("/{subscribeId}")
+  public ResponseEntity<EntityModel<ResultResponse<UUID>>> getRoomBySubscribeId(@RequestHeader(value = "Authorization") String authorizationHeader,@PathVariable Long subscribeId) {
+    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
+    UUID roomUuid = chatRoomService.getChatRoom(currentLoginUserId,subscribeId);
+    return ResponseEntity.ok(EntityModel.of(new ResultResponse<>(API_SUCCESS_GET_CHATROOM,roomUuid)));
   }
 
-  @GetMapping("/room/enter/{roomId}")
-  public String roomDetail(Model model, @PathVariable String roomId) {
-    model.addAttribute("roomId", roomId);
-    return "/chat/roomdetail";
-  }
-
-  @GetMapping("/room/{roomId}")
-  @ResponseBody
-  public ChatRoom roomInfo(@PathVariable String roomId) {
-    return chatRoomRepository.findRoomById(roomId);
-  }
 }

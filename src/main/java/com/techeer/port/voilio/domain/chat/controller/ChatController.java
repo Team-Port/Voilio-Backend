@@ -2,7 +2,7 @@ package com.techeer.port.voilio.domain.chat.controller;
 
 import com.techeer.port.voilio.domain.chat.model.ChatMessage;
 import com.techeer.port.voilio.domain.chat.pubsub.RedisPublisher;
-import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
+import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepositoryN;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
   private final RedisPublisher redisPublisher;
-  private final ChatRoomRepository chatRoomRepository;
+  private final ChatRoomRepositoryN chatRoomRepository;
 
   /** websocket "/pub/chat/message"로 들어오는 메시징을 처리한다. */
   @MessageMapping("/chat/message")

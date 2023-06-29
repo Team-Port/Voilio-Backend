@@ -34,17 +34,13 @@ public class SubscribeController {
   @Autowired private UserService userService;
   @Autowired private SubscribeMapper subscribeMapper;
 
-  @PostMapping("/{subscribeUserId}")
-  public ResponseEntity<ResultResponse> subscribe(
-      @PathVariable Long subscribeUserId,
-      @RequestHeader("Authorization") String authorizationHeader) {
+  @PostMapping("/")
+  public ResponseEntity<ResultResponse> subscribe(@Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    Long userId = userService.getCurrentLoginUser(authorizationHeader);
-    log.info("authorizationHeader : {}, userId : {}", authorizationHeader, userId);
-    subscribeService.subscribe(userId, subscribeUserId);
+    subscribeService.subscribe(subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).subscribe(subscribeUserId, authorizationHeader))
+        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest))
             .withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
@@ -54,7 +50,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.unsubscribe(subscribeRequest.getUser_id(), subscribeRequest.getSubscribe_id());
+    subscribeService.unsubscribe(subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
