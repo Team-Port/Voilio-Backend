@@ -46,9 +46,9 @@ public class UserConfiguration {
   }
 
   @Bean
-  public Job userJob() throws Exception {
+  public Job sleeperUserJob() throws Exception {
     return this.jobBuilderFactory
-        .get("userJob")
+        .get("sleeperUserJob")
         .incrementer(new RunIdIncrementer())
 //                .start(this.saveUserStep())
         .start(this.sleeperUserStep())
