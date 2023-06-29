@@ -80,22 +80,7 @@ public class User extends BaseEntity implements UserDetails {
     this.activatedAt = activatedAt;
   }
 
-  public boolean checkSleeperUser() {
-    return User.checkSleeperUser(this.getActivatedAt());
-  }
+  public void setStopped(boolean stopped) { isStopped = stopped; }
 
-  private static boolean checkSleeperUser(LocalDateTime activatedAt) {
-    if (Objects.isNull(activatedAt)) {
-      return false;
-    }
-    return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
-  }
-
-  public void setStopped(boolean stopped) {
-    isStopped = stopped;
-  }
-
-  public void changeSleeperUser() {
-    this.setStopped(true);
-  }
+  public void changeSleeperUser() { this.setStopped(true); }
 }

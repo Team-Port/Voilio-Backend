@@ -4,6 +4,9 @@ import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import javax.persistence.EntityManagerFactory;
+
+import com.techeer.port.voilio.domain.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class UserConfiguration {
 
   private final EmailService emailService;
@@ -28,23 +32,9 @@ public class UserConfiguration {
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   private final UserRepository userRepository;
+  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final EntityManagerFactory entityManagerFactory;
-
-  public UserConfiguration(
-      EmailService emailService,
-      JobBuilderFactory jobBuilderFactory,
-      StepBuilderFactory stepBuilderFactory,
-      UserRepository userRepository,
-      PasswordEncoder passwordEncoder,
-      EntityManagerFactory entityManagerFactory) {
-    this.emailService = emailService;
-    this.jobBuilderFactory = jobBuilderFactory;
-    this.stepBuilderFactory = stepBuilderFactory;
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.entityManagerFactory = entityManagerFactory;
-  }
 
   @Bean
   public Job sleeperUserJob() throws Exception {
@@ -91,7 +81,7 @@ public class UserConfiguration {
 
   private ItemProcessor<? super User, ? extends User> userProcessor() {
     return user -> {
-      if (user.checkSleeperUser() && !user.isStopped()) {
+      if (userService.checkSleeperUser(user) && !user.isStopped()) {
         return user;
       }
       return null;

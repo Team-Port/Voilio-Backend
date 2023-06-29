@@ -6,8 +6,12 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -79,5 +83,16 @@ public class UserService {
       currentLoginUserNickname = Long.valueOf(userDetails.getUsername());
     }
     return currentLoginUserNickname;
+  }
+
+  public boolean checkSleeperUser(User user) {
+    return checkSleeperUser(user.getActivatedAt());
+  }
+
+  private static boolean checkSleeperUser(LocalDateTime activatedAt) {
+    if (Objects.isNull(activatedAt)) {
+      return false;
+    }
+    return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
   }
 }
