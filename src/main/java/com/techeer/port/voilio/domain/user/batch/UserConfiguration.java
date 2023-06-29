@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.batch;
 
 import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import javax.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -92,7 +93,7 @@ public class UserConfiguration {
       if (user.checkSleeperUser()) {
         return user;
       }
-      return null;
+      throw new NotFoundUserException();
     };
   }
 
