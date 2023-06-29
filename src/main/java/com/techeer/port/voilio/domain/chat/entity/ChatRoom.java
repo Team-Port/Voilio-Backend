@@ -1,11 +1,9 @@
 package com.techeer.port.voilio.domain.chat.entity;
 
-import java.util.UUID;
-
 import com.techeer.port.voilio.domain.user.entity.User;
-import lombok.*;
-
+import java.util.UUID;
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -24,11 +22,7 @@ public class ChatRoom {
   @JoinColumn(name = "user_id2")
   private User user2;
 
-  @Column
-  @Builder.Default
-  private UUID roomUuid = UUID.randomUUID();
+  @Column @Builder.Default private UUID roomUuid = UUID.randomUUID();
 
-  @Column
-  private String roomName;
-
+  @Column private String roomName;
 }

@@ -29,7 +29,7 @@ public enum ErrorCode {
   CONVERT_FILE_ERROR(400, "S001", "파일 변환 실패"),
   UPLOAD_FILE_ERROR(400, "S002", "파일이 존재하지 않음"),
 
-  API_ERROR_CHATROOM_NOT_FOUND(400,"R001","채팅방이 존재하지 않음"),
+  API_ERROR_CHATROOM_NOT_FOUND(400, "R001", "채팅방이 존재하지 않음"),
   ;
   private final int status;
   private final String code;

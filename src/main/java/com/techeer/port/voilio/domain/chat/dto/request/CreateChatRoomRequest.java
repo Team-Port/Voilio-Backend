@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CreateChatRoomRequest {
-    private String nickName;
-    private long chatUserId;
+  private String nickName;
+  private long chatUserId;
 }

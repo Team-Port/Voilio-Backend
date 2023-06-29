@@ -35,13 +35,13 @@ public class SubscribeController {
   @Autowired private SubscribeMapper subscribeMapper;
 
   @PostMapping("/")
-  public ResponseEntity<ResultResponse> subscribe(@Valid @RequestBody SubscribeRequest subscribeRequest) {
+  public ResponseEntity<ResultResponse> subscribe(
+      @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
     subscribeService.subscribe(subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest))
-            .withSelfRel());
+        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
@@ -50,7 +50,8 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.unsubscribe(subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
+    subscribeService.unsubscribe(
+        subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
