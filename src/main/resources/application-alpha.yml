@@ -1,0 +1,7 @@
+spring:
+  config:
+    activate:
+      on-profile: alpha
+  redis:
+    host: redis_container
+    port: 6379

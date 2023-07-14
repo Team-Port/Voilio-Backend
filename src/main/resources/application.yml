@@ -3,6 +3,7 @@ spring:
     active:
       - secret
       - local
+      - alpha
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,6 +36,8 @@ spring:
   freemarker:
     cache: false
     suffix: .ftl
+
+
 
 
 springdoc:
