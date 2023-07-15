@@ -17,9 +17,8 @@ public enum ErrorCode {
   USER_NOT_FOUND_ERROR(400, "U002", "사용자를 찾을 수 없음"),
   INVALID_USER_PASSWORD(400, "U003", "비밀번호가 일치하지 않음"),
   ALREADY_EXIST_USER(400, "U004", "이미 가입된 유저 email 입니다."),
-  INVAILD_USER_INFO(401, "U005", "가입되지 않은 유저거나, 이메일과 비밀번호가 일치하지 않습니다."),
 
-  NO_AUTHORITY(401, "U006", "권한이 없습니다."),
+  NO_AUTHORITY(401, "U005", "권한이 없습니다."),
 
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),

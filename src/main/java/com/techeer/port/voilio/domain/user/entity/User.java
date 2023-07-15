@@ -1,10 +1,12 @@
 package com.techeer.port.voilio.domain.user.entity;
 
 import com.techeer.port.voilio.global.common.BaseEntity;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,6 +34,13 @@ public class User extends BaseEntity implements UserDetails {
   @Column(nullable = false)
   @NotBlank
   private String nickname;
+
+  @Column(name = "activated_at")
+  private LocalDateTime activatedAt;
+
+  @Column(name = "is_stopped")
+  @ColumnDefault("false")
+  private boolean isStopped;
 
   @Enumerated(EnumType.STRING)
   private Authority authority;
@@ -64,5 +73,17 @@ public class User extends BaseEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return false;
+  }
+
+  public void setActivatedAt(LocalDateTime activatedAt) {
+    this.activatedAt = activatedAt;
+  }
+
+  public void setStopped(boolean stopped) {
+    isStopped = stopped;
+  }
+
+  public void changeSleeperUser() {
+    this.setStopped(true);
   }
 }
