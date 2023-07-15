@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
@@ -9,6 +10,7 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -81,7 +86,7 @@ public class BoardRepositoryTest {
                 .content("testContent3")
                 .category2(Category.IT)
                 .category1(Category.IT)
-                .isPublic(true)
+                .isPublic(false)
                 .video_url("https://www.naver.com/")
                 .thumbnail_url("https://www.naver.com")
                 .build());
@@ -177,16 +182,11 @@ public class BoardRepositoryTest {
       List<Board> expectBoards5 = expectBoards4;
 
       // when
-      List<Board> actualBoards =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword);
-      List<Board> actualBoards2 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword2);
-      List<Board> actualBoards3 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword3);
-      List<Board> actualBoards4 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword4);
-      List<Board> actualBoards5 =
-          boardRepository.findAllByTitleContainingAndIsPublicTrueAndIsDeletedFalse(keyword5);
+      List<Board> actualBoards = boardRepository.findBoardByKeyword(keyword);
+      List<Board> actualBoards2 = boardRepository.findBoardByKeyword(keyword2);
+      List<Board> actualBoards3 = boardRepository.findBoardByKeyword(keyword3);
+      List<Board> actualBoards4 = boardRepository.findBoardByKeyword(keyword4);
+      List<Board> actualBoards5 = boardRepository.findBoardByKeyword(keyword5);
 
       // then
       assertEquals(expectBoards.size(), actualBoards.size());
@@ -207,10 +207,7 @@ public class BoardRepositoryTest {
       Board existedBoard2 = board2;
 
       // when
-      Board foundBoard1 =
-          boardRepository
-              .findByIdAndIsDeletedFalseAndIsPublicTrue(existedBoard.getId())
-              .orElseThrow();
+      Board foundBoard1 = boardRepository.findById(existedBoard.getId()).orElseThrow();
 
       // then
       assertEquals(foundBoard1.getId(), existedBoard.getId());
@@ -229,9 +226,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(boardId + 1)
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(boardId + 1).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -249,9 +244,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(board1.getId()).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -269,9 +262,7 @@ public class BoardRepositoryTest {
           assertThrows(
               NotFoundBoard.class,
               () -> {
-                boardRepository
-                    .findByIdAndIsDeletedFalseAndIsPublicTrue(board1.getId())
-                    .orElseThrow(NotFoundBoard::new);
+                boardRepository.findById(board1.getId()).orElseThrow(NotFoundBoard::new);
               });
 
       assertEquals("게시글을 찾을 수 없음", exception.getMessage());
@@ -288,5 +279,83 @@ public class BoardRepositoryTest {
 
       // when,then
     }
+  }
+
+  @Test
+  @DisplayName("testFindAllBoard")
+  public void testFindAllBoard() {
+    List<Board> expectedBoards = new ArrayList<>();
+    expectedBoards.add(board1);
+    expectedBoards.add(board2);
+    expectedBoards.add(board3);
+
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> actualPage = boardRepository.findAllBoard(pageable);
+    List<Board> actualBoards = actualPage.getContent();
+
+    assertEquals(expectedBoards.size(), actualBoards.size());
+    for (int i = 0; i < expectedBoards.size(); i++) {
+      assertEquals(expectedBoards.get(i).getId(), actualBoards.get(i).getId());
+      assertEquals(expectedBoards.get(i).getIsPublic(), actualBoards.get(i).getIsPublic());
+      assertEquals(expectedBoards.get(i).getContent(), actualBoards.get(i).getContent());
+      assertEquals(expectedBoards.get(i).getVideo_url(), actualBoards.get(i).getVideo_url());
+      assertEquals(
+          expectedBoards.get(i).getThumbnail_url(), actualBoards.get(i).getThumbnail_url());
+      assertEquals(expectedBoards.get(i).getCategory1(), actualBoards.get(i).getCategory1());
+      assertEquals(expectedBoards.get(i).getCategory2(), actualBoards.get(i).getCategory2());
+    }
+  }
+
+  @Test
+  @DisplayName("testFindBoardByIdExceptHide")
+  public void testFindBoardByIdExceptHide() {
+    Board board =
+        Board.builder()
+            .user(user1)
+            .title("Test")
+            .content("Test")
+            .category1(Category.IT)
+            .category2(Category.IT)
+            .isPublic(true)
+            .video_url("https://www.naver.com/")
+            .thumbnail_url("https://www.naver.com/")
+            .build();
+
+    board = boardRepository.save(board);
+    Long boardId = board.getId();
+
+    Optional<Board> foundBoradOptional = boardRepository.findBoardByIdExceptHide(boardId);
+
+    assertTrue(foundBoradOptional.isPresent());
+    Board foundBoard = foundBoradOptional.get();
+    assertEquals(boardId, foundBoard.getId());
+    assertFalse(foundBoard.getIsDeleted());
+  }
+
+  @Test
+  public void testFindBoardByCategory() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result =
+        boardRepository.findBoardByCategory(Category.IT, Category.KOTLIN, pageable);
+
+    assertThat(result).hasSize(2);
+  }
+
+  @Test
+  public void testFindBoardByUserNickname() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result = boardRepository.findBoardByUserNickname("tester1", pageable);
+
+    assertThat(result.getContent()).containsExactly(board1, board2);
+    assertThat(result).hasSize(2);
+  }
+
+  @Test
+  public void testFindBoardByUserNicknameExceptHide() {
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide("tester1", pageable);
+
+    assertThat(result.getContent()).containsExactly(board1, board2, board3);
+    assertThat(result).hasSize(3);
   }
 }
