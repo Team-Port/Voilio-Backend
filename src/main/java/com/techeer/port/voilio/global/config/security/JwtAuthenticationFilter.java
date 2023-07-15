@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/*
+  JwtSecurityConfig 에서의 사용
+ */
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -29,8 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+
     String jwt = resolveToken(request);
-    // 유효한 토큰인지 확인
+
+    // jwt 에 값이 있는지, 유효한 토큰인지 확인
     if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
       Authentication authentication = jwtProvider.getAuthentication(jwt);
       SecurityContextHolder.getContext().setAuthentication(authentication);

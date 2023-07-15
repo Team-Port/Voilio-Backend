@@ -40,9 +40,12 @@ public class AuthService {
   public TokenDto login(UserLoginRequest userLoginRequest) {
     User user = validateAccount(userLoginRequest);
 
-    // 로그인 성공 후, 추가 작업 - 토큰 생성
+    // 마지막 로그인 정보 업데이트
     user.setActivatedAt(LocalDateTime.now());
+
+    // SecurityContextHolder.getContext()에 등록될 Authentication 객체리턴 받음
     UsernamePasswordAuthenticationToken authenticationToken = userLoginRequest.toAuthentication();
+    // AuthenticationManagerBuilder 를 통해 인증 객체를 만들 수 있도록 제공
     Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
     return jwtProvider.generateTokenDto(authentication);

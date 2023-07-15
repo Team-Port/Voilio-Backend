@@ -5,17 +5,15 @@ import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
-import com.techeer.port.voilio.global.config.security.SecurityUtil;
+import com.techeer.port.voilio.global.config.security.GetNowUser;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
-  private AuthenticationManagerBuilder authenticationManagerBuilder;
 
   public List<User> getUserList() {
     return new ArrayList<User>(userRepository.findAll());
@@ -61,7 +57,7 @@ public class UserService {
 
   public UserResponse getMyInfoBySecurity() {
     return userRepository
-        .findById(SecurityUtil.getCurrentMemberId())
+        .findById(GetNowUser.getCurrentMemberId())
         .map(UserResponse::of)
         .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
   }

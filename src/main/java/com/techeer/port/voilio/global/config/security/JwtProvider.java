@@ -32,7 +32,7 @@ public class JwtProvider {
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  // 토큰 생성
+  // 인증 객체를 받아와서 토큰 생성
   public TokenDto generateTokenDto(Authentication authentication) {
     String authorities =
         authentication.getAuthorities().stream()
@@ -40,7 +40,7 @@ public class JwtProvider {
             .collect(Collectors.joining(","));
 
     long now = (new Date()).getTime();
-    Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+    Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);   // 현재 시간으로부터 유효 시간을 더해 만료 시간 상정
 
     String accessToken =
         Jwts.builder()
@@ -70,6 +70,7 @@ public class JwtProvider {
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
     UserDetails principal = new User(claims.getSubject(), "", authorities);
+
     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
   }
 

@@ -1,5 +1,6 @@
-package com.techeer.port.voilio.global.config.security;
+package com.techeer.port.voilio.global.config.security.jwtCheck;
 
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

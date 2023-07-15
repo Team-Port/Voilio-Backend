@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.global.config.security;
+package com.techeer.port.voilio.global.config.security.jwtCheck;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +7,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+/*
+  WebSecurityConfig 에서의 사용을 위해
+ */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

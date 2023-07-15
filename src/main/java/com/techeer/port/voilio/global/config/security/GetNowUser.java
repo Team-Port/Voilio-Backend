@@ -3,9 +3,9 @@ package com.techeer.port.voilio.global.config.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class SecurityUtil {
+public class GetNowUser {
 
-  private SecurityUtil() {}
+  private GetNowUser() {}
 
   public static Long getCurrentMemberId() {
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
