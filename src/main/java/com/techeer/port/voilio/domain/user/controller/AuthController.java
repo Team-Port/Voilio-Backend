@@ -9,16 +9,16 @@ import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.service.AuthService;
+import com.techeer.port.voilio.domain.user.service.RefreshTokenService;
+import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import java.rmi.AlreadyBoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,6 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
+  private final AuthenticationManager authenticationManager;
+  private final JwtProvider jwtProvider;
+  private final RefreshTokenService refreshTokenService;
+
 
   @PostMapping("/signup")
   public ResponseEntity<ResultResponse<UserResponse>> signup(
@@ -49,4 +53,11 @@ public class AuthController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(@RequestParam String username) {
+    refreshTokenService.deleteRefreshToken(username);
+    return ResponseEntity.ok("Successfully logged out.");
+  }
+
 }
