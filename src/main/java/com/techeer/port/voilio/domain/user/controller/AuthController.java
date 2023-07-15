@@ -30,7 +30,6 @@ public class AuthController {
   private final JwtProvider jwtProvider;
   private final RefreshTokenService refreshTokenService;
 
-
   @PostMapping("/signup")
   public ResponseEntity<ResultResponse<UserResponse>> signup(
       @RequestBody UserSignUpRequest userSignUpRequest) throws AlreadyBoundException {
@@ -59,5 +58,4 @@ public class AuthController {
     refreshTokenService.deleteRefreshToken(username);
     return ResponseEntity.ok("Successfully logged out.");
   }
-
 }

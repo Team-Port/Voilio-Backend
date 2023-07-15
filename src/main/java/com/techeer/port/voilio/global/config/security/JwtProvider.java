@@ -26,7 +26,8 @@ public class JwtProvider {
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_TYPE = "bearer";
   private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 토큰 유효시간 30분
-  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // Refresh token 유효시간 7일
+  private static final long REFRESH_TOKEN_EXPIRE_TIME =
+      1000L * 60 * 60 * 24 * 7; // Refresh token 유효시간 7일
   private final Key key;
 
   private RefreshTokenService refreshTokenService;
@@ -56,7 +57,8 @@ public class JwtProvider {
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 
-    String refreshToken = Jwts.builder()
+    String refreshToken =
+        Jwts.builder()
             .setSubject(authentication.getName())
             .setExpiration(refreshTokenExpiresIn)
             .signWith(key, SignatureAlgorithm.HS512)
@@ -86,7 +88,12 @@ public class JwtProvider {
 
   public String getUsername(String refreshToken) {
     try {
-      return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken).getBody().getSubject();
+      return Jwts.parserBuilder()
+          .setSigningKey(key)
+          .build()
+          .parseClaimsJws(refreshToken)
+          .getBody()
+          .getSubject();
     } catch (ExpiredJwtException e) {
       return e.getClaims().getSubject();
     }
