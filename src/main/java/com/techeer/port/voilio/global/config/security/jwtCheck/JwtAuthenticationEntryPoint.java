@@ -8,8 +8,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 /*
-  WebSecurityConfig 에서의 사용을 위해
- */
+ WebSecurityConfig 에서의 사용을 위해
+*/
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

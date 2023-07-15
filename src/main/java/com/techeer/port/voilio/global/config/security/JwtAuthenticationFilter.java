@@ -12,8 +12,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /*
-  JwtSecurityConfig 에서의 사용
- */
+ JwtSecurityConfig 에서의 사용
+*/
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   public static final String AUTHORIZATION_HEADER = "Authorization";

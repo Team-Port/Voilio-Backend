@@ -9,8 +9,8 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
-  WebSecurityConfig 에서의 사용을 위해
- */
+ WebSecurityConfig 에서의 사용을 위해
+*/
 
 @RequiredArgsConstructor
 public class JwtSecurityConfig
@@ -21,7 +21,8 @@ public class JwtSecurityConfig
   public void configure(HttpSecurity http) {
     JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider);
 
-    // Spring Security 는 기본적으로 세션 쿠키 방식의 인증이 이루어진다. 이 인증이 이루어지는 Filter = UsernamePasswordAuthenticationFilter
+    // Spring Security 는 기본적으로 세션 쿠키 방식의 인증이 이루어진다. 이 인증이 이루어지는 Filter =
+    // UsernamePasswordAuthenticationFilter
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 }

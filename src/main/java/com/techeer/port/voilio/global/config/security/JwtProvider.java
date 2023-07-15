@@ -40,7 +40,7 @@ public class JwtProvider {
             .collect(Collectors.joining(","));
 
     long now = (new Date()).getTime();
-    Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);   // 현재 시간으로부터 유효 시간을 더해 만료 시간 상정
+    Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 현재 시간으로부터 유효 시간을 더해 만료 시간 상정
 
     String accessToken =
         Jwts.builder()
