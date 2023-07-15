@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.global.config.security;
 
+import com.techeer.port.voilio.domain.user.service.RefreshTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,11 +26,15 @@ public class JwtProvider {
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_TYPE = "bearer";
   private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 토큰 유효시간 30분
+  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // Refresh token 유효시간 7일
   private final Key key;
+
+  private RefreshTokenService refreshTokenService;
 
   public JwtProvider(@Value("${jwt.secret}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
+    this.refreshTokenService = refreshTokenService;
   }
 
   // 인증 객체를 받아와서 토큰 생성
@@ -41,6 +46,7 @@ public class JwtProvider {
 
     long now = (new Date()).getTime();
     Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 현재 시간으로부터 유효 시간을 더해 만료 시간 상정
+    Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
     String accessToken =
         Jwts.builder()
@@ -50,11 +56,40 @@ public class JwtProvider {
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 
+    String refreshToken = Jwts.builder()
+            .setSubject(authentication.getName())
+            .setExpiration(refreshTokenExpiresIn)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
+
+    refreshTokenService.saveRefreshToken(authentication.getName(), refreshToken);
+
     return TokenDto.builder()
         .grantType(BEARER_TYPE)
         .accessToken(accessToken)
         .tokenExpiresIn(tokenExpiresIn.getTime())
         .build();
+  }
+
+  public TokenDto refreshToken(String refreshToken) {
+    if (validateToken(refreshToken)) {
+      // refreshToken이 유효하다면 새로운 accessToken을 생성
+      Authentication authentication = getAuthentication(refreshToken);
+      return generateTokenDto(authentication);
+    } else {
+      // refreshToken이 유효하지 않다면 refreshToken을 제거
+      String username = getUsername(refreshToken);
+      refreshTokenService.deleteRefreshToken(username);
+      throw new RuntimeException("Refresh token is not valid.");
+    }
+  }
+
+  public String getUsername(String refreshToken) {
+    try {
+      return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken).getBody().getSubject();
+    } catch (ExpiredJwtException e) {
+      return e.getClaims().getSubject();
+    }
   }
 
   // JWT 토큰에서 인증 정보 조회
