@@ -6,8 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface CommentRepository extends JpaRepository<Comment, Long>, CommentCustomRepository {
-
-  @Query("SELECT c FROM Comment c join fetch c.board where c.isDeleted = false and c.board.id=:id")
-  List<Comment> findByBoardId(@Param("id") Long id);
+public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom {
 }

@@ -8,14 +8,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CommentRepositoryImpl implements CommentCustomRepository {
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
   private final JPAQueryFactory queryFactory;
 
   @Override
   public List<Comment> findByBoardId(Long id) {
     return queryFactory
-        .select(comment)
+        .selectFrom(comment)
         .join(comment.board)
         .fetchJoin()
         .where(comment.isDeleted.eq(false), comment.board.id.eq(id))
