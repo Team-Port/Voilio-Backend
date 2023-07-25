@@ -31,9 +31,8 @@ public class ChatService {
     ListenableFuture<SendResult<String, ChatMessage>> future =
         kafkaTemplate.send(topic, chatMessage);
   }
-
-  public Page<GetChatResponse> getChat(UUID roomUuid, Pageable pageable) {
-    Page<Chat> chats = chatRepository.findAllByRoomUuid(roomUuid, pageable);
-    return chatMapper.toDto(chats);
-  }
+    public Page<GetChatResponse> getChat(UUID roomUuid, Pageable pageable) {
+        Page<Chat> chats = chatRepository.findAllByRoomId(roomUuid, pageable);
+        return chatMapper.toDto(chats);
+    }
 }

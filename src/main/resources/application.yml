@@ -36,7 +36,7 @@ spring:
     suffix: .ftl
   batch:
     jdbc:
-      initialize-schema: never
+      initialize-schema: always
   mail:
     host: smtp.gmail.com
     port: 587
