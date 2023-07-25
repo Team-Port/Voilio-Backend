@@ -1,15 +1,12 @@
 package com.techeer.port.voilio.domain.chat.document;
 
-import com.techeer.port.voilio.domain.chat.dto.ChatMessage;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import javax.persistence.Id;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import javax.persistence.Id;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @ToString
 @Getter
@@ -18,16 +15,13 @@ import java.util.UUID;
 @Builder
 @Document(collection = "chat")
 public class Chat {
-    @Id
-    private String id;
+  @Id private String id;
 
-    @Field
-    private UUID roomId;
+  @Field private UUID roomId;
 
-    @Field private Long userId;
+  @Field private Long userId;
 
-    @Field private String message;
+  @Field private String message;
 
-    @Field @CreatedDate
-    private LocalDateTime createdAt;
+  @Field @CreatedDate private LocalDateTime createdAt;
 }

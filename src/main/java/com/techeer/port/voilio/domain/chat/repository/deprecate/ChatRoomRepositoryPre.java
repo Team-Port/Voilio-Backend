@@ -1,9 +1,9 @@
 package com.techeer.port.voilio.domain.chat.repository.deprecate;
 
-//@Slf4j
-//@RequiredArgsConstructor
-//@Repository
-//public class ChatRoomRepositoryN {
+// @Slf4j
+// @RequiredArgsConstructor
+// @Repository
+// public class ChatRoomRepositoryN {
 //  // 채팅방(topic)에 발행되는 메시지를 처리할 Listner
 //  private final RedisMessageListenerContainer redisMessageListener;
 //  // 구독 처리 서비스
@@ -29,4 +29,4 @@ package com.techeer.port.voilio.domain.chat.repository.deprecate;
 //  public ChannelTopic getTopic(String roomId) {
 //    return topics.get(roomId);
 //  }
-//}
+// }

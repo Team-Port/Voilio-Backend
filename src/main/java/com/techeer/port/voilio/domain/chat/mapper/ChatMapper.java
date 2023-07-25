@@ -1,19 +1,18 @@
 package com.techeer.port.voilio.domain.chat.mapper;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.techeer.port.voilio.domain.chat.controller.ChatController;
 import com.techeer.port.voilio.domain.chat.document.Chat;
 import com.techeer.port.voilio.domain.chat.dto.ChatMessage;
 import com.techeer.port.voilio.domain.chat.dto.response.GetChatResponse;
 import com.techeer.port.voilio.global.result.ResultCode;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class ChatMapper {
@@ -38,14 +37,14 @@ public class ChatMapper {
   }
 
   public EntityModel toModel(
-          ResultCode code, Page<GetChatResponse> response, UUID roomUuid, int page) {
+      ResultCode code, Page<GetChatResponse> response, UUID roomUuid, int page) {
     EntityModel<ResultResponse<Object>> entity =
-            EntityModel.of(
-                    new ResultResponse<>(code, response),
-                    linkTo(methodOn(ChatController.class).getChat(roomUuid, page)).withSelfRel());
+        EntityModel.of(
+            new ResultResponse<>(code, response),
+            linkTo(methodOn(ChatController.class).getChat(roomUuid, page)).withSelfRel());
     if (response.hasNext())
       entity.add(
-              linkTo(methodOn(ChatController.class).getChat(roomUuid, page + 1)).withRel("next"));
+          linkTo(methodOn(ChatController.class).getChat(roomUuid, page + 1)).withRel("next"));
 
     return entity;
   }
