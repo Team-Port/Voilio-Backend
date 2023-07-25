@@ -2,6 +2,7 @@ spring:
   profiles:
     active:
       - secret
+      - kafka
       - local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -36,6 +36,8 @@ public enum ResultCode {
   API_SUCCESS_GET_ALL_CHATROOM("R001", "200", "모든 채팅방을 정상적으로 불러왔습니다."),
   API_SUCCESS_CREATE_CHATROOM("R002", "200", "채팅방이 정상적으로 등록되었습니다."),
   API_SUCCESS_GET_CHATROOM("R003", "200", "채팅방을 정상적으로 불러왔습니다."),
+
+  API_SUCCESS_CHAT_GET_ALL("CH001","200","채팅을 정상적으로 불러왓습니다."),
   ;
 
   private final String code;

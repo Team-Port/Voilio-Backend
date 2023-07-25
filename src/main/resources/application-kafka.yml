@@ -1,0 +1,20 @@
+spring:
+  config:
+    activate:
+      on-profile: kafka
+  kafka:
+    producer:
+      bootstrap-servers: localhost:8097 ,localhost:8098,localhost:8099
+      acks: all
+    consumer:
+      bootstrap-servers: localhost:8097,localhost:8098,localhost:8099
+      group-id: chatting
+
+    listener:
+      ack-mode: manual_immediate
+      type: single
+
+kafka:
+  topic-user-add-request: log-user-add
+  topic-user-add-chat-request: log-user-chat
+  topic-user-change: user-change

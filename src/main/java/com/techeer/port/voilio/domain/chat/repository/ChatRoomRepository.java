@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.chat.repo;
+package com.techeer.port.voilio.domain.chat.repository;
 
 import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
 import com.techeer.port.voilio.domain.chat.entity.ChatRoomId;

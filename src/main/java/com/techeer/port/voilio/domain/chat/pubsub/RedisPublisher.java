@@ -1,6 +1,6 @@
 package com.techeer.port.voilio.domain.chat.pubsub;
 
-import com.techeer.port.voilio.domain.chat.model.ChatMessage;
+import com.techeer.port.voilio.domain.chat.dto.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
