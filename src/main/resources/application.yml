@@ -3,29 +3,27 @@ spring:
     active:
       - secret
       - local
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/voilio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: port
     password: port0429
-
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: create #update
+
     properties:
       hibernate:
+        show_sql: true  # 생성된 sql 출력
         format_sql: true
         use_sql_comments: true;
     show_sql: true
-
   servlet:
     multipart:
       max-file-size: 3GB
       max-request-size: 3GB
-
   devtools:
     livereload:
       enabled: true
@@ -35,7 +33,21 @@ spring:
   freemarker:
     cache: false
     suffix: .ftl
-
+  batch:
+    jdbc:
+      initialize-schema: never
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gilyeon.dev
+    password: hlorrqvtjgnklsxi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
 springdoc:
   default-consumes-media-type: application/json
@@ -53,10 +65,11 @@ springdoc:
   paths-to-match:
     - /**
 
+
 logging:
   level:
-    org:
-      hibernate: info
+    org.springframework: info
+    com.techeer.port.voilio : debug
 
 jwt:
   secret: masdfafqawf65wdsadadcdwgzqpfoqmdyrkvuapfcjTTOwkfpOEsdcafafafaFEFFA1dfefaefGeAOgegIge3edw2ewfaffefa
