@@ -10,7 +10,6 @@ import com.techeer.port.voilio.domain.subscribe.dto.response.SubscribeResponse;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
 import com.techeer.port.voilio.domain.subscribe.service.SubscribeService;
-import com.techeer.port.voilio.domain.user.controller.UserController;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -50,8 +49,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.unsubscribe(
-        subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
+    subscribeService.unsubscribe(subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
@@ -94,12 +92,15 @@ public class SubscribeController {
   }
 
   @PostMapping("/check")
-  public ResponseEntity<ResultResponse> checkSubscribe (
-          @Valid @RequestBody CheckSubscribeRequestDto checkSubscribeRequestDto
-  ) {
-    Boolean check = subscribeService.checkSubscribe(checkSubscribeRequestDto.getNickname(), checkSubscribeRequestDto.getSubscribeId());
+  public ResponseEntity<ResultResponse> checkSubscribe(
+      @Valid @RequestBody CheckSubscribeRequestDto checkSubscribeRequestDto) {
+    Boolean check =
+        subscribeService.checkSubscribe(
+            checkSubscribeRequestDto.getNickname(), checkSubscribeRequestDto.getSubscribeId());
     ResultResponse<Boolean> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, check);
-    resultResponse.add(linkTo(methodOn(SubscribeController.class).checkSubscribe(checkSubscribeRequestDto)).withSelfRel());
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).checkSubscribe(checkSubscribeRequestDto))
+            .withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
