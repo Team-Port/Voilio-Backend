@@ -15,4 +15,6 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, SubscribeI
 
   @Query("SELECT s FROM Subscribe s WHERE s.user.nickname = :nickname")
   Page<Subscribe> findSubscribeByNickname(@Param("nickname") String nickname, Pageable pageable);
+
+  Boolean existsByUserNicknameAndAndSubscribeId(String nickname, Long subscribeId);
 }
