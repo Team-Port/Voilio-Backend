@@ -90,7 +90,8 @@ public class UserController {
   @Operation(summary = "최근 가입순 회원 이름 조회")
   public ResponseEntity<ResultResponse> getLatestMember() {
     List<Top5LatestMemberResponseDto> top5LatestMemberResponseDtos = userService.getLatestMember();
-    ResultResponse<?> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, top5LatestMemberResponseDtos);
+    ResultResponse<?> resultResponse =
+        new ResultResponse<>(GET_USER_SUCCESS, top5LatestMemberResponseDtos);
     resultResponse.add(linkTo(methodOn(UserController.class).getLatestMember()).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
