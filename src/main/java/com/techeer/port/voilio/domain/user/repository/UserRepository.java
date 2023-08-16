@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.user.repository;
 
 import com.techeer.port.voilio.domain.user.entity.User;
-
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT b.user.id FROM Board b WHERE b.id = :boardId")
   Long findUserIdByBoardId(@Param("boardId") Long boardId);
 
-  List<User> findTop5ByIsDeletedOrderByCreateAtDesc (boolean isDeleted);
+  List<User> findTop5ByIsDeletedOrderByCreateAtDesc(boolean isDeleted);
 }

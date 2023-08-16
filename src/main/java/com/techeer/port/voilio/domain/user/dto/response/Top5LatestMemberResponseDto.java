@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Top5LatestMemberResponseDto {
-    private Long memberId;
-    private String nickname;
-
+  private Long memberId;
+  private String nickname;
 }

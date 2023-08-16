@@ -98,9 +98,9 @@ public class UserService {
   public List<Top5LatestMemberResponseDto> getLatestMember() {
     List<User> userList = userRepository.findTop5ByIsDeletedOrderByCreateAtDesc(false);
     List<Top5LatestMemberResponseDto> top5LatestMemberResponseDtos = new ArrayList<>();
-    for(User user : userList){
-      Top5LatestMemberResponseDto top5LatestMemberResponseDto = Top5LatestMemberResponseDto
-              .builder()
+    for (User user : userList) {
+      Top5LatestMemberResponseDto top5LatestMemberResponseDto =
+          Top5LatestMemberResponseDto.builder()
               .memberId(user.getId())
               .nickname(user.getNickname())
               .build();
