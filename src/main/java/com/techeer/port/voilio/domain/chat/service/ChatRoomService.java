@@ -22,7 +22,7 @@ public class ChatRoomService {
   private final ChatRoomMapper chatRoomMapper;
 
   public ChatRoom createChatRoom(CreateChatRoomRequest request) {
-    User user1 = userService.getUser(request.getNickName());
+    User user1 = userService.getUser(request.getRoomName());
     User user2 = userService.getUser(request.getChatUserId());
     return chatRoomRepository.save(chatRoomMapper.toEntity(user1, user2));
   }
