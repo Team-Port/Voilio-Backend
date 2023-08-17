@@ -45,7 +45,7 @@ public class SubscribeController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @DeleteMapping("/")
+  @PostMapping("/unsubscribe")
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 

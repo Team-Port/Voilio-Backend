@@ -35,8 +35,8 @@ public class SubscribeService {
   }
 
   @Transactional
-  public void unsubscribe(String userName, Long follow_id) {
-    User user = userRepository.findUserByNickname(userName).orElseThrow(NotFoundUser::new);
+  public void unsubscribe(String userNickname, Long follow_id) {
+    User user = userRepository.findUserByNickname(userNickname).orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe followerToDelete = subscribeRepository.findByUserAndSubscribe(user, subscribe);
