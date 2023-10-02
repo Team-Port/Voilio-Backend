@@ -4,10 +4,8 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 import com.techeer.port.voilio.global.common.YnType;
+import javax.persistence.*;
 import lombok.*;
 
 @Getter

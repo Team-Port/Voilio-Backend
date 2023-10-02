@@ -82,7 +82,7 @@ public class BoardService {
     if (result.isEmpty()) {
       throw new NotFoundBoard();
     }
-//    List<BoardDto> boardDtoList = BoardMapperInterface.INSTANCE.toDtos(result.toList());
+    //    List<BoardDto> boardDtoList = BoardMapperInterface.INSTANCE.toDtos(result.toList());
     return result;
   }
 

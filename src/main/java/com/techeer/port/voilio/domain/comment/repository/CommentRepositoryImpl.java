@@ -4,9 +4,8 @@ import static com.techeer.port.voilio.domain.comment.entity.QComment.comment;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
-import java.util.List;
-
 import com.techeer.port.voilio.global.common.YnType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

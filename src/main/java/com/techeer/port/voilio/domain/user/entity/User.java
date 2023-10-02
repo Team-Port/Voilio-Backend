@@ -2,11 +2,11 @@ package com.techeer.port.voilio.domain.user.entity;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.BaseEntity;
+import com.techeer.port.voilio.global.common.YnType;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
-import com.techeer.port.voilio.global.common.YnType;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,12 +23,9 @@ public class User extends BaseEntity implements UserDetails {
   @Column(name = "user_id")
   private Long id;
 
-
   private String email;
 
-
   private String password;
-
 
   private String nickname;
 
@@ -41,15 +38,17 @@ public class User extends BaseEntity implements UserDetails {
   @Column(name = "is_stopped")
   private YnType isStopped;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<Board> boards;
 
   @Enumerated(EnumType.STRING)
   private Authority authority;
 
   private YnType delYn;
-
-
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

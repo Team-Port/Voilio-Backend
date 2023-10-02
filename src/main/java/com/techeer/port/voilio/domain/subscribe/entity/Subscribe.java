@@ -20,10 +20,9 @@ public class Subscribe {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "from_user_id")
-  private User fromUser;  // 팔로잉 하는 사용자
+  private User fromUser; // 팔로잉 하는 사용자
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "to_user_id")
-  private User toUser;  // 팔로잉 받는 사용자
-
+  private User toUser; // 팔로잉 받는 사용자
 }

@@ -4,10 +4,9 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.YnType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.techeer.port.voilio.global.common.YnType;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;

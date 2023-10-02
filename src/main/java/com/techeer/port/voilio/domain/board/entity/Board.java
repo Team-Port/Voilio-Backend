@@ -1,21 +1,20 @@
 package com.techeer.port.voilio.domain.board.entity;
 
-import com.techeer.port.voilio.global.common.BoardDivision;
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
+
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
+import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.YnType;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
-import com.techeer.port.voilio.global.common.YnType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Entity
 @Getter
@@ -53,14 +52,12 @@ public class Board extends BaseEntity {
 
   private YnType delYn;
 
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BoardImage> boardImages = new ArrayList<>();
-
 
   public void changeDelYn(YnType delYn) {
     this.delYn = delYn;
@@ -96,9 +93,10 @@ public class Board extends BaseEntity {
   }
 
   public void changePublic() {
-    if(this.isPublic.equals(YnType.N)){
+    if (this.isPublic.equals(YnType.N)) {
       this.isPublic = Y;
-    };
+    }
+    ;
     this.isPublic = N;
   }
 

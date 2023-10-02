@@ -4,14 +4,13 @@ import com.techeer.port.voilio.global.common.YnType;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class CommentDto {
 
-    private Long id;
+  private Long id;
 
-    private String content;
+  private String content;
 
-    private YnType delYn;
+  private YnType delYn;
 }
