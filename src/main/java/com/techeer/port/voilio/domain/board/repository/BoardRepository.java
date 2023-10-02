@@ -15,24 +15,25 @@ import org.springframework.stereotype.Repository;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
   @Query(
-      "SELECT b FROM Board b WHERE b.title LIKE %:keyword% AND b.isPublic = true AND b.isDeleted ="
-          + " false ORDER BY b.createAt DESC")
+      "SELECT b FROM Board b WHERE b.title LIKE %:keyword% AND b.isPublic = 'N' AND b.delYn ="
+          + " 'N' ORDER BY b.createAt DESC")
   List<Board> findBoardByKeyword(@Param("keyword") String keyword);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false AND b.isPublic = true")
+      "SELECT b FROM Board b WHERE b.id = :board_id AND b.delYn = 'N' AND b.isPublic = 'Y'")
   Optional<Board> findBoardById(@Param("board_id") Long id);
 
-  @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.isDeleted = false")
+
+  @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.delYn = 'N'")
   Optional<Board> findBoardByIdExceptHide(@Param("board_id") Long id);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted is false AND b.isPublic is true ORDER BY"
+      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' ORDER BY"
           + " b.createAt DESC")
   Page<Board> findAllBoard(Pageable pageable);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND (b.category1 ="
+      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND (b.category1 ="
           + " :category1 OR b.category2 = :category2) ORDER BY b.createAt DESC")
   Page<Board> findBoardByCategory(
       @Param("category1") Category category1,
@@ -40,12 +41,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
       Pageable pageable);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.isPublic = true AND b.user.nickname ="
+      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND b.user.nickname ="
           + " :nickname ORDER BY b.createAt DESC")
   Page<Board> findBoardByUserNickname(@Param("nickname") String nickname, Pageable pageable);
 
   @Query(
-      "SELECT b FROM Board b WHERE b.isDeleted = false AND b.user.nickname ="
+      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.user.nickname ="
           + " :nickname ORDER BY b.createAt DESC")
   Page<Board> findBoardByUserNicknameExceptHide(
       @Param("nickname") String nickname, Pageable pageable);

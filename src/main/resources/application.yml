@@ -11,9 +11,8 @@ spring:
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: create #update
-
+#    hibernate:
+#      ddl-auto: create #update
     properties:
       hibernate:
         show_sql: true  # 생성된 sql 출력
@@ -56,15 +55,14 @@ springdoc:
     groups:
       enabled: true
   swagger-ui:
-    operations-sorter: alpha # alpha(알파벳 오름차순), method(HTTP메소드순)
-    tags-sorter: alpha # 태그 정렬 기준
-    path: /swagger-ui.html # html 문서 접속 경로
+    operations-sorter: alpha    # alpha(알파벳 오름차순), method(HTTP메소드순)
+    tags-sorter: alpha          # 태그 정렬 기준
+    path: /swagger-ui.html      # html 문서 접속 경로
     disable-swagger-default-url: true
     display-query-params-without-oauth2: true
-    doc-expansion: none # tag, operation 펼치는 방식
+    doc-expansion: none         # tag, operation 펼치는 방식
   paths-to-match:
     - /**
-
 
 logging:
   level:

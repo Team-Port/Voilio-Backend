@@ -1,21 +1,21 @@
 package com.techeer.port.voilio.domain.user.entity;
 
+import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Getter
 @Builder
-@ToString(callSuper = true)
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
   @Id
@@ -23,27 +23,33 @@ public class User extends BaseEntity implements UserDetails {
   @Column(name = "user_id")
   private Long id;
 
-  @Column(nullable = false)
-  @NotBlank
+
   private String email;
 
-  @NotBlank
-  @Column(nullable = false)
+
   private String password;
 
-  @Column(nullable = false)
-  @NotBlank
+
   private String nickname;
+
+  @Column(name = "image_url")
+  private String imageUrl;
 
   @Column(name = "activated_at")
   private LocalDateTime activatedAt;
 
   @Column(name = "is_stopped")
-  @ColumnDefault("false")
-  private boolean isStopped;
+  private YnType isStopped;
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Board> boards;
 
   @Enumerated(EnumType.STRING)
   private Authority authority;
+
+  private YnType delYn;
+
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,15 +81,19 @@ public class User extends BaseEntity implements UserDetails {
     return false;
   }
 
-  public void setActivatedAt(LocalDateTime activatedAt) {
+  public void updateActivatedAt(LocalDateTime activatedAt) {
     this.activatedAt = activatedAt;
   }
 
-  public void setStopped(boolean stopped) {
+  public void setStopped(YnType stopped) {
     isStopped = stopped;
   }
 
   public void changeSleeperUser() {
-    this.setStopped(true);
+    this.setStopped(YnType.Y);
+  }
+
+  public void changeDelYn(YnType delYn) {
+    this.delYn = delYn;
   }
 }

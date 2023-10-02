@@ -22,8 +22,8 @@ public class SubscribeService {
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe newFollower = new Subscribe();
-    newFollower.setUser(user);
-    newFollower.setSubscribe(subscribe);
+    newFollower.setFromUser(user);
+    newFollower.setToUser(subscribe);
     subscribeRepository.save(newFollower);
   }
 
@@ -31,7 +31,7 @@ public class SubscribeService {
     User user = userRepository.findUserByNickname(userName).orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
-    Subscribe followerToDelete = subscribeRepository.findByUserAndSubscribe(user, subscribe);
+    Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);
     subscribeRepository.delete(followerToDelete);
   }
 

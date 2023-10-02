@@ -9,8 +9,8 @@ public class SubscribeMapper {
 
   public SubscribeResponse toDto(Subscribe subscribe) {
     return SubscribeResponse.builder()
-        .subscribe_id(subscribe.getSubscribe().getId())
-        .subscribe_nickname(subscribe.getSubscribe().getNickname())
+        .subscribe_id(subscribe.getToUser().getId())
+        .subscribe_nickname(subscribe.getToUser().getNickname())
         .build();
   }
 }

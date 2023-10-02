@@ -41,7 +41,7 @@ public class AuthService {
     User user = validateAccount(userLoginRequest);
 
     // 로그인 성공 후, 추가 작업 - 토큰 생성
-    user.setActivatedAt(LocalDateTime.now());
+    user.updateActivatedAt(LocalDateTime.now());
     UsernamePasswordAuthenticationToken authenticationToken = userLoginRequest.toAuthentication();
     Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 

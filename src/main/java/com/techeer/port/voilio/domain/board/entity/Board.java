@@ -1,25 +1,24 @@
 package com.techeer.port.voilio.domain.board.entity;
 
-import com.techeer.port.voilio.domain.comment.entity.Comment;
+import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.validator.constraints.URL;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Entity
 @Getter
-@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "boards")
 public class Board extends BaseEntity {
@@ -29,36 +28,43 @@ public class Board extends BaseEntity {
   @Column(name = "board_id")
   private Long id;
 
-  @Column @NotBlank private String title;
+  private String title;
 
-  @Column @NotBlank private String content;
+  private String content;
 
-  @Column
-  @NotNull
   @Enumerated(EnumType.STRING)
   private Category category1;
 
-  @Column
-  @NotNull
   @Enumerated(EnumType.STRING)
   private Category category2;
 
-  @Column @URL @NotBlank private String video_url;
+  @Column(name = "video_url")
+  private String videoUrl;
 
-  @Column @URL @NotBlank private String thumbnail_url;
+  @Column(name = "thumbnail_url")
+  private String thumbnailUrl;
 
-  @Column
-  @NotNull
-  @ColumnDefault("true")
-  private boolean isPublic;
+  private Long view;
+
+  @Enumerated(EnumType.STRING)
+  private BoardDivision division;
+
+  private YnType isPublic;
+
+  private YnType delYn;
+
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
-  @NotNull
   private User user;
 
   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Comment> comments = new ArrayList<>();
+  private List<BoardImage> boardImages = new ArrayList<>();
+
+
+  public void changeDelYn(YnType delYn) {
+    this.delYn = delYn;
+  }
 
   @Builder
   public Board(
@@ -66,34 +72,37 @@ public class Board extends BaseEntity {
       String content,
       Category category1,
       Category category2,
-      String video_url,
+      String videoUrl,
       String thumbnail_url,
       User user,
-      boolean isPublic) {
+      YnType isPublic) {
     this.title = title;
     this.content = content;
     this.category1 = category1;
     this.category2 = category2;
-    this.video_url = video_url;
-    this.thumbnail_url = thumbnail_url;
+    this.videoUrl = videoUrl;
+    this.thumbnailUrl = thumbnail_url;
     this.isPublic = isPublic;
     this.user = user;
   }
 
   public void setBoard(
-      String title, String content, Category category1, Category category2, String thumbnail_url) {
+      String title, String content, Category category1, Category category2, String thumbnailUrl) {
     this.title = title;
     this.content = content;
     this.category1 = category1;
     this.category2 = category2;
-    this.thumbnail_url = thumbnail_url;
+    this.thumbnailUrl = thumbnailUrl;
   }
 
   public void changePublic() {
-    this.isPublic = !this.isPublic;
+    if(this.isPublic.equals(YnType.N)){
+      this.isPublic = Y;
+    };
+    this.isPublic = N;
   }
 
-  public boolean getIsPublic() {
+  public YnType getIsPublic() {
     return this.isPublic;
   }
 }

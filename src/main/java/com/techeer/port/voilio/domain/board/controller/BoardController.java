@@ -197,9 +197,9 @@ public class BoardController {
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "30") int size,
-      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
+      @RequestParam(defaultValue = "0") int page
+      , @RequestParam(defaultValue = "30") int size
+      , @RequestHeader(value = "Authorization", required = false, defaultValue = "")
           String authorizationHeader) {
     Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
@@ -330,7 +330,8 @@ public class BoardController {
   @PostMapping(value = "/files", consumes = "multipart/form-data")
   public ResponseEntity<EntityModel<ResultResponse<UploadFileResponse>>> uploadVideo(
       @RequestParam(value = "video", required = false) MultipartFile videoFile,
-      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile)
+  {
     UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
     ResultResponse<UploadFileResponse> resultResponse =
         new ResultResponse<>(FILE_UPLOAD_SUCCESS, uploadFile);

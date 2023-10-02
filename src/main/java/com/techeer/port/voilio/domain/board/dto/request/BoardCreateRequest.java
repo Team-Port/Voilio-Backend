@@ -6,6 +6,8 @@ import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.Category;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;
@@ -34,9 +36,9 @@ public class BoardCreateRequest extends BaseEntity {
         .content(this.content)
         .category1(this.category1)
         .category2(this.category2)
-        .video_url(this.video_url)
+        .videoUrl(this.video_url)
         .thumbnail_url(this.thumbnail_url)
-        .isPublic(true)
+        .isPublic(YnType.Y)
         .user(user)
         .build();
   }

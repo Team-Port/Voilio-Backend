@@ -6,12 +6,13 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@ToString(callSuper = true)
 @Table(name = "comments")
 public class Comment extends BaseEntity {
 
@@ -20,17 +21,17 @@ public class Comment extends BaseEntity {
   @Column(name = "comment_id")
   private Long id;
 
-  @Column @NotNull private String content;
+  private String content;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "board_id")
-  @NotNull
   private Board board;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
-  //  @NotNull
   private User user;
+
+  private YnType delYn;
 
   @Builder
   private Comment(String content, Board board, User user) {
@@ -44,6 +45,6 @@ public class Comment extends BaseEntity {
   }
 
   public void deleteComment() {
-    this.changeDeleted();
+    this.delYn = YnType.Y;
   }
 }

@@ -10,15 +10,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-  @Query("SELECT u FROM User u WHERE u.id = :id and u.isDeleted=false ")
+  @Query("SELECT u FROM User u WHERE u.id = :id and u.delYn = 'N' ")
   Optional<User> findUserById(@Param("id") long id);
 
-  @Query("SELECT u FROM User u WHERE u.email = :email and u.isDeleted=false ")
+  @Query("SELECT u FROM User u WHERE u.email = :email and u.delYn = 'N' ")
   Optional<User> findUserByEmail(@Param("email") String email);
 
   boolean existsByEmail(String email);
 
-  @Query("SELECT u FROM User u WHERE u.nickname = :nickname and u.isDeleted=false ")
+  @Query("SELECT u FROM User u WHERE u.nickname = :nickname and u.delYn = 'N' ")
   Optional<User> findUserByNickname(@Param("nickname") String nickname);
 
   @Query("SELECT b.user.id FROM Board b WHERE b.id = :boardId")

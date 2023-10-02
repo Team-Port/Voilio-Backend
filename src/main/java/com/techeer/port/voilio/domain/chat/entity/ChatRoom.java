@@ -22,7 +22,9 @@ public class ChatRoom {
   @JoinColumn(name = "user_id2")
   private User user2;
 
-  @Column @Builder.Default private UUID roomUuid = UUID.randomUUID();
+  @Column
+  @Builder.Default
+  private UUID roomUuid = UUID.randomUUID();
 
   @Column private String roomName;
 }

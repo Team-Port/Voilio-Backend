@@ -16,6 +16,7 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
+import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,7 +89,7 @@ public class BoardControllerTest {
             .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
             .user_id(123L)
             .nickname("tester")
-            .isPublic(false)
+            .isPublic(YnType.N)
             .build();
 
     given(boardService.findBoardByIdExceptHide(boardId)).willReturn(boardResponse);
@@ -124,7 +125,7 @@ public class BoardControllerTest {
             .thumbnail_url("https://www.naver.com/thumbnail.jpeg")
             .user_id(123L)
             .nickname("tester")
-            .isPublic(false)
+            .isPublic(YnType.N)
             .build();
 
     given(boardService.findBoardById(boardId)).willReturn(boardResponse);
@@ -213,9 +214,9 @@ public class BoardControllerTest {
             .content("Test Content")
             .category1(Category.IT)
             .category2(Category.KOTLIN)
-            .video_url("http://example.com/video")
+            .videoUrl("http://example.com/video")
             .thumbnail_url("http://example.com/thumbnail")
-            .isPublic(true)
+            .isPublic(YnType.Y)
             .build();
 
     List<Board> boardList = List.of(board);
@@ -232,8 +233,8 @@ public class BoardControllerTest {
                   .content(boardArg.getContent())
                   .category1(boardArg.getCategory1())
                   .category2(boardArg.getCategory2())
-                  .video_url(boardArg.getVideo_url())
-                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .video_url(boardArg.getVideoUrl())
+                  .thumbnail_url(boardArg.getThumbnailUrl())
                   .isPublic(boardArg.getIsPublic())
                   .build();
             });
@@ -266,9 +267,9 @@ public class BoardControllerTest {
             .content("Test Content")
             .category1(Category.IT)
             .category2(Category.KOTLIN)
-            .video_url("http://example.com/video")
+            .videoUrl("http://example.com/video")
             .thumbnail_url("http://example.com/thumbnail")
-            .isPublic(true)
+            .isPublic(YnType.Y)
             .build();
 
     List<Board> boardList = List.of(board);
@@ -285,8 +286,8 @@ public class BoardControllerTest {
                   .content(boardArg.getContent())
                   .category1(boardArg.getCategory1())
                   .category2(boardArg.getCategory2())
-                  .video_url(boardArg.getVideo_url())
-                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .video_url(boardArg.getVideoUrl())
+                  .thumbnail_url(boardArg.getThumbnailUrl())
                   .isPublic(boardArg.getIsPublic())
                   .build();
             });
@@ -329,9 +330,9 @@ public class BoardControllerTest {
             .content("Test Content")
             .category1(Category.IT)
             .category2(Category.KOTLIN)
-            .video_url("http://example.com/video")
+            .videoUrl("http://example.com/video")
             .thumbnail_url("http://example.com/thumbnail")
-            .isPublic(true)
+            .isPublic(YnType.Y)
             .build();
 
     List<Board> boardList = List.of(board);
@@ -349,8 +350,8 @@ public class BoardControllerTest {
                   .content(boardArg.getContent())
                   .category1(boardArg.getCategory1())
                   .category2(boardArg.getCategory2())
-                  .video_url(boardArg.getVideo_url())
-                  .thumbnail_url(boardArg.getThumbnail_url())
+                  .video_url(boardArg.getVideoUrl())
+                  .thumbnail_url(boardArg.getThumbnailUrl())
                   .isPublic(boardArg.getIsPublic())
                   .user_id(boardArg.getUser().getId())
                   .nickname(boardArg.getUser().getNickname())
