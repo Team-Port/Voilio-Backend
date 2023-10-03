@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.board.dto.response;
 
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.YnType;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,6 @@ public class BoardResponse {
   private LocalDateTime created_at;
   private Long user_id;
   private String nickname;
-  private boolean isPublic;
+  private YnType isPublic;
   @Setter private boolean auth;
 }

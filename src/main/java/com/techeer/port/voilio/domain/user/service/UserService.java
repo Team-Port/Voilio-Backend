@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class UserService {
 
   public void deleteUser(Long userId) {
     User user = getUser(userId);
-    user.changeDeleted();
+    user.changeDelYn(YnType.Y);
     userRepository.save(user);
   }
 

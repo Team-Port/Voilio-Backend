@@ -12,6 +12,7 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +37,7 @@ public class BoardService {
 
   public void deleteBoard(Long board_id) {
     Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
-    board.changeDeleted();
+    board.changeDelYn(YnType.Y);
     boardRepository.save(board);
   }
 
@@ -72,7 +73,7 @@ public class BoardService {
   @Transactional
   public Board updateBoard(Long board_id, BoardUpdateRequest request) {
     Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
-    if (board.getIsDeleted() == true) throw new NotFoundBoard();
+    if (board.getDelYn().equals(YnType.Y)) throw new NotFoundBoard();
     return boardRepository.save(request.toEntity(board));
   }
 
@@ -81,6 +82,7 @@ public class BoardService {
     if (result.isEmpty()) {
       throw new NotFoundBoard();
     }
+    //    List<BoardDto> boardDtoList = BoardMapperInterface.INSTANCE.toDtos(result.toList());
     return result;
   }
 

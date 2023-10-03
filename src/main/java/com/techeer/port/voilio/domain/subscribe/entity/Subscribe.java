@@ -5,24 +5,24 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(callSuper = true)
 @Table(name = "subscribes")
-@IdClass(SubscribeId.class)
 public class Subscribe {
 
   @Id
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
+  @Column(name = "subscribe_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  @Id
-  @ManyToOne
-  @JoinColumn(name = "subscribe_id")
-  private User subscribe;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "from_user_id")
+  private User fromUser; // 팔로잉 하는 사용자
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "to_user_id")
+  private User toUser; // 팔로잉 받는 사용자
 }

@@ -18,12 +18,12 @@ public class EmailService {
   private final TemplateEngine templateEngine;
 
   public void sendEmailToSleeperUser(User user) {
-    Email email = Email.builder().addressee(user.getEmail()).title("[ Voilio ] 휴면 계정 안내").build();
+    Email email = Email.builder().address(user.getEmail()).title("[ Voilio ] 휴면 계정 안내").build();
 
     try {
       MimeMessage message = javaMailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, true);
-      helper.setTo(email.getAddressee());
+      helper.setTo(email.getAddress());
       helper.setSubject(email.getTitle());
 
       Context context = new Context();

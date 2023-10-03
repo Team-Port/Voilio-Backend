@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.email.EmailService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.common.YnType;
 import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +81,7 @@ public class UserConfiguration {
 
   private ItemProcessor<? super User, ? extends User> userProcessor() {
     return user -> {
-      if (userService.checkSleeperUser(user) && !user.isStopped()) {
+      if (userService.checkSleeperUser(user) && user.getIsStopped().equals(YnType.N)) {
         return user;
       }
       return null;
