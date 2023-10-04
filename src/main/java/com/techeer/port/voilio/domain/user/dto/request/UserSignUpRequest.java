@@ -3,6 +3,8 @@ package com.techeer.port.voilio.domain.user.dto.request;
 import com.techeer.port.voilio.domain.user.entity.Authority;
 import com.techeer.port.voilio.domain.user.entity.User;
 import java.time.LocalDateTime;
+
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,6 +27,7 @@ public class UserSignUpRequest {
         .nickname(nickname)
         .activatedAt(LocalDateTime.now())
         .authority(Authority.ROLE_USER)
+            .delYn(YnType.valueOf("N"))
         .build();
   }
 }
