@@ -4,13 +4,8 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -19,6 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Service
 @Transactional
@@ -34,7 +37,7 @@ public class UserService {
   }
 
   public User getUser(Long userId) {
-    User user = userRepository.findUserById(userId).orElseThrow(NotFoundUser::new);
+    User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
     return user;
   }
 
@@ -56,7 +59,7 @@ public class UserService {
 
   public void deleteUser(Long userId) {
     User user = getUser(userId);
-    user.changeDelYn(YnType.Y);
+    user.changeDelYn(Y);
     userRepository.save(user);
   }
 
