@@ -48,8 +48,10 @@ public class Board extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private BoardDivision division;
 
+  @Enumerated(EnumType.STRING)
   private YnType isPublic;
 
+  @Enumerated(EnumType.STRING)
   private YnType delYn;
 
   @ManyToOne(fetch = FetchType.LAZY)
