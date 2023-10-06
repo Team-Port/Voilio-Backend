@@ -16,9 +16,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //  Optional<User> findUserById(@Param("id") long id);
 
   Optional<User> findUserByIdAndDelYn(long id, YnType delYn);
-  @Query("SELECT u FROM User u WHERE u.email = :email and u.delYn = 'N' ")
-  Optional<User> findUserByEmail(@Param("email") String email);
+//  @Query("SELECT u FROM User u WHERE u.email = :email and u.delYn = 'N' ")
+//  Optional<User> findUserByEmail(@Param("email") String email);
 
+  Optional<User> findUserByEmailAndDelYn(String email, YnType delYn);
   boolean existsByEmail(String email);
 
   @Query("SELECT u FROM User u WHERE u.nickname = :nickname and u.delYn = 'N' ")
