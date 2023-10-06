@@ -14,9 +14,6 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
@@ -24,6 +21,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -95,7 +96,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
-    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
 
     if (result.isEmpty()) {
@@ -106,7 +107,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
-    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
     Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable);
 
     if (result.isEmpty()) {

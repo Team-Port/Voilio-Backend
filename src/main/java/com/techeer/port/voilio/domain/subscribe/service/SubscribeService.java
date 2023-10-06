@@ -5,6 +5,7 @@ import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.YnType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ public class SubscribeService {
   @Autowired private UserRepository userRepository;
 
   public void subscribe(String userName, Long follow_id) {
-    User user = userRepository.findUserByNickname(userName).orElseThrow(NotFoundUser::new);
+    User user = userRepository.findUserByNicknameAndDelYn(userName, YnType.N).orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe newFollower = new Subscribe();
@@ -28,7 +29,7 @@ public class SubscribeService {
   }
 
   public void unsubscribe(String userName, Long follow_id) {
-    User user = userRepository.findUserByNickname(userName).orElseThrow(NotFoundUser::new);
+    User user = userRepository.findUserByNicknameAndDelYn(userName, YnType.N).orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);

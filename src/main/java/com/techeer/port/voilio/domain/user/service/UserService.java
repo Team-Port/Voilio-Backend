@@ -42,12 +42,12 @@ public class UserService {
   }
 
   public User getUser(String nickname) {
-    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
+    User user = userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
     return user;
   }
 
   public Long getUserByNickname(String nickname) {
-    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
+    User user = userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
     return user.getId();
   }
 
