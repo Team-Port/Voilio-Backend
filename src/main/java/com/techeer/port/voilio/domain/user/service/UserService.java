@@ -3,6 +3,7 @@ package com.techeer.port.voilio.domain.user.service;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
@@ -32,8 +33,9 @@ public class UserService {
   private final JwtProvider jwtProvider;
   private AuthenticationManagerBuilder authenticationManagerBuilder;
 
-  public List<User> getUserList() {
-    return new ArrayList<User>(userRepository.findAll());
+  public List<UserResponse> getUserList() {
+    List<User> users = new ArrayList<User>(userRepository.findAll());
+    return UserMapper.INSTANCE.toDtos(users);
   }
 
   public User getUser(Long userId) {

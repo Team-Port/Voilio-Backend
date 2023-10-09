@@ -1,9 +1,5 @@
 package com.techeer.port.voilio.domain.user.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -11,13 +7,18 @@ import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "User", description = "User API Document")
 @RequestMapping("api/v1/users")
@@ -37,7 +38,7 @@ public class UserController {
   @GetMapping("/list")
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<List<EntityModel<User>>>> getUserList() {
-    List<EntityModel<User>> users =
+    List<EntityModel<UserResponse>> users =
         userService.getUserList().stream()
             .map(
                 user ->
