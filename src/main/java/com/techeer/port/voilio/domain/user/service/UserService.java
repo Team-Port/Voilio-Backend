@@ -45,9 +45,9 @@ public class UserService {
     return userResponse;
   }
 
-  public User getUser(String nickname) {
+  public UserDto getUser(String nickname) {
     User user = userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
-    return user;
+    return UserMapper.INSTANCE.toDto(user);
   }
 
   public Long getUserByNickname(String nickname) {
