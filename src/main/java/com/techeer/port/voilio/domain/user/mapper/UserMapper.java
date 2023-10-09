@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.user.mapper;
 
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import org.mapstruct.Mapper;
@@ -12,6 +13,7 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-//    UserResponse toDto(User user);
+    UserDto toDto(User user);
+    User toUser(UserDto userDto);
     List<UserResponse> toDtos(List<User> users);
 }

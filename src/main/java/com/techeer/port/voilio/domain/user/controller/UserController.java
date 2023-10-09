@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.user.controller;
 
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -57,8 +58,8 @@ public class UserController {
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
   public ResponseEntity<ResultResponse> getUserById(@PathVariable("user_id") Long userId) {
-    User user = userService.getUser(userId);
-    ResultResponse<User> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
+    UserDto user = userService.getUser(userId);
+    ResultResponse<UserDto> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
     resultResponse.add(linkTo(methodOn(UserController.class).getUserById(userId)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);

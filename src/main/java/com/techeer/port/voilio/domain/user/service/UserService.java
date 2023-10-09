@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.user.service;
 
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
@@ -38,9 +39,10 @@ public class UserService {
     return UserMapper.INSTANCE.toDtos(users);
   }
 
-  public User getUser(Long userId) {
+  public UserDto getUser(Long userId) {
     User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
-    return user;
+    UserDto userResponse = UserMapper.INSTANCE.toDto(user);
+    return userResponse;
   }
 
   public User getUser(String nickname) {
@@ -60,7 +62,8 @@ public class UserService {
   }
 
   public void deleteUser(Long userId) {
-    User user = getUser(userId);
+    UserDto userDto = getUser(userId);
+    User user = UserMapper.INSTANCE.toUser(userDto);
     user.changeDelYn(Y);
     userRepository.save(user);
   }
