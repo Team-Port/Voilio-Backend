@@ -6,6 +6,7 @@ import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
 import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
+import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
@@ -35,7 +36,8 @@ public class AuthService {
       throw new AlreadyBoundException();
     }
 
-    User user = userSignUpRequest.toEntity(passwordEncoder);
+//    User user = userSignUpRequest.toEntity(passwordEncoder);
+    User user = UserMapper.INSTANCE.toUser(userSignUpRequest, passwordEncoder);
     return UserResponse.of(userRepository.save(user));
   }
 
