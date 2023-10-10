@@ -19,7 +19,10 @@ public class SubscribeService {
   @Autowired private UserRepository userRepository;
 
   public void subscribe(String userName, Long follow_id) {
-    User user = userRepository.findUserByNicknameAndDelYn(userName, YnType.N).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe newFollower = new Subscribe();
@@ -29,7 +32,10 @@ public class SubscribeService {
   }
 
   public void unsubscribe(String userName, Long follow_id) {
-    User user = userRepository.findUserByNicknameAndDelYn(userName, YnType.N).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);

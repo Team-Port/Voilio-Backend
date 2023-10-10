@@ -11,16 +11,15 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
+import java.rmi.AlreadyBoundException;
+import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.rmi.AlreadyBoundException;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class AuthService {
       throw new AlreadyBoundException();
     }
 
-//    User user = userSignUpRequest.toEntity(passwordEncoder);
+    //    User user = userSignUpRequest.toEntity(passwordEncoder);
     User user = UserMapper.INSTANCE.toUser(userSignUpRequest, passwordEncoder);
     return UserResponse.of(userRepository.save(user));
   }

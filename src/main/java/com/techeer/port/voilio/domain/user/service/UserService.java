@@ -44,12 +44,14 @@ public class UserService {
   }
 
   public UserDto getUser(String nickname) {
-    User user = userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
     return UserMapper.INSTANCE.toDto(user);
   }
 
   public Long getUserByNickname(String nickname) {
-    User user = userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
     return user.getId();
   }
 
