@@ -3,17 +3,16 @@ package com.techeer.port.voilio.domain.user.entity;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.YnType;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Builder
