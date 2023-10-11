@@ -1,11 +1,15 @@
 package com.techeer.port.voilio.domain.user.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.LOGIN_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
+
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.service.AuthService;
 import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import java.rmi.AlreadyBoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.rmi.AlreadyBoundException;
-
-import static com.techeer.port.voilio.global.result.ResultCode.LOGIN_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -32,8 +31,8 @@ public class AuthController {
     UserResponse userResponse = authService.signup(userSignUpRequest);
     ResultResponse<UserResponse> resultResponse =
         new ResultResponse<>(USER_REGISTRATION_SUCCESS, userResponse);
-//    resultResponse.add(
-//        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
+    //    resultResponse.add(
+    //        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
@@ -43,8 +42,8 @@ public class AuthController {
       @RequestBody UserLoginRequest userLoginRequest) throws AlreadyBoundException {
     TokenDto tokenDto = authService.login(userLoginRequest);
     ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
-//    resultResponse.add(
-//        linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
+    //    resultResponse.add(
+    //        linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
