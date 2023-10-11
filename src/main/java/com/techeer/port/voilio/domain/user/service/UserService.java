@@ -1,8 +1,5 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
-
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
@@ -11,10 +8,6 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -23,6 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Service
 @Transactional
@@ -63,7 +64,7 @@ public class UserService {
 
   public void deleteUser(Long userId) {
     UserDto userDto = getUser(userId);
-    User user = UserMapper.INSTANCE.toUser(userDto);
+    User user = UserMapper.INSTANCE.toEntity(userDto);
     user.changeDelYn(Y);
     userRepository.save(user);
   }
