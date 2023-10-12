@@ -1,16 +1,16 @@
 package com.techeer.port.voilio.domain.board.dto.response;
 
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-@Builder
+
 @Getter
+@Setter
+@Builder
 public class UploadFileResponse {
-  private String video_url;
-  private String thumbnail_url;
 
-  public UploadFileResponse(String video_url, String thumbnail_url) {
-    this.video_url = video_url;
-    this.thumbnail_url = thumbnail_url;
-  }
+  @NotNull private String videoUrl;
+  @NotNull private String thumbnailUrl;
 }

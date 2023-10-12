@@ -30,11 +30,7 @@ public class BoardMapper {
     return boards.stream().map(this::toDto).collect(Collectors.toList());
   }
 
-  public UploadFileResponse toDto(String videoUrl, String thumbnailUrl) {
-    return UploadFileResponse.builder().video_url(videoUrl).thumbnail_url(thumbnailUrl).build();
-  }
-
   public UploadFileResponse toDto(String thumbnailUrl) {
-    return UploadFileResponse.builder().thumbnail_url(thumbnailUrl).build();
+    return UploadFileResponse.builder().thumbnailUrl(thumbnailUrl).build();
   }
 }
