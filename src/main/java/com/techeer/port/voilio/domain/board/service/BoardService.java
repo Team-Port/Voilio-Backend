@@ -88,7 +88,8 @@ public class BoardService {
   }
 
   public List<BoardDto> findAllBoard(Pageable pageable) {
-    Page<Board> boardPage = boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.ALL);
+    Page<Board> boardPage =
+        boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.ALL);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
@@ -147,8 +148,7 @@ public class BoardService {
 
   public BoardVideoDto uploadVideo(MultipartFile videoFile) {
     try {
-      return BoardMapperInterface.INSTANCE.toVideo(
-          s3Manager.upload(videoFile, "video"));
+      return BoardMapperInterface.INSTANCE.toVideo(s3Manager.upload(videoFile, "video"));
     } catch (IOException e) {
       throw new ConvertException();
     }

@@ -61,7 +61,7 @@ public class BoardController {
   public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
       @PathVariable Long board_id,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
 
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
     boolean isAuthenticated =
@@ -93,7 +93,7 @@ public class BoardController {
       @RequestParam Category category2,
       @RequestParam MultipartFile thumbnailFile,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
     boolean isAuthenticated =
         !authorizationHeader.isEmpty()
@@ -113,15 +113,15 @@ public class BoardController {
       ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
       resultResponse.add(
           linkTo(
-              methodOn(BoardController.class)
-                  .updateBoard(
-                      boardId,
-                      title,
-                      content,
-                      category1,
-                      category2,
-                      thumbnailFile,
-                      authorizationHeader))
+                  methodOn(BoardController.class)
+                      .updateBoard(
+                          boardId,
+                          title,
+                          content,
+                          category1,
+                          category2,
+                          thumbnailFile,
+                          authorizationHeader))
               .withSelfRel());
       return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     } else {
@@ -143,7 +143,7 @@ public class BoardController {
   public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
       @RequestParam("search") String search,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
     List<EntityModel<BoardResponse>> boards =
         boardService.findBoardByKeyword(search).stream()
             .map(
@@ -151,8 +151,8 @@ public class BoardController {
                     EntityModel.of(
                         board,
                         linkTo(
-                            methodOn(BoardController.class)
-                                .findBoardById(board.getId(), authorizationHeader))
+                                methodOn(BoardController.class)
+                                    .findBoardById(board.getId(), authorizationHeader))
                             .withSelfRel()))
             .collect(Collectors.toList());
     ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
@@ -182,43 +182,46 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_CREATED_SUCCESS));
   }
 
-  @PostMapping(value = "/video", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @PostMapping(
+      value = "/video",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   @Operation(summary = "비디오 생성", description = "비디오 생성 메서드입니다. videoUrl을 반환합니다")
   public ResponseEntity<ResultsResponse> uploadVideo(
-      @RequestParam(value = "video", required = false) MultipartFile videoFile
-  ) {
+      @RequestParam(value = "video", required = false) MultipartFile videoFile) {
 
     BoardVideoDto boardVideoDto = boardService.uploadVideo(videoFile);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardVideoDto));
   }
 
-  @PostMapping(value = "/thumbnail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @PostMapping(
+      value = "/thumbnail",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   @Operation(summary = "썸네일 생성", description = "썸네일 생성 메서드입니다. thumbnailUrl을 반환합니다")
   public ResponseEntity<ResultsResponse> uploadThumbnail(
-      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile
-  ) {
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
 
     BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
   }
 
-
   @PostMapping(value = "/files", consumes = "multipart/form-data")
   public ResponseEntity<ResultsResponse> uploadVideos(
       @RequestParam(value = "video", required = false) MultipartFile videoFile,
       @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
 
-    boardService.uploadFiles(videoFile, thumbnailFile); //S3에 올리기
+    boardService.uploadFiles(videoFile, thumbnailFile); // S3에 올리기
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS));
   }
 
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultsResponse> findsAllBoard(@ParameterObject
-  @PageableDefault(size = 20, sort = "updateAt", direction = Sort.Direction.DESC) Pageable pageable) {
+  public ResponseEntity<ResultsResponse> findsAllBoard(
+      @ParameterObject
+          @PageableDefault(size = 20, sort = "updateAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
 
     List<BoardDto> allBoard = boardService.findAllBoard(pageable);
 
@@ -232,7 +235,7 @@ public class BoardController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
 
     Category category1 = Category.valueOf(category.toUpperCase());
     Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
@@ -243,8 +246,8 @@ public class BoardController {
                     EntityModel.of(
                         boardMapper.toDto(board),
                         linkTo(
-                            methodOn(BoardController.class)
-                                .findBoardById(board.getId(), authorizationHeader))
+                                methodOn(BoardController.class)
+                                    .findBoardById(board.getId(), authorizationHeader))
                             .withSelfRel()))
             .collect(Collectors.toList());
 
@@ -256,8 +259,8 @@ public class BoardController {
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
             linkTo(
-                methodOn(BoardController.class)
-                    .findBoardByCategory(category, page, size, authorizationHeader))
+                    methodOn(BoardController.class)
+                        .findBoardByCategory(category, page, size, authorizationHeader))
                 .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
@@ -273,7 +276,7 @@ public class BoardController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "30") int size,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-      String authorizationHeader) {
+          String authorizationHeader) {
 
     Long currentLoginUserNickname = userService.getCurrentLoginUser(authorizationHeader);
 
@@ -293,12 +296,12 @@ public class BoardController {
                   Link selfLink =
                       isAuthenticated
                           ? linkTo(
-                          methodOn(BoardController.class)
-                              .findBoardById(board.getId(), nickname))
-                          .withSelfRel()
+                                  methodOn(BoardController.class)
+                                      .findBoardById(board.getId(), nickname))
+                              .withSelfRel()
                           : linkTo(
-                              methodOn(BoardController.class)
-                                  .findBoardById(board.getId(), authorizationHeader))
+                                  methodOn(BoardController.class)
+                                      .findBoardById(board.getId(), authorizationHeader))
                               .withSelfRel();
                   BoardResponse boardResponse = boardMapper.toDto(board);
                   boardResponse.setAuth(isAuthenticated);
@@ -314,8 +317,8 @@ public class BoardController {
             boardPage.getTotalElements(),
             boardPage.getTotalPages(),
             linkTo(
-                methodOn(BoardController.class)
-                    .findBoardByUserId(nickname, page, size, authorizationHeader))
+                    methodOn(BoardController.class)
+                        .findBoardByUserId(nickname, page, size, authorizationHeader))
                 .withSelfRel());
 
     ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
@@ -323,6 +326,4 @@ public class BoardController {
 
     return ResponseEntity.ok().body(resultResponse);
   }
-
-
 }

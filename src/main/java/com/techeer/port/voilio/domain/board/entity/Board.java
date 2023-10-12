@@ -46,7 +46,7 @@ public class Board extends BaseEntity {
   @Column(name = "thumbnail_url")
   private String thumbnailUrl;
 
-//  private Long view;
+  //  private Long view;
 
   @Enumerated(EnumType.STRING)
   private BoardDivision division;

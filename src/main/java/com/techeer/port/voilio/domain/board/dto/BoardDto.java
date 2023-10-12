@@ -1,15 +1,11 @@
 package com.techeer.port.voilio.domain.board.dto;
 
-import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.DateTime;
 
 @Getter
 @Setter
@@ -29,7 +25,7 @@ public class BoardDto {
 
   private String thumbnailUrl;
 
-//  private Long view;
+  //  private Long view;
 
   private BoardDivision division;
 
@@ -41,5 +37,5 @@ public class BoardDto {
 
   private LocalDateTime updateAt;
 
-//  private List<BoardImageDto> boardImages = new ArrayList<>();
+  //  private List<BoardImageDto> boardImages = new ArrayList<>();
 }

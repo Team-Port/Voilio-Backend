@@ -1,8 +1,5 @@
 package com.techeer.port.voilio.domain.board.dto.request;
 
-import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
@@ -11,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.URL;
 
 @Builder
 @Getter
@@ -52,5 +48,4 @@ public class BoardCreateRequest {
   @Schema(description = "게시글 유형")
   @NotNull
   private BoardDivision division;
-
 }
