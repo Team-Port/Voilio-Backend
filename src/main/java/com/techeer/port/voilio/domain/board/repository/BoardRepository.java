@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.board.repository;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.YnType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.delYn = 'N'")
   Optional<Board> findBoardByIdExceptHide(@Param("board_id") Long id);
 
-  @Query(
-      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' ORDER BY"
-          + " b.createAt DESC")
-  Page<Board> findAllBoard(Pageable pageable);
+  Page<Board> findAllByDelYnAndIsPublic(Pageable pageable, YnType delYn, YnType isPublic);
 
   @Query(
       "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND (b.category1 ="
