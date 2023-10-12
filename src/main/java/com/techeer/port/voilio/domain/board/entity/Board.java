@@ -15,10 +15,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 @Table(name = "boards")
 public class Board extends BaseEntity {
 
@@ -43,13 +46,16 @@ public class Board extends BaseEntity {
   @Column(name = "thumbnail_url")
   private String thumbnailUrl;
 
-  private Long view;
+//  private Long view;
 
   @Enumerated(EnumType.STRING)
   private BoardDivision division;
 
+  @Enumerated(EnumType.STRING)
   private YnType isPublic;
 
+  @Enumerated(EnumType.STRING)
+  @ColumnDefault("'N'")
   private YnType delYn;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -70,17 +76,19 @@ public class Board extends BaseEntity {
       Category category1,
       Category category2,
       String videoUrl,
-      String thumbnail_url,
+      String thumbnailUrl,
       User user,
+      BoardDivision division,
       YnType isPublic) {
     this.title = title;
     this.content = content;
     this.category1 = category1;
     this.category2 = category2;
     this.videoUrl = videoUrl;
-    this.thumbnailUrl = thumbnail_url;
+    this.thumbnailUrl = thumbnailUrl;
     this.isPublic = isPublic;
     this.user = user;
+    this.division = division;
   }
 
   public void setBoard(
