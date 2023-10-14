@@ -1,11 +1,10 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_FINDALL_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.SUBSCRIBE_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.UNSUBSCRIBE_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.techeer.port.voilio.domain.subscribe.dto.request.CheckSubscribeRequestDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.SubscribeRequest;
 import com.techeer.port.voilio.domain.subscribe.dto.response.SubscribeResponse;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
@@ -38,7 +37,7 @@ public class SubscribeController {
   public ResponseEntity<ResultResponse> subscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.subscribe(subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
+    subscribeService.subscribe(subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
@@ -46,12 +45,11 @@ public class SubscribeController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @DeleteMapping("/")
+  @PostMapping("/unsubscribe")
   public ResponseEntity<ResultResponse> unsubscribe(
       @Valid @RequestBody SubscribeRequest subscribeRequest) {
 
-    subscribeService.unsubscribe(
-        subscribeRequest.getNickName(), subscribeRequest.getSubscribe_id());
+    subscribeService.unsubscribe(subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
     resultResponse.add(
         linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
@@ -91,5 +89,19 @@ public class SubscribeController {
     ResultResponse<Pagination<EntityModel<SubscribeResponse>>> resultResponse =
         new ResultResponse<>(SUBSCRIBE_FINDALL_SUCCESS, result);
     return ResponseEntity.ok().body(resultResponse);
+  }
+
+  @PostMapping("/check")
+  public ResponseEntity<ResultResponse> checkSubscribe(
+      @Valid @RequestBody CheckSubscribeRequestDto checkSubscribeRequestDto) {
+    Boolean check =
+        subscribeService.checkSubscribe(
+            checkSubscribeRequestDto.getNickname(), checkSubscribeRequestDto.getSubscribeId());
+    ResultResponse<Boolean> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, check);
+    resultResponse.add(
+        linkTo(methodOn(SubscribeController.class).checkSubscribe(checkSubscribeRequestDto))
+            .withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
