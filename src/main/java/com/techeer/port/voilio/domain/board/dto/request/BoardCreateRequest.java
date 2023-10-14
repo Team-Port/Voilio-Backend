@@ -1,44 +1,51 @@
 package com.techeer.port.voilio.domain.board.dto.request;
 
-import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.global.common.BaseEntity;
+import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.URL;
 
 @Builder
 @Getter
-public class BoardCreateRequest extends BaseEntity {
+public class BoardCreateRequest {
 
-  @NotNull private Long user_id;
+  @Schema(description = "유저 아이디")
+  @NotNull
+  private Long userId;
 
-  @NotBlank private String title;
+  @Schema(description = "게시글 제목")
+  @NotBlank
+  private String title;
 
-  @NotBlank private String content;
+  @Schema(description = "게시글 내용")
+  @NotBlank
+  private String content;
 
-  @NotNull private Category category1;
+  @Schema(description = "카테고리")
+  @NotNull
+  private Category category1;
 
-  @NotNull private Category category2;
+  @Schema(description = "카테고리")
+  @NotNull
+  private Category category2;
 
-  @URL @NotBlank private String video_url;
+  @Schema(description = "동영상 URL")
+  @NotNull
+  private String videoUrl;
 
-  @URL @NotBlank private String thumbnail_url;
+  @Schema(description = "썸네일 URL")
+  @NotNull
+  private String thumbnailUrl;
 
-  public Board toEntity(User user) {
-    return Board.builder()
-        .title(this.title)
-        .content(this.content)
-        .category1(this.category1)
-        .category2(this.category2)
-        .videoUrl(this.video_url)
-        .thumbnail_url(this.thumbnail_url)
-        .isPublic(YnType.Y)
-        .user(user)
-        .build();
-  }
+  @Schema(description = "공개여부")
+  @NotNull
+  private YnType isPublic;
+
+  @Schema(description = "게시글 유형")
+  @NotNull
+  private BoardDivision division;
 }

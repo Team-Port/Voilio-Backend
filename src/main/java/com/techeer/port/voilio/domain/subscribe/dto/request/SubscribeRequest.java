@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SubscribeRequest {
 
-  @NotNull private String nickName;
+  @NotNull private String nickname;
 
-  @NotNull private Long subscribe_id;
+  @NotNull private Long subscribeId;
 }

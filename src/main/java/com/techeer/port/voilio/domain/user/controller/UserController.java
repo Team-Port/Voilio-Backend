@@ -3,6 +3,7 @@ package com.techeer.port.voilio.domain.user.controller;
 import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 import com.techeer.port.voilio.domain.user.dto.UserDto;
+import com.techeer.port.voilio.domain.user.dto.response.Top5LatestMemberResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -79,6 +80,17 @@ public class UserController {
     ResultResponse<?> resultResponse = new ResultResponse<>(DELETE_USER_SUCCESS);
     //
     // resultResponse.add(linkTo(methodOn(UserController.class).deleteUser(userId)).withSelfRel());
+
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @GetMapping("/showAll")
+  @Operation(summary = "최근 가입순 회원 이름 조회")
+  public ResponseEntity<ResultResponse> getLatestMember() {
+    List<Top5LatestMemberResponseDto> top5LatestMemberResponseDtos = userService.getLatestMember();
+    ResultResponse<?> resultResponse =
+        new ResultResponse<>(GET_USER_SUCCESS, top5LatestMemberResponseDtos);
+    resultResponse.add(linkTo(methodOn(UserController.class).getLatestMember()).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

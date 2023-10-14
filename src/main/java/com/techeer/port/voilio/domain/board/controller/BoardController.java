@@ -4,6 +4,9 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
+import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
@@ -17,18 +20,25 @@ import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import com.techeer.port.voilio.global.result.ResultsResponse;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -97,7 +107,7 @@ public class BoardController {
               .content(content)
               .category1(category1)
               .category2(category2)
-              .thumbnail_url(updateFiles.getThumbnail_url())
+              .thumbnail_url(updateFiles.getThumbnailUrl())
               .build();
       boardService.updateBoard(boardId, boardUpdateRequest);
       ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
@@ -162,71 +172,60 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @PostMapping(value = "/create", consumes = "multipart/form-data")
+  @PostMapping(value = "/create")
   @Operation(summary = "게시물 생성", description = "게시물 생성 메서드입니다.")
-  public ResponseEntity<ResultResponse> createBoard(
-      @RequestParam(value = "user_id") Long user_id,
-      @RequestParam(value = "title") String title,
-      @RequestParam(value = "content") String content,
-      @RequestParam(value = "category1") Category category1,
-      @RequestParam(value = "category2") Category category2,
-      @RequestParam(value = "video") MultipartFile videoFile,
-      @RequestParam(value = "thumbnail") MultipartFile thumbnailFile) {
-    UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
-    BoardCreateRequest boardCreateRequest =
-        BoardCreateRequest.builder()
-            .user_id(user_id)
-            .title(title)
-            .content(content)
-            .category1(category1)
-            .category2(category2)
-            .video_url(uploadFile.getVideo_url())
-            .thumbnail_url(uploadFile.getThumbnail_url())
-            .build();
+  public ResponseEntity<ResultsResponse> createBoard(
+      @RequestBody @Valid BoardCreateRequest boardCreateRequest) {
+
     boardService.createBoard(boardCreateRequest);
-    ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_CREATED_SUCCESS);
-    resultResponse.add(
-        linkTo(
-                methodOn(BoardController.class)
-                    .createBoard(
-                        user_id, title, content, category1, category2, videoFile, thumbnailFile))
-            .withSelfRel());
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_CREATED_SUCCESS));
+  }
+
+  @PostMapping(
+      value = "/video",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @Operation(summary = "비디오 생성", description = "비디오 생성 메서드입니다. videoUrl을 반환합니다")
+  public ResponseEntity<ResultsResponse> uploadVideo(
+      @RequestParam(value = "video", required = false) MultipartFile videoFile) {
+
+    BoardVideoDto boardVideoDto = boardService.uploadVideo(videoFile);
+
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardVideoDto));
+  }
+
+  @PostMapping(
+      value = "/thumbnail",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @Operation(summary = "썸네일 생성", description = "썸네일 생성 메서드입니다. thumbnailUrl을 반환합니다")
+  public ResponseEntity<ResultsResponse> uploadThumbnail(
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
+
+    BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
+
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
+  }
+
+  @PostMapping(value = "/files", consumes = "multipart/form-data")
+  public ResponseEntity<ResultsResponse> uploadVideos(
+      @RequestParam(value = "video", required = false) MultipartFile videoFile,
+      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
+
+    boardService.uploadFiles(videoFile, thumbnailFile); // S3에 올리기
+
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS));
   }
 
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>> findAllBoard(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "30") int size,
-      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-          String authorizationHeader) {
-    Page<Board> boardPage = boardService.findAllBoard(PageRequest.of(page, size));
-    List<EntityModel<BoardResponse>> boardLists =
-        boardPage.getContent().stream()
-            .map(
-                board ->
-                    EntityModel.of(
-                        boardMapper.toDto(board),
-                        linkTo(
-                                methodOn(BoardController.class)
-                                    .findBoardById(board.getId(), authorizationHeader))
-                            .withSelfRel()))
-            .collect(Collectors.toList());
+  public ResponseEntity<ResultsResponse> findsAllBoard(
+      @ParameterObject
+          @PageableDefault(size = 20, sort = "updateAt", direction = Sort.Direction.DESC)
+          Pageable pageable) {
 
-    Pagination<EntityModel<BoardResponse>> result =
-        new Pagination<>(
-            boardLists,
-            boardPage.getNumber(),
-            boardPage.getSize(),
-            boardPage.getTotalElements(),
-            boardPage.getTotalPages(),
-            linkTo(methodOn(BoardController.class).findAllBoard(page, size, authorizationHeader))
-                .withSelfRel());
+    List<BoardDto> allBoard = boardService.findAllBoard(pageable);
 
-    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-    return ResponseEntity.ok().body(resultResponse);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
   @GetMapping("/lists/category")
@@ -237,6 +236,7 @@ public class BoardController {
       @RequestParam(defaultValue = "30") int size,
       @RequestHeader(value = "Authorization", required = false, defaultValue = "")
           String authorizationHeader) {
+
     Category category1 = Category.valueOf(category.toUpperCase());
     Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
     List<EntityModel<BoardResponse>> boardLists =
@@ -325,21 +325,5 @@ public class BoardController {
         new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
 
     return ResponseEntity.ok().body(resultResponse);
-  }
-
-  @PostMapping(value = "/files", consumes = "multipart/form-data")
-  public ResponseEntity<EntityModel<ResultResponse<UploadFileResponse>>> uploadVideo(
-      @RequestParam(value = "video", required = false) MultipartFile videoFile,
-      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
-    UploadFileResponse uploadFile = boardService.uploadFiles(videoFile, thumbnailFile);
-    ResultResponse<UploadFileResponse> resultResponse =
-        new ResultResponse<>(FILE_UPLOAD_SUCCESS, uploadFile);
-
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(
-            EntityModel.of(
-                resultResponse,
-                linkTo(methodOn(BoardController.class).uploadVideo(videoFile, thumbnailFile))
-                    .withSelfRel()));
   }
 }
