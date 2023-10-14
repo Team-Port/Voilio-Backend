@@ -1,11 +1,15 @@
 package com.techeer.port.voilio.domain.user.service;
 
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
+
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestMemberResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
-import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
 import java.time.LocalDateTime;
@@ -30,22 +34,25 @@ public class UserService {
   private final JwtProvider jwtProvider;
   private AuthenticationManagerBuilder authenticationManagerBuilder;
 
-  public List<User> getUserList() {
-    return new ArrayList<User>(userRepository.findAll());
+  public List<UserResponse> getUserList() {
+    List<User> users = new ArrayList<User>(userRepository.findAll());
+    return UserMapper.INSTANCE.toDtos(users);
   }
 
-  public User getUser(Long userId) {
-    User user = userRepository.findUserById(userId).orElseThrow(NotFoundUser::new);
-    return user;
+  public UserDto getUser(Long userId) {
+    User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
+    return UserMapper.INSTANCE.toDto(user);
   }
 
-  public User getUser(String nickname) {
-    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
-    return user;
+  public UserDto getUser(String nickname) {
+    User user =
+        userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
+    return UserMapper.INSTANCE.toDto(user);
   }
 
   public Long getUserByNickname(String nickname) {
-    User user = userRepository.findUserByNickname(nickname).orElseThrow(NotFoundUser::new);
+    User user =
+        userRepository.findUserByNicknameAndDelYn(nickname, N).orElseThrow(NotFoundUser::new);
     return user.getId();
   }
 
@@ -56,8 +63,9 @@ public class UserService {
   }
 
   public void deleteUser(Long userId) {
-    User user = getUser(userId);
-    user.changeDelYn(YnType.Y);
+    UserDto userDto = getUser(userId);
+    User user = UserMapper.INSTANCE.toEntity(userDto);
+    user.changeDelYn(Y);
     userRepository.save(user);
   }
 

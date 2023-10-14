@@ -2,8 +2,6 @@ package com.techeer.port.voilio.domain.user.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.LOGIN_SUCCESS;
 import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
@@ -33,8 +31,8 @@ public class AuthController {
     UserResponse userResponse = authService.signup(userSignUpRequest);
     ResultResponse<UserResponse> resultResponse =
         new ResultResponse<>(USER_REGISTRATION_SUCCESS, userResponse);
-    resultResponse.add(
-        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
+    //    resultResponse.add(
+    //        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
@@ -44,8 +42,8 @@ public class AuthController {
       @RequestBody UserLoginRequest userLoginRequest) throws AlreadyBoundException {
     TokenDto tokenDto = authService.login(userLoginRequest);
     ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
-    resultResponse.add(
-        linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
+    //    resultResponse.add(
+    //        linkTo(methodOn(AuthController.class).login(userLoginRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

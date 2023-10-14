@@ -110,7 +110,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
-    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
     Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
 
     if (result.isEmpty()) {
@@ -124,7 +124,7 @@ public class BoardService {
   }
 
   public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
-    Optional<User> user = userRepository.findUserByNickname(nickname);
+    Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
     Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable);
 
     if (result.isEmpty()) {

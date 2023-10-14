@@ -7,9 +7,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamicInsert
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
   @Id
@@ -39,8 +39,6 @@ public class User extends BaseEntity implements UserDetails {
   private LocalDateTime activatedAt;
 
   @Column(name = "is_stopped")
-  @ColumnDefault("'N'")
-  @Enumerated(EnumType.STRING)
   private YnType isStopped;
 
   @OneToMany(
@@ -54,7 +52,6 @@ public class User extends BaseEntity implements UserDetails {
   private Authority authority;
 
   @Enumerated(EnumType.STRING)
-  @ColumnDefault("'N'")
   private YnType delYn;
 
   @Override

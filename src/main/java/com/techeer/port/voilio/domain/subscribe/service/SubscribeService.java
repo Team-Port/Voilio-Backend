@@ -6,6 +6,7 @@ import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.common.YnType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,11 @@ public class SubscribeService {
   @Autowired private UserRepository userRepository;
   private final UserService userService;
 
-  @Transactional
-  public void subscribe(String userNickname, Long follow_id) {
-    User user = userRepository.findUserByNickname(userNickname).orElseThrow(NotFoundUser::new);
+  public void subscribe(String userName, Long follow_id) {
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe newFollower = new Subscribe();
@@ -34,9 +37,11 @@ public class SubscribeService {
     subscribeRepository.save(newFollower);
   }
 
-  @Transactional
-  public void unsubscribe(String userNickname, Long follow_id) {
-    User user = userRepository.findUserByNickname(userNickname).orElseThrow(NotFoundUser::new);
+  public void unsubscribe(String userName, Long follow_id) {
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);
