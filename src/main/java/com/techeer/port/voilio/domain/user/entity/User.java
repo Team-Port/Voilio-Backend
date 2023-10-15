@@ -39,6 +39,7 @@ public class User extends BaseEntity implements UserDetails {
   private LocalDateTime activatedAt;
 
   @Column(name = "is_stopped")
+  @Enumerated(EnumType.STRING)
   private YnType isStopped;
 
   @OneToMany(
@@ -51,6 +52,7 @@ public class User extends BaseEntity implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Authority authority;
 
+  @Column(name = "del_yn")
   @Enumerated(EnumType.STRING)
   private YnType delYn;
 
