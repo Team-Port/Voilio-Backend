@@ -12,10 +12,9 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
-import java.time.LocalDateTime;
-
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,13 +32,12 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
 
-
   @Transactional
   public Boolean signup(UserSignUpRequest userSignUpRequest) {
     if (userRepository.existsByEmail(userSignUpRequest.getEmail())) {
       throw new AlreadyExistUser();
     }
-    try{
+    try {
       User user = UserMapper.INSTANCE.toEntity(userSignUpRequest);
       user.changePassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
       user.changeUserRole(Authority.ROLE_USER);
@@ -47,7 +45,7 @@ public class AuthService {
       user.changeIsStopped(YnType.N);
       userRepository.save(user);
       return true;
-    } catch (Exception e){
+    } catch (Exception e) {
       throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
     }
   }

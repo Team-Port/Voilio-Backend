@@ -27,8 +27,9 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<ResultResponse<Boolean>> signup(
       @RequestBody UserSignUpRequest userSignUpRequest) {
-    Boolean isSignup =  authService.signup(userSignUpRequest);
-    ResultResponse<Boolean> resultResponse = new ResultResponse<>(USER_REGISTRATION_SUCCESS, isSignup);
+    Boolean isSignup = authService.signup(userSignUpRequest);
+    ResultResponse<Boolean> resultResponse =
+        new ResultResponse<>(USER_REGISTRATION_SUCCESS, isSignup);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 

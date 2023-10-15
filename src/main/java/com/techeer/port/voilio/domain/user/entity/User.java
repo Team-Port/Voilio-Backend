@@ -92,13 +92,19 @@ public class User extends BaseEntity implements UserDetails {
     this.changeIsStopped(YnType.Y);
   }
 
-  public void changePassword(String password) {this.password = password;}
+  public void changePassword(String password) {
+    this.password = password;
+  }
 
-  public void changeUserRole(Authority roleType) {this.authority = roleType;}
+  public void changeUserRole(Authority roleType) {
+    this.authority = roleType;
+  }
 
-  public void changeDelYn(YnType ynType) {this.delYn = ynType;}
+  public void changeDelYn(YnType ynType) {
+    this.delYn = ynType;
+  }
 
-  public void changeIsStopped(YnType ynType) {this.isStopped = ynType;}
-
-
+  public void changeIsStopped(YnType ynType) {
+    this.isStopped = ynType;
+  }
 }
