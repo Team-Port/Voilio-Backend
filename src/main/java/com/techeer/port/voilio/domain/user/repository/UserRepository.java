@@ -32,5 +32,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT b.user.id FROM Board b WHERE b.id = :boardId")
   Long findUserIdByBoardId(@Param("boardId") Long boardId);
 
-  List<User> findTop5ByIsDeletedOrderByCreateAtDesc(boolean isDeleted);
+//  List<User> findTop5ByIsDeletedOrderByCreateAtDesc(boolean isDeleted);
 }
