@@ -1,25 +1,25 @@
-//package com.techeer.port.voilio.domain.chat.controller;
+// package com.techeer.port.voilio.domain.chat.controller;
 //
-//import static com.techeer.port.voilio.global.result.ResultCode.*;
+// import static com.techeer.port.voilio.global.result.ResultCode.*;
 //
-//import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
-//import com.techeer.port.voilio.domain.chat.dto.response.GetChatRoomResponse;
-//import com.techeer.port.voilio.domain.chat.service.ChatRoomService;
-//import com.techeer.port.voilio.domain.user.service.UserService;
-//import com.techeer.port.voilio.global.result.ResultResponse;
-//import java.util.List;
-//import java.util.UUID;
-//import javax.validation.Valid;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.hateoas.EntityModel;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
+// import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
+// import com.techeer.port.voilio.domain.chat.dto.response.GetChatRoomResponse;
+// import com.techeer.port.voilio.domain.chat.service.ChatRoomService;
+// import com.techeer.port.voilio.domain.user.service.UserService;
+// import com.techeer.port.voilio.global.result.ResultResponse;
+// import java.util.List;
+// import java.util.UUID;
+// import javax.validation.Valid;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.hateoas.EntityModel;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.*;
 //
-//@RequiredArgsConstructor
-//@RestController
-//@RequestMapping("api/v1/chatRooms")
-//public class ChatRoomController {
+// @RequiredArgsConstructor
+// @RestController
+// @RequestMapping("api/v1/chatRooms")
+// public class ChatRoomController {
 //
 //  private final ChatRoomService chatRoomService;
 //  private final UserService userService;
@@ -50,4 +50,4 @@
 //    return ResponseEntity.ok(
 //        EntityModel.of(new ResultResponse<>(API_SUCCESS_GET_CHATROOM, roomUuid)));
 //  }
-//}
+// }

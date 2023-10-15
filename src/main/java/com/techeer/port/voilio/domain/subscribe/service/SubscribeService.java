@@ -60,7 +60,7 @@ public class SubscribeService {
     User user1 = userService.getUser(nickname);
     User user2 = userService.getUser(subscribeId);
     if (user1.equals(user2)) return true;
-//    return subscribeRepository.existsByUserNicknameAndAndSubscribeId(nickname, subscribeId);
+    //    return subscribeRepository.existsByUserNicknameAndAndSubscribeId(nickname, subscribeId);
     return null;
   }
 }

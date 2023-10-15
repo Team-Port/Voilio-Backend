@@ -1,21 +1,21 @@
-//package com.techeer.port.voilio.domain.chat.service;
+// package com.techeer.port.voilio.domain.chat.service;
 //
-//import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
-//import com.techeer.port.voilio.domain.chat.dto.response.GetChatRoomResponse;
-//import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
-//import com.techeer.port.voilio.domain.chat.exception.NotFoundChatRoom;
-//import com.techeer.port.voilio.domain.chat.mapper.ChatRoomMapper;
-//import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
-//import com.techeer.port.voilio.domain.user.entity.User;
-//import com.techeer.port.voilio.domain.user.service.UserService;
-//import java.util.List;
-//import java.util.UUID;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
+// import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
+// import com.techeer.port.voilio.domain.chat.dto.response.GetChatRoomResponse;
+// import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
+// import com.techeer.port.voilio.domain.chat.exception.NotFoundChatRoom;
+// import com.techeer.port.voilio.domain.chat.mapper.ChatRoomMapper;
+// import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
+// import com.techeer.port.voilio.domain.user.entity.User;
+// import com.techeer.port.voilio.domain.user.service.UserService;
+// import java.util.List;
+// import java.util.UUID;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.stereotype.Service;
 //
-//@RequiredArgsConstructor
-//@Service
-//public class ChatRoomService {
+// @RequiredArgsConstructor
+// @Service
+// public class ChatRoomService {
 //
 //  private final ChatRoomRepository chatRoomRepository;
 //  private final UserService userService;
@@ -34,7 +34,8 @@
 //
 //  public UUID getChatRoom(Long userId, Long user2Id) {
 //    ChatRoom chatRoom =
-//        chatRoomRepository.findByUser1AndUser2(userId, user2Id).orElseThrow(NotFoundChatRoom::new);
+//        chatRoomRepository.findByUser1AndUser2(userId,
+// user2Id).orElseThrow(NotFoundChatRoom::new);
 //    return chatRoom.getRoomUuid();
 //  }
-//}
+// }
