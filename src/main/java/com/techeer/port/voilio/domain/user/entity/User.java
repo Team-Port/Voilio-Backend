@@ -88,15 +88,17 @@ public class User extends BaseEntity implements UserDetails {
     this.activatedAt = activatedAt;
   }
 
-  public void setStopped(YnType stopped) {
-    isStopped = stopped;
-  }
-
   public void changeSleeperUser() {
-    this.setStopped(YnType.Y);
+    this.changeIsStopped(YnType.Y);
   }
 
-  public void changeDelYn(YnType delYn) {
-    this.delYn = delYn;
-  }
+  public void changePassword(String password) {this.password = password;}
+
+  public void changeUserRole(Authority roleType) {this.authority = roleType;}
+
+  public void changeDelYn(YnType ynType) {this.delYn = ynType;}
+
+  public void changeIsStopped(YnType ynType) {this.isStopped = ynType;}
+
+
 }

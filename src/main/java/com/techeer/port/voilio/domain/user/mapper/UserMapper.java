@@ -20,7 +20,7 @@ public interface UserMapper {
 
   User toEntity(UserDto userDto);
 
-  User toEntity(UserSignUpRequest userSignUpRequest, PasswordEncoder passwordEncoder);
+  User toEntity(UserSignUpRequest userSignUpRequest);
 
   List<UserResponse> toDtos(List<User> users);
 }
