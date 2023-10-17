@@ -39,6 +39,7 @@ public class User extends BaseEntity implements UserDetails {
   private LocalDateTime activatedAt;
 
   @Column(name = "is_stopped")
+  @Enumerated(EnumType.STRING)
   private YnType isStopped;
 
   @OneToMany(
@@ -51,6 +52,7 @@ public class User extends BaseEntity implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Authority authority;
 
+  @Column(name = "del_yn")
   @Enumerated(EnumType.STRING)
   private YnType delYn;
 
@@ -88,15 +90,23 @@ public class User extends BaseEntity implements UserDetails {
     this.activatedAt = activatedAt;
   }
 
-  public void setStopped(YnType stopped) {
-    isStopped = stopped;
-  }
-
   public void changeSleeperUser() {
-    this.setStopped(YnType.Y);
+    this.changeIsStopped(YnType.Y);
   }
 
-  public void changeDelYn(YnType delYn) {
-    this.delYn = delYn;
+  public void changePassword(String password) {
+    this.password = password;
+  }
+
+  public void changeUserRole(Authority roleType) {
+    this.authority = roleType;
+  }
+
+  public void changeDelYn(YnType ynType) {
+    this.delYn = ynType;
+  }
+
+  public void changeIsStopped(YnType ynType) {
+    this.isStopped = ynType;
   }
 }

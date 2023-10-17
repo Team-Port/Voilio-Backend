@@ -5,7 +5,6 @@ import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION
 
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
-import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.service.AuthService;
 import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -26,14 +25,11 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<ResultResponse<UserResponse>> signup(
-      @RequestBody UserSignUpRequest userSignUpRequest) throws AlreadyBoundException {
-    UserResponse userResponse = authService.signup(userSignUpRequest);
-    ResultResponse<UserResponse> resultResponse =
-        new ResultResponse<>(USER_REGISTRATION_SUCCESS, userResponse);
-    //    resultResponse.add(
-    //        linkTo(methodOn(AuthController.class).signup(userSignUpRequest)).withSelfRel());
-
+  public ResponseEntity<ResultResponse<Boolean>> signup(
+      @RequestBody UserSignUpRequest userSignUpRequest) {
+    Boolean isSignup = authService.signup(userSignUpRequest);
+    ResultResponse<Boolean> resultResponse =
+        new ResultResponse<>(USER_REGISTRATION_SUCCESS, isSignup);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
