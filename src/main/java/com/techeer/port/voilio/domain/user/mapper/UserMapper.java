@@ -7,7 +7,6 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper
 public interface UserMapper {
@@ -20,7 +19,7 @@ public interface UserMapper {
 
   User toEntity(UserDto userDto);
 
-  User toEntity(UserSignUpRequest userSignUpRequest, PasswordEncoder passwordEncoder);
+  User toEntity(UserSignUpRequest userSignUpRequest);
 
   List<UserResponse> toDtos(List<User> users);
 }

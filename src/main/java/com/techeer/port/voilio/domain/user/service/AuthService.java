@@ -2,8 +2,9 @@ package com.techeer.port.voilio.domain.user.service;
 
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
-import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
+import com.techeer.port.voilio.domain.user.entity.Authority;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.exception.AlreadyExistUser;
 import com.techeer.port.voilio.domain.user.exception.InvalidPassword;
 import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
@@ -11,33 +12,42 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.TokenDto;
-import java.rmi.AlreadyBoundException;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import java.time.LocalDateTime;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
   private final AuthenticationManagerBuilder managerBuilder;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
 
-  public UserResponse signup(UserSignUpRequest userSignUpRequest) throws AlreadyBoundException {
+  @Transactional
+  public Boolean signup(UserSignUpRequest userSignUpRequest) {
     if (userRepository.existsByEmail(userSignUpRequest.getEmail())) {
-      throw new AlreadyBoundException();
+      throw new AlreadyExistUser();
     }
-
-    User user = userSignUpRequest.toEntity(passwordEncoder);
-    //    User user = UserMapper.INSTANCE.toEntity(userSignUpRequest, passwordEncoder);
-    return UserMapper.INSTANCE.toSimpleDto(userRepository.save(user));
+    try {
+      User user = UserMapper.INSTANCE.toEntity(userSignUpRequest);
+      user.changePassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
+      user.changeUserRole(Authority.ROLE_USER);
+      user.changeDelYn(YnType.N);
+      user.changeIsStopped(YnType.N);
+      userRepository.save(user);
+      return true;
+    } catch (Exception e) {
+      throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
   }
 
   public TokenDto login(UserLoginRequest userLoginRequest) {
