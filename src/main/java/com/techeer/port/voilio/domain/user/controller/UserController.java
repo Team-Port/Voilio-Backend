@@ -1,7 +1,5 @@
 package com.techeer.port.voilio.domain.user.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.*;
-
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
@@ -10,11 +8,14 @@ import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Tag(name = "User", description = "User API Document")
 @RequestMapping("api/v1/users")
@@ -61,6 +62,14 @@ public class UserController {
   public ResponseEntity<ResultResponse> deleteUser(@PathVariable("user_id") Long userId) {
     userService.deleteUser(userId);
     ResultResponse<?> resultResponse = new ResultResponse<>(DELETE_USER_SUCCESS);
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @GetMapping("/nickname/random")
+  @Operation(summary = "랜덤 닉네임", description = "랜덤 닉네임 생성 메서드입니다.")
+  public ResponseEntity<ResultResponse> createRandomNickname() {
+    String nickname = userService.createRandomNickname();
+    ResultResponse<?> resultResponse = new ResultResponse<>(CREATE_NICKNAME_SUCCESS, nickname);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
