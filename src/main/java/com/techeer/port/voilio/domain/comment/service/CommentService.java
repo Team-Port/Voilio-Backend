@@ -57,12 +57,13 @@ public class CommentService {
     return CommentMapper.INSTANCE.toDto(comment);
   }
 
-  public CommentInfo updateComment(CommentUpdateRequest commentUpdateRequest, Long commentId) {
-    Comment foundComment = findCommentById(commentId);
-    foundComment.updateComment(commentUpdateRequest);
+  @Transactional
+  public CommentDto updateComment(CommentUpdateRequest commentUpdateRequest, Long commentId, User user) {
+    Comment comment = commentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND_EXCEPTION));
+    comment.updateComment(commentUpdateRequest.getContent());
 
-    Comment savedComment = commentRepository.save(foundComment);
-    return commentEntityToCommentInfo(savedComment);
+    CommentDto commentDto = CommentMapper.INSTANCE.toDto(commentRepository.save(comment));
+    return commentDto;
   }
 
   public void deleteComment(Long id) {

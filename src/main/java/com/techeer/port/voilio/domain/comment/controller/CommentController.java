@@ -17,8 +17,9 @@ import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
-import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,58 +32,58 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-  private final CommentService commentService;
+    private final CommentService commentService;
 
-  @Operation(summary = "댓글 생성 ", description = "댓글 생성 메서드입니다.")
-  @PostMapping
-  public ResponseEntity<ResultResponse<CommentDto>> createComment(
-          @RequestBody CommentRequest commentRequest
-          , @AuthenticationPrincipal User user
-  ) {
-    if(user == null){
-      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    @Operation(summary = "댓글 생성 ", description = "댓글 생성 메서드입니다.")
+    @PostMapping
+    public ResponseEntity<ResultResponse<CommentDto>> createComment(
+            @RequestBody CommentRequest commentRequest
+            , @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+        CommentDto commentDto = commentService.createComment(commentRequest, user);
+        ResultResponse<CommentDto> resultResponse =
+                new ResultResponse<>(COMMENT_CREATED_SUCCESS, commentDto);
+        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
-    CommentDto commentDto = commentService.createComment(commentRequest, user);
-    ResultResponse<CommentDto> resultResponse =
-        new ResultResponse<>(COMMENT_CREATED_SUCCESS, commentDto);
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  }
 
-  @Operation(summary = "댓글 수정", description = "댓글 수정 메서드입니다.")
-  @PutMapping("/{commentId}")
-  public ResponseEntity<ResultResponse> updateComment(
-      @Valid @RequestBody CommentUpdateRequest commentUpdateRequest, @PathVariable Long commentId) {
+    @Operation(summary = "댓글 수정", description = "댓글 수정 메서드입니다.")
+    @PutMapping("/{commentId}")
+    public ResponseEntity<ResultResponse<CommentDto>> updateComment(
+            @RequestBody CommentUpdateRequest commentUpdateRequest
+            , @PathVariable Long commentId
+            , @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+        CommentDto commentDto = commentService.updateComment(commentUpdateRequest, commentId, user);
+        ResultResponse<CommentDto> resultResponse =
+                new ResultResponse<>(UPDATE_COMMENT_SUCCESS, commentDto);
+        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    }
 
-    CommentInfo commentInfo = commentService.updateComment(commentUpdateRequest, commentId);
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제 메서드입니다.")
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<ResultResponse> deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+        ResultResponse<Comment> resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
+        resultResponse.add(
+                linkTo(methodOn(CommentController.class).deleteComment(commentId)).withSelfRel());
 
-    ResultResponse<Comment> resultResponse =
-        new ResultResponse<>(UPDATE_COMMENT_SUCCESS, commentInfo);
-    resultResponse.add(
-        linkTo(methodOn(CommentController.class).updateComment(commentUpdateRequest, commentId))
-            .withSelfRel());
+        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    }
 
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  }
+    @Operation(summary = "댓글 조회", description = "게시글별 댓글 조회 메서드입니다.")
+    @GetMapping("/{boardId}/list")
+    public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long boardId) {
+        List<CommentResponse> commentList = commentService.findCommentByBoardId(boardId);
+        ResultResponse<Comment> resultResponse = new ResultResponse<>(GET_COMMENT_SUCCESS, commentList);
+        resultResponse.add(
+                linkTo(methodOn(CommentController.class).getCommentList(boardId)).withSelfRel());
 
-  @Operation(summary = "댓글 삭제", description = "댓글 삭제 메서드입니다.")
-  @PatchMapping("/{commentId}")
-  public ResponseEntity<ResultResponse> deleteComment(@PathVariable Long commentId) {
-    commentService.deleteComment(commentId);
-    ResultResponse<Comment> resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(CommentController.class).deleteComment(commentId)).withSelfRel());
-
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  }
-
-  @Operation(summary = "댓글 조회", description = "게시글별로 댓글 조회 메서드입니다.")
-  @GetMapping("/{boardId}/list")
-  public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long boardId) {
-    List<CommentResponse> commentList = commentService.findCommentByBoardId(boardId);
-    ResultResponse<Comment> resultResponse = new ResultResponse<>(GET_COMMENT_SUCCESS, commentList);
-    resultResponse.add(
-        linkTo(methodOn(CommentController.class).getCommentList(boardId)).withSelfRel());
-
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  }
+        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    }
 }

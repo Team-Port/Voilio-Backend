@@ -44,8 +44,8 @@ public class Comment extends BaseEntity {
   @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> childComments = new ArrayList<>();
 
-  public void updateComment(CommentUpdateRequest commentUpdateRequest) {
-    this.content = commentUpdateRequest.getContent();
+  public void updateComment(String newContent) {
+    this.content = newContent;
   }
 
   public void deleteComment() {
