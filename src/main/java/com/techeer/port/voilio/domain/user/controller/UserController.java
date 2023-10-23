@@ -25,12 +25,6 @@ public class UserController {
   private final UserService userService;
   private final JwtProvider jwtProvider;
 
-  @GetMapping("/me")
-  public ResponseEntity<UserResponse> getMyMemberInfo() {
-    UserResponse myInfoBySecurity = userService.getMyInfoBySecurity();
-    return ResponseEntity.ok((myInfoBySecurity));
-  }
-
   @GetMapping("/list")
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<List<User>>> getUserList() {

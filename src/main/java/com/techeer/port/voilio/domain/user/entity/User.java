@@ -56,36 +56,6 @@ public class User extends BaseEntity implements UserDetails {
   @Enumerated(EnumType.STRING)
   private YnType delYn;
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
-  }
-
-  @Override
-  public String getUsername() {
-    return email;
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return false;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return false;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return false;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return false;
-  }
-
   public void updateActivatedAt(LocalDateTime activatedAt) {
     this.activatedAt = activatedAt;
   }
@@ -108,5 +78,39 @@ public class User extends BaseEntity implements UserDetails {
 
   public void changeIsStopped(YnType ynType) {
     this.isStopped = ynType;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return null;
+  }
+
+  @Override
+  public String getUsername() {
+    if (email != null && !email.equals("")) {
+      return email;
+    } else {
+      return id.toString();
+    }
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return false;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return false;
   }
 }

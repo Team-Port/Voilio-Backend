@@ -11,14 +11,12 @@ public enum ErrorCode {
   INTERNAL_SERVER_ERROR(500, "G001", "서버 오류"),
   INPUT_INVALID_VALUE(409, "G002", "잘못된 입력"),
 
-  // 예시
   // User 도메인
   INVALID_PASSWORD(400, "U001", "잘못된 비밀번호"),
   USER_NOT_FOUND_ERROR(400, "U002", "사용자를 찾을 수 없음"),
   INVALID_USER_PASSWORD(400, "U003", "비밀번호가 일치하지 않음"),
-  ALREADY_EXIST_USER(400, "U004", "이미 가입된 유저 email 입니다."),
-
-  NO_AUTHORITY(401, "U005", "권한이 없습니다."),
+  ALREADY_EXIST_USER(400, "U004", "이미 가입된 이메일이 존재합니다."),
+  INVALID_AUTH_TOKEN(401, "U005", "권한 정보가 없는 토큰입니다."),
 
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),
