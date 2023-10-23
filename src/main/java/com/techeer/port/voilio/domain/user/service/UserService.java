@@ -83,9 +83,10 @@ public class UserService {
     return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
   }
 
-    public List<Top5LatestUserResponseDto> getLatestMember() {
-      List<User> userList = userRepository.findTop5ByDelYnOrderByIdDesc(N);
-      List<Top5LatestUserResponseDto> top5LatestUserResponseDtos = UserMapper.INSTANCE.toTop5LatestUserDto(userList);
-      return top5LatestUserResponseDtos;
-    }
+  public List<Top5LatestUserResponseDto> getLatestMember() {
+    List<User> userList = userRepository.findTop5ByDelYnOrderByIdDesc(N);
+    List<Top5LatestUserResponseDto> top5LatestUserResponseDtos =
+        UserMapper.INSTANCE.toTop5LatestUserDto(userList);
+    return top5LatestUserResponseDtos;
+  }
 }

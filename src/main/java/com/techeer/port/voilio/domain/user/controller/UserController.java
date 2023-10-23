@@ -59,14 +59,13 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-    @GetMapping("/latest/5")
-    @Operation(summary = "최근 가입순 회원 이름 조회")
-    public ResponseEntity<ResultResponse> getLatestMember() {
-      List<Top5LatestUserResponseDto> top5LatestUserResponseDtos =
-   userService.getLatestMember();
-      ResultResponse<?> resultResponse =
-          new ResultResponse<>(GET_USER_SUCCESS, top5LatestUserResponseDtos);
+  @GetMapping("/latest/5")
+  @Operation(summary = "최근 가입순 회원 이름 조회")
+  public ResponseEntity<ResultResponse> getLatestMember() {
+    List<Top5LatestUserResponseDto> top5LatestUserResponseDtos = userService.getLatestMember();
+    ResultResponse<?> resultResponse =
+        new ResultResponse<>(GET_USER_SUCCESS, top5LatestUserResponseDtos);
 
-      return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 }

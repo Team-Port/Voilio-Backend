@@ -2,7 +2,6 @@ package com.techeer.port.voilio.domain.user.repository;
 
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.YnType;
-
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -21,15 +21,17 @@ public class OpenApiConfig {
             .version("v0.0.1")
             .description("Voilio 프로젝트의 API 명세서입니다.");
 
-
     String jwtSchemeName = "jwtAuth";
 
     // API 요청헤더에 인증정보 포함
     SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
 
     // SecuritySchemes 등록
-    Components components = new Components()
-            .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+    Components components =
+        new Components()
+            .addSecuritySchemes(
+                jwtSchemeName,
+                new SecurityScheme()
                     .name(jwtSchemeName)
                     .type(SecurityScheme.Type.HTTP)
                     .scheme("Bearer")
@@ -37,9 +39,6 @@ public class OpenApiConfig {
 
     SpringDocUtils.getConfig().addAnnotationsToIgnore(AuthenticationPrincipal.class);
 
-    return new OpenAPI()
-            .info(info)
-            .addSecurityItem(securityRequirement)
-            .components(components);
+    return new OpenAPI().info(info).addSecurityItem(securityRequirement).components(components);
   }
 }

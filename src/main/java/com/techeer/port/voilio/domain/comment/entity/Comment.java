@@ -1,15 +1,13 @@
 package com.techeer.port.voilio.domain.comment.entity;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.YnType;
-import javax.persistence.*;
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @Builder
@@ -51,7 +49,6 @@ public class Comment extends BaseEntity {
   public void deleteComment() {
     this.delYn = YnType.Y;
   }
-
 
   public void updateParentComment(Comment parentComment) {
     this.parentComment = parentComment;
