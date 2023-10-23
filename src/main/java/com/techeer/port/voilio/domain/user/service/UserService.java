@@ -10,7 +10,6 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -16,36 +16,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    private final JwtProvider jwtProvider;
+  private final JwtProvider jwtProvider;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.
-                httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(
-                        "/api/v1/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/v3/api-docs/**",
-                        "/v3/api-docs/swagger-config/**",
-                        "/chat/**",
-                        "/webjars/**",
-                        "/ws-stomp/**",
-                        "**/pub/**")
-                .permitAll()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                        UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.httpBasic()
+        .disable()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .antMatchers(
+            "/api/v1/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/v3/api-docs/swagger-config/**",
+            "/chat/**",
+            "/webjars/**",
+            "/ws-stomp/**",
+            "**/pub/**")
+        .permitAll()
+        .and()
+        .addFilterBefore(
+            new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
 }

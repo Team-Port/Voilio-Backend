@@ -1,13 +1,10 @@
 package com.techeer.port.voilio.domain.subscribe.mapper;
 
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
-import com.techeer.port.voilio.domain.subscribe.dto.response.SubscribeResponse;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Mapper
 public interface SubscribeMapper {

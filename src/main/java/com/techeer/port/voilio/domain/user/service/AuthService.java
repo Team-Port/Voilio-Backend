@@ -19,7 +19,6 @@ import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,8 +55,10 @@ public class AuthService {
 
   @Transactional
   public String login(UserLoginRequest userLoginRequest) {
-    User user = userRepository.findUserByEmailAndDelYn(userLoginRequest.getEmail(), YnType.N)
-                    .orElseThrow(NotFoundUserException::new);
+    User user =
+        userRepository
+            .findUserByEmailAndDelYn(userLoginRequest.getEmail(), YnType.N)
+            .orElseThrow(NotFoundUserException::new);
 
     if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
       throw new InvalidPassword();
@@ -69,7 +70,7 @@ public class AuthService {
     return token;
   }
 
-  public UserDto me(User user){
+  public UserDto me(User user) {
     UserDto userDto = UserMapper.INSTANCE.toDto(user);
     List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
     userDto.updateFollowing(SubscribeMapper.INSTANCE.toDtos(subscribeList));

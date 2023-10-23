@@ -25,7 +25,6 @@ public class UserController {
   private final UserService userService;
   private final JwtProvider jwtProvider;
 
-
   @GetMapping("/list")
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
   public ResponseEntity<ResultResponse<List<User>>> getUserList() {
