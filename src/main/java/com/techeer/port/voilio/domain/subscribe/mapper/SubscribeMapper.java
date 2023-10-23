@@ -1,16 +1,20 @@
 package com.techeer.port.voilio.domain.subscribe.mapper;
 
+import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
 import com.techeer.port.voilio.domain.subscribe.dto.response.SubscribeResponse;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Component
-public class SubscribeMapper {
+import java.util.List;
 
-  public SubscribeResponse toDto(Subscribe subscribe) {
-    return SubscribeResponse.builder()
-        .subscribe_id(subscribe.getToUser().getId())
-        .subscribe_nickname(subscribe.getToUser().getNickname())
-        .build();
-  }
+@Mapper
+public interface SubscribeMapper {
+
+  SubscribeMapper INSTANCE = Mappers.getMapper(SubscribeMapper.class);
+
+  SubscribeDto toDto(Subscribe entity);
+
+  List<SubscribeDto> toDtos(List<Subscribe> entities);
 }

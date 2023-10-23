@@ -9,54 +9,43 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.stereotype.Component;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@Component
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
-  private final JwtProvider jwtProvider;
-  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    private final JwtProvider jwtProvider;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.httpBasic()
-        .disable()
-        .csrf()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-        .accessDeniedHandler(jwtAccessDeniedHandler)
-        .and()
-        .authorizeRequests()
-        .antMatchers("/auth/**")
-        .permitAll()
-        .antMatchers("/api/v1/**")
-        .permitAll()
-        .antMatchers(
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/v3/api-docs/**",
-            "/v3/api-docs/swagger-config/**")
-        .permitAll()
-        .antMatchers("/chat/**", "/webjars/**", "/ws-stomp/**", "**/pub/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .apply(new JwtSecurityConfig(jwtProvider));
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.
+                httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers(
+                        "/api/v1/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs/swagger-config/**",
+                        "/chat/**",
+                        "/webjars/**",
+                        "/ws-stomp/**",
+                        "**/pub/**")
+                .permitAll()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+                        UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-    return http.build();
-  }
 }

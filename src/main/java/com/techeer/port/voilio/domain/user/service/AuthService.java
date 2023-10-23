@@ -1,5 +1,9 @@
 package com.techeer.port.voilio.domain.user.service;
 
+import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
+import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
+import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.entity.Authority;
@@ -11,14 +15,13 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
-import com.techeer.port.voilio.global.config.security.TokenDto;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,7 @@ public class AuthService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
+  private final SubscribeRepository subscribeRepository;
 
   @Transactional
   public Boolean signup(UserSignUpRequest userSignUpRequest) {
@@ -50,26 +54,25 @@ public class AuthService {
     }
   }
 
-  public TokenDto login(UserLoginRequest userLoginRequest) {
-    User user = validateAccount(userLoginRequest);
-
-    // 로그인 성공 후, 추가 작업 - 토큰 생성
-    user.updateActivatedAt(LocalDateTime.now());
-    UsernamePasswordAuthenticationToken authenticationToken = userLoginRequest.toAuthentication();
-    Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-
-    return jwtProvider.generateTokenDto(authentication);
-  }
-
-  private User validateAccount(UserLoginRequest userLoginRequest) {
-    User user =
-        userRepository
-            .findUserByEmailAndDelYn(userLoginRequest.getEmail(), YnType.N)
-            .orElseThrow(NotFoundUserException::new);
+  @Transactional
+  public String login(UserLoginRequest userLoginRequest) {
+    User user = userRepository.findUserByEmailAndDelYn(userLoginRequest.getEmail(), YnType.N)
+                    .orElseThrow(NotFoundUserException::new);
 
     if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
       throw new InvalidPassword();
     }
-    return user;
+
+    user.updateActivatedAt(LocalDateTime.now());
+
+    String token = jwtProvider.createToken(user.getEmail(), user.getAuthority());
+    return token;
+  }
+
+  public UserDto me(User user){
+    UserDto userDto = UserMapper.INSTANCE.toDto(user);
+    List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
+    userDto.updateFollowing(SubscribeMapper.INSTANCE.toDtos(subscribeList));
+    return userDto;
   }
 }
