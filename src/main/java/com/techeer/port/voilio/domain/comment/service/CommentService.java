@@ -4,23 +4,31 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.board.service.BoardService;
+import com.techeer.port.voilio.domain.comment.dto.CommentDto;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentInfo;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.comment.dto.response.CommentResponse;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
 import com.techeer.port.voilio.domain.comment.exception.NotFoundCommentException;
+import com.techeer.port.voilio.domain.comment.mapper.CommentMapper;
 import com.techeer.port.voilio.domain.comment.repository.CommentRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.techeer.port.voilio.global.common.YnType;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
   private final UserRepository userRepository;
@@ -30,12 +38,23 @@ public class CommentService {
 
   private final BoardService boardService;
 
-  public CommentInfo registerComment(CommentRequest commentRequest) {
+  @Transactional
+  public CommentDto createComment(CommentRequest commentRequest, User user) {
+    Board board = boardRepository.findById(commentRequest.getBoardId()).orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
+    Comment comment = Comment.builder()
+            .user(user)
+            .board(board)
+            .content(commentRequest.getContent())
+            .delYn(YnType.N)
+            .build();
 
-    Comment createNewCommentEntity = CreateNewCommentEntity(commentRequest);
-    Comment comment = commentRepository.save(createNewCommentEntity);
+    if(commentRequest.getParentId() != null){
+      Comment parentComment = commentRepository.findByBoardIdAndId(commentRequest.getBoardId(), commentRequest.getParentId()).orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND_EXCEPTION));
+      comment.updateParentComment(parentComment);
+    }
 
-    return commentEntityToCommentInfo(comment);
+    commentRepository.save(comment);
+    return CommentMapper.INSTANCE.toDto(comment);
   }
 
   public CommentInfo updateComment(CommentUpdateRequest commentUpdateRequest, Long commentId) {
@@ -82,17 +101,17 @@ public class CommentService {
         .build();
   }
 
-  private Comment CreateNewCommentEntity(CommentRequest commentRequest) {
-
-    User findUser = getUserById(commentRequest.getUserId());
-    Board findBoard = getBoardById(commentRequest.getBoardId());
-
-    return Comment.builder()
-        .user(findUser)
-        .board(findBoard)
-        .content(commentRequest.getContent())
-        .build();
-  }
+//  private Comment CreateNewCommentEntity(CommentRequest commentRequest) {
+//
+//    User findUser = getUserById(commentRequest.getUserId());
+//    Board findBoard = getBoardById(commentRequest.getBoardId());
+//
+//    return Comment.builder()
+//        .user(findUser)
+//        .board(findBoard)
+//        .content(commentRequest.getContent())
+//        .build();
+//  }
 
   private User getUserById(Long userId) {
     return userRepository.findById(userId).orElseThrow(NotFoundUserException::new);

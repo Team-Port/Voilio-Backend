@@ -1,24 +1,17 @@
 package com.techeer.port.voilio.domain.comment.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotNull;
 import lombok.*;
 
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class CommentRequest {
 
-  @Schema(description = "유저 아이디")
-  @NotNull
-  private Long userId;
-
   @Schema(description = "게시판 아이디")
-  @NotNull
   private Long boardId;
 
   @Schema(description = "댓글 내용")
-  @NotNull
   private String content;
+
+  @Schema(description = "상위 댓글 아이디")
+  private Long parentId;
 }
