@@ -34,7 +34,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "댓글 생성 ", description = "댓글 생성 메서드입니다.")
+    @Operation(summary = "댓글 생성 ", description = "댓글 및 대댓글 생성")
     @PostMapping
     public ResponseEntity<ResultResponse<CommentDto>> createComment(
             @RequestBody CommentRequest commentRequest
@@ -49,7 +49,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 
-    @Operation(summary = "댓글 수정", description = "댓글 수정 메서드입니다.")
+    @Operation(summary = "댓글 수정", description = "댓글 및 대댓글 수정 (본인만 가능)")
     @PutMapping("/{commentId}")
     public ResponseEntity<ResultResponse<CommentDto>> updateComment(
             @RequestBody CommentUpdateRequest commentUpdateRequest
@@ -65,14 +65,17 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 
-    @Operation(summary = "댓글 삭제", description = "댓글 삭제 메서드입니다.")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제 (soft delete)")
     @PatchMapping("/{commentId}")
-    public ResponseEntity<ResultResponse> deleteComment(@PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
-        ResultResponse<Comment> resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
-        resultResponse.add(
-                linkTo(methodOn(CommentController.class).deleteComment(commentId)).withSelfRel());
-
+    public ResponseEntity<ResultResponse> deleteComment(
+            @PathVariable Long commentId
+            , @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+        commentService.deleteComment(commentId, user);
+        ResultResponse resultResponse = new ResultResponse<>(DELETE_COMMENT_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 
