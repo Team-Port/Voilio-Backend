@@ -1,13 +1,12 @@
 package com.techeer.port.voilio.domain.user.dto.response;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-public class Top5LatestMemberResponseDto {
-  private Long memberId;
+public class Top5LatestUserResponseDto {
+  private Long id;
+  private String email;
   private String nickname;
 }

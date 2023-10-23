@@ -5,6 +5,7 @@ import static com.techeer.port.voilio.global.common.YnType.Y;
 
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
+import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
@@ -61,7 +62,6 @@ public class UserService {
 
   public Long getUserIdByBoardId(Long board_id) {
     Long id = userRepository.findUserIdByBoardId(board_id);
-
     return id;
   }
 
@@ -83,19 +83,9 @@ public class UserService {
     return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
   }
 
-  //  public List<Top5LatestMemberResponseDto> getLatestMember() {
-  //    List<User> userList = userRepository.findTop5ByIsDeletedOrderByCreateAtDesc(false);
-  //    List<Top5LatestMemberResponseDto> top5LatestMemberResponseDtos = new ArrayList<>();
-  //    for (User user : userList) {
-  //      Top5LatestMemberResponseDto top5LatestMemberResponseDto =
-  //          Top5LatestMemberResponseDto.builder()
-  //              .memberId(user.getId())
-  //              .nickname(user.getNickname())
-  //              .build();
-  //
-  //      top5LatestMemberResponseDtos.add(top5LatestMemberResponseDto);
-  //    }
-  //
-  //    return top5LatestMemberResponseDtos;
-  //  }
+    public List<Top5LatestUserResponseDto> getLatestMember() {
+      List<User> userList = userRepository.findTop5ByDelYnOrderByIdDesc(N);
+      List<Top5LatestUserResponseDto> top5LatestUserResponseDtos = UserMapper.INSTANCE.toTop5LatestUserDto(userList);
+      return top5LatestUserResponseDtos;
+    }
 }

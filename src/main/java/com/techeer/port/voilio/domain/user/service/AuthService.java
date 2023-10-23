@@ -65,7 +65,6 @@ public class AuthService {
     }
 
     user.updateActivatedAt(LocalDateTime.now());
-
     String token = jwtProvider.createToken(user.getEmail(), user.getAuthority());
     return token;
   }
