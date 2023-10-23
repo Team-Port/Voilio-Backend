@@ -19,4 +19,6 @@ public class CommentDto {
   private String content;
 
   private YnType delYn;
+
+  private List<CommentDto> childComments = new ArrayList<>();
 }

@@ -17,6 +17,7 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.exception.NotFoundUserException;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,45 +75,13 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<CommentResponse> findCommentByBoardId(Long id) {
-
+    public List<CommentDto> findCommentByBoardId(Long id) {
         if (!boardRepository.existsById(id)) {
             throw new NotFoundBoard();
         }
-
-        List<CommentResponse> commentList =
-                commentRepository.findByBoardId(id).stream()
-                        .map(this::commentEntityToCommentResponse)
-                        .collect(Collectors.toList());
-        return commentList;
+        List<Comment> commentList = commentRepository.findAllByBoardIdAndDelYnAndParentCommentIsNull(id, YnType.N);
+        List<CommentDto> commentDtoList = CommentMapper.INSTANCE.toDtos(commentList);
+        return commentDtoList;
     }
 
-    private CommentInfo commentEntityToCommentInfo(Comment savedComment) {
-        return CommentInfo.builder()
-                .content(savedComment.getContent())
-                .createAt(savedComment.getCreateAt())
-                .updateAt(savedComment.getUpdateAt())
-                .build();
-    }
-
-    private CommentResponse commentEntityToCommentResponse(Comment comment) {
-        return CommentResponse.builder()
-                .commentId(comment.getId())
-                .content(comment.getContent())
-                .nickname(comment.getUser().getNickname())
-                .localDateTime(comment.getCreateAt())
-                .build();
-    }
-
-//  private Comment CreateNewCommentEntity(CommentRequest commentRequest) {
-//
-//    User findUser = getUserById(commentRequest.getUserId());
-//    Board findBoard = getBoardById(commentRequest.getBoardId());
-//
-//    return Comment.builder()
-//        .user(findUser)
-//        .board(findBoard)
-//        .content(commentRequest.getContent())
-//        .build();
-//  }
 }

@@ -79,14 +79,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 
-    @Operation(summary = "댓글 조회", description = "게시글별 댓글 조회 메서드입니다.")
+    @Operation(summary = "게시글 별 댓글 및 대댓글 조회")
     @GetMapping("/{boardId}/list")
     public ResponseEntity<ResultResponse> getCommentList(@PathVariable Long boardId) {
-        List<CommentResponse> commentList = commentService.findCommentByBoardId(boardId);
+        List<CommentDto> commentList = commentService.findCommentByBoardId(boardId);
         ResultResponse<Comment> resultResponse = new ResultResponse<>(GET_COMMENT_SUCCESS, commentList);
-        resultResponse.add(
-                linkTo(methodOn(CommentController.class).getCommentList(boardId)).withSelfRel());
-
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 }
