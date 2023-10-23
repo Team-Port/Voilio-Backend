@@ -1,8 +1,6 @@
 package com.techeer.port.voilio.domain.comment.dto;
 
-import com.techeer.port.voilio.domain.board.dto.BoardDto;
-import com.techeer.port.voilio.domain.comment.entity.Comment;
-import com.techeer.port.voilio.domain.user.dto.UserDto;
+import com.techeer.port.voilio.domain.user.dto.UserSimpleDto;
 import com.techeer.port.voilio.global.common.YnType;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +17,8 @@ public class CommentDto {
   private String content;
 
   private YnType delYn;
+
+  private UserSimpleDto user;
 
   private List<CommentDto> childComments = new ArrayList<>();
 }
