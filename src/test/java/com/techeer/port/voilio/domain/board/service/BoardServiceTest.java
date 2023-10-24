@@ -1,45 +1,45 @@
-//package com.techeer.port.voilio.domain.board.service;
+// package com.techeer.port.voilio.domain.board.service;
 //
-//import static org.hamcrest.MatcherAssert.*;
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.Mockito.*;
+// import static org.hamcrest.MatcherAssert.*;
+// import static org.junit.jupiter.api.Assertions.*;
+// import static org.mockito.BDDMockito.given;
+// import static org.mockito.Mockito.*;
 //
-//import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-//import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
-//import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
-//import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
-//import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
-//import com.techeer.port.voilio.domain.board.entity.Board;
-//import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
-//import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
-//import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
-//import com.techeer.port.voilio.domain.board.repository.BoardRepository;
-//import com.techeer.port.voilio.domain.user.entity.User;
-//import com.techeer.port.voilio.domain.user.repository.UserRepository;
-//import com.techeer.port.voilio.global.common.Category;
-//import com.techeer.port.voilio.s3.util.S3Manager;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//import net.minidev.asm.ex.ConvertException;
-//import org.junit.jupiter.api.*;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Spy;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageImpl;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.web.multipart.MultipartFile;
+// import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+// import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
+// import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+// import com.techeer.port.voilio.domain.board.dto.response.UpdateFileResponse;
+// import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
+// import com.techeer.port.voilio.domain.board.entity.Board;
+// import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
+// import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+// import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+// import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+// import com.techeer.port.voilio.domain.user.entity.User;
+// import com.techeer.port.voilio.domain.user.repository.UserRepository;
+// import com.techeer.port.voilio.global.common.Category;
+// import com.techeer.port.voilio.s3.util.S3Manager;
+// import java.io.IOException;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Optional;
+// import net.minidev.asm.ex.ConvertException;
+// import org.junit.jupiter.api.*;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.Spy;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.PageImpl;
+// import org.springframework.data.domain.Pageable;
+// import org.springframework.test.context.ActiveProfiles;
+// import org.springframework.web.multipart.MultipartFile;
 //
-//@ExtendWith(MockitoExtension.class)
-//@ActiveProfiles("test")
-//@DisplayName("Board Service")
-//public class BoardServiceTest {
+// @ExtendWith(MockitoExtension.class)
+// @ActiveProfiles("test")
+// @DisplayName("Board Service")
+// public class BoardServiceTest {
 //  @Mock private BoardRepository boardRepository;
 //  @Mock private UserRepository userRepository;
 //
@@ -213,7 +213,8 @@
 //              .thumbnail_url("https://www.naver.com/thumbnail.jpg")
 //              .build();
 //
-//      when(userRepository.findById(boardCreateRequest.getUser_id())).thenReturn(Optional.of(user1));
+//
+// when(userRepository.findById(boardCreateRequest.getUser_id())).thenReturn(Optional.of(user1));
 //
 //      assertDoesNotThrow(() -> boardService.createBoard(boardCreateRequest));
 //
@@ -407,7 +408,8 @@
 //          .willReturn(emptyBoardPage);
 //
 //      // when, then
-//      assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category, pageable));
+//      assertThrows(NotFoundBoard.class, () -> boardService.findBoardByCategory(category,
+// pageable));
 //      verify(boardRepository).findBoardByCategory(category, category, pageable);
 //    }
 //  }
@@ -580,4 +582,4 @@
 //      verify(s3Manager).upload(thumbnailFile, "thumbnail");
 //    }
 //  }
-//}
+// }

@@ -85,8 +85,7 @@ public class BoardService {
   }
 
   public List<BoardDto> findAllBoard(Pageable pageable) {
-    Page<Board> boardPage =
-        boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.Y);
+    Page<Board> boardPage = boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.Y);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
