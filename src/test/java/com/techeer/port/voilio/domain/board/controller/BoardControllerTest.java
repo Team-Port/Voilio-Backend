@@ -1,46 +1,46 @@
-//package com.techeer.port.voilio.domain.board.controller;
+// package com.techeer.port.voilio.domain.board.controller;
 //
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.Mockito.*;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+// import static org.mockito.BDDMockito.given;
+// import static org.mockito.Mockito.*;
+// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+// import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 //
-//import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-//import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
-//import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
-//import com.techeer.port.voilio.domain.board.entity.Board;
-//import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
-//import com.techeer.port.voilio.domain.board.service.BoardService;
-//import com.techeer.port.voilio.domain.user.entity.User;
-//import com.techeer.port.voilio.domain.user.service.UserService;
-//import com.techeer.port.voilio.global.common.Category;
-//import com.techeer.port.voilio.global.common.Pagination;
-//import com.techeer.port.voilio.global.common.YnType;
-//import com.techeer.port.voilio.global.result.ResultResponse;
-//import java.util.List;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageImpl;
-//import org.springframework.hateoas.EntityModel;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.mock.web.MockMultipartFile;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-//import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-//import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-//import org.springframework.web.multipart.MultipartFile;
+// import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+// import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+// import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
+// import com.techeer.port.voilio.domain.board.entity.Board;
+// import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+// import com.techeer.port.voilio.domain.board.service.BoardService;
+// import com.techeer.port.voilio.domain.user.entity.User;
+// import com.techeer.port.voilio.domain.user.service.UserService;
+// import com.techeer.port.voilio.global.common.Category;
+// import com.techeer.port.voilio.global.common.Pagination;
+// import com.techeer.port.voilio.global.common.YnType;
+// import com.techeer.port.voilio.global.result.ResultResponse;
+// import java.util.List;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.DisplayName;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.PageImpl;
+// import org.springframework.hateoas.EntityModel;
+// import org.springframework.http.MediaType;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.mock.web.MockMultipartFile;
+// import org.springframework.test.web.servlet.MockMvc;
+// import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+// import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+// import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+// import org.springframework.web.multipart.MultipartFile;
 //
-//@ExtendWith(MockitoExtension.class)
-//@DisplayName("BoardController Test Start")
-//public class BoardControllerTest {
+// @ExtendWith(MockitoExtension.class)
+// @DisplayName("BoardController Test Start")
+// public class BoardControllerTest {
 //
 //  @Mock private BoardService boardService;
 //  @Mock private UserService userService;
@@ -192,7 +192,8 @@
 //        .andDo(print());
 //
 //    // 특정 메서드가 특정 인자로 호출되었는지 검증
-//    verify(boardService, times(1)).uploadFiles(any(MultipartFile.class), any(MultipartFile.class));
+//    verify(boardService, times(1)).uploadFiles(any(MultipartFile.class),
+// any(MultipartFile.class));
 //    verify(boardService, times(1)).createBoard(any(BoardCreateRequest.class));
 //  }
 //
@@ -400,4 +401,4 @@
 //        .andExpect(status().isCreated())
 //        .andDo(print());
 //  }
-//}
+// }
