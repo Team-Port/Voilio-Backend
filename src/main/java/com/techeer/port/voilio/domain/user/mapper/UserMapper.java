@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.mapper;
 
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
+import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface UserMapper {
   User toEntity(UserSignUpRequest userSignUpRequest);
 
   List<UserResponse> toDtos(List<User> users);
+
+  List<Top5LatestUserResponseDto> toTop5LatestUserDto(List<User> users);
 }
