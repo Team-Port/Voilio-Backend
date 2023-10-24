@@ -13,10 +13,6 @@ import lombok.Getter;
 @Getter
 public class BoardCreateRequest {
 
-  @Schema(description = "유저 아이디")
-  @NotNull
-  private Long userId;
-
   @Schema(description = "게시글 제목")
   @NotBlank
   private String title;

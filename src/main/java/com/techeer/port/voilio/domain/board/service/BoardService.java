@@ -56,11 +56,8 @@ public class BoardService {
   }
 
   @Transactional
-  public void createBoard(BoardCreateRequest boardCreateRequest) {
-    User user =
-        userRepository.findById(boardCreateRequest.getUserId()).orElseThrow(NotFoundUser::new);
+  public void createBoard(BoardCreateRequest boardCreateRequest, User user) {
     Board board = BoardMapperInterface.INSTANCE.toEntityDto(boardCreateRequest, user);
-
     boardRepository.save(board);
   }
 
@@ -89,7 +86,7 @@ public class BoardService {
 
   public List<BoardDto> findAllBoard(Pageable pageable) {
     Page<Board> boardPage =
-        boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.ALL);
+        boardRepository.findAllByDelYnAndIsPublic(pageable, YnType.N, YnType.Y);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
