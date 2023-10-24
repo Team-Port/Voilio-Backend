@@ -20,6 +20,8 @@ public enum ErrorCode {
 
   NO_AUTHORITY(401, "U005", "권한이 없습니다."),
 
+  ALREADY_EXIST_USER_BY_NICKNAME(400, "U006", "이미 가입된 유저 nickname 입니다."),
+
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),
   // comment

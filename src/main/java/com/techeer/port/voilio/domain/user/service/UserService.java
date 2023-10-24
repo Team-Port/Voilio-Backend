@@ -1,21 +1,14 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
-
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.exception.AlreadyExistUserByNickname;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.config.security.SecurityUtil;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -24,6 +17,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Service
 @Transactional
@@ -113,19 +112,27 @@ public class UserService {
   }
 
   public String createRandomNickname() {
-    String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는"};
-    String[] nounList = {"개발자", "댄서", "기획자", "CEO", "뮤지션"};
+    String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는", "귀여윤"};
+    String[] adjectiveList1 = {"멋있는"};
+    String[] nounList = {"강아지", "고양이", "코알라", "꺼차", "뻐꾸기", "판다", "여우"};
+    String[] nounList1 = {"강아지"};
 
     Random random = new Random();
-    int index = random.nextInt(5);
+    int index = random.nextInt(adjectiveList1.length);
     String adjective = adjectiveList[index];
 
-    index = random.nextInt(5);
+    index = random.nextInt(nounList1.length);
     String noun = nounList[index];
 
     String nickname = adjective + " " + noun;
 
-    return nickname;
+    Optional<User> findUser = userRepository.findUserByNicknameAndDelYn(nickname, N);
+
+    if(findUser.isEmpty()){
+      return nickname;
+    }
+    else throw new AlreadyExistUserByNickname();
+
   }
 
   //  public List<Top5LatestMemberResponseDto> getLatestMember() {
