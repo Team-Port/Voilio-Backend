@@ -83,7 +83,7 @@ public class BoardService {
 
   public Page<BoardDto> findAllBoard(Pageable pageable) {
     Page<Board> boardPage =
-            boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
+        boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
@@ -134,7 +134,7 @@ public class BoardService {
   public UploadFileResponse uploadFiles(MultipartFile videoFile, MultipartFile thumbnailFile) {
     try {
       return BoardMapper.INSTANCE.toVideoAndThumbnail(
-              s3Manager.upload(videoFile, "video"), s3Manager.upload(thumbnailFile, "thumbnail"));
+          s3Manager.upload(videoFile, "video"), s3Manager.upload(thumbnailFile, "thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }
@@ -150,18 +150,17 @@ public class BoardService {
 
   public BoardThumbnailDto uploadThumbnail(MultipartFile thumbnailFile) {
     try {
-      return BoardMapper.INSTANCE.toThumbnail(
-              s3Manager.upload(thumbnailFile, "thumbnail"));
+      return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(thumbnailFile, "thumbnail"));
     } catch (IOException e) {
       throw new ConvertException();
     }
   }
 
-//  public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
-//    try {
-//      return boardMapper.toDto(s3Manager.upload(thumbnailFile, "thumbnail"));
-//    } catch (IOException e) {
-//      throw new ConvertException();
-//    }
-//  }
+  //  public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
+  //    try {
+  //      return boardMapper.toDto(s3Manager.upload(thumbnailFile, "thumbnail"));
+  //    } catch (IOException e) {
+  //      throw new ConvertException();
+  //    }
+  //  }
 }
