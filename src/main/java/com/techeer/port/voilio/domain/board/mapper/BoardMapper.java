@@ -1,36 +1,36 @@
 package com.techeer.port.voilio.domain.board.mapper;
 
-import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
+import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
+import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
+import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.user.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
 
-@Component
-public class BoardMapper {
-  public BoardResponse toDto(Board board) {
-    return BoardResponse.builder()
-        .id(board.getId())
-        .title(board.getTitle())
-        .content(board.getContent())
-        .category1(board.getCategory1())
-        .category2(board.getCategory2())
-        .video_url(board.getVideoUrl())
-        .thumbnail_url(board.getThumbnailUrl())
-        .updated_at(board.getUpdateAt())
-        .created_at(board.getCreateAt())
-        .user_id(board.getUser().getId())
-        .nickname(board.getUser().getNickname())
-        .isPublic(board.getIsPublic())
-        .build();
-  }
+@Mapper
+public interface BoardMapper {
 
-  public List<BoardResponse> toDto(List<Board> boards) {
-    return boards.stream().map(this::toDto).collect(Collectors.toList());
-  }
+  BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
-  public UploadFileResponse toDto(String thumbnailUrl) {
-    return UploadFileResponse.builder().thumbnailUrl(thumbnailUrl).build();
+  Board toEntityDto(BoardCreateRequest boardCreateRequest, User user);
+
+  UploadFileResponse toVideoAndThumbnail(String videoUrl, String thumbnail);
+
+  BoardVideoDto toVideo(String videoUrl);
+
+  BoardThumbnailDto toThumbnail(String thumbnailUrl);
+
+  BoardDto toDto(Board board);
+
+  List<BoardDto> toDtos(List<Board> boards);
+
+  default Page<BoardDto> toPageList(Page<Board> boardList) {
+    return boardList.map(this::toDto);
   }
 }
