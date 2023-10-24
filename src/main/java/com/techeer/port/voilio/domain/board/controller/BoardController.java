@@ -8,36 +8,25 @@ import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
-import com.techeer.port.voilio.domain.board.dto.response.BoardResponse;
-import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
-import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.board.exception.NoAuthority;
-import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
-import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.Pagination;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,37 +42,24 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardController {
 
     private final BoardService boardService;
-    private final BoardMapper boardMapper;
     private final S3Manager s3Manager;
     private final JwtProvider jwtProvider;
     private final UserService userService;
 
-//  @GetMapping("/{board_id}")
-//  @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
-//  public ResponseEntity<EntityModel<ResultResponse<Board>>> findBoardById(
-//      @PathVariable Long board_id,
-//      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-//          String authorizationHeader) {
-//
-//    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
-//    boolean isAuthenticated =
-//        !authorizationHeader.isEmpty()
-//            && currentLoginUserId.equals(userService.getUserIdByBoardId(board_id));
-//
-//    BoardResponse board;
-//    if (isAuthenticated) {
-//      board = boardService.findBoardByIdExceptHide(board_id);
-//      board.setAuth(isAuthenticated);
-//    } else {
-//      board = boardService.findBoardById(board_id);
-//    }
-//    ResultResponse<Board> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, board);
-//    Link selfLink =
-//        linkTo(methodOn(BoardController.class).findBoardById(board_id, authorizationHeader))
-//            .withSelfRel();
-//
-//    return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(responseFormat, selfLink));
-//  }
+    @GetMapping("/{boardId}")
+    @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
+    public ResponseEntity<ResultResponse> findBoardById(
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+        BoardDto boardDto = boardService.findBoardById(boardId, user);
+        ResultResponse<BoardDto> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, boardDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+    }
+
 //
 //  @PutMapping(value = "/update/{boardId}", consumes = "multipart/form-data")
 //  @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
@@ -180,6 +156,9 @@ public class BoardController {
             @RequestBody @Valid BoardCreateRequest boardCreateRequest
             , @AuthenticationPrincipal User user
     ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
         boardService.createBoard(boardCreateRequest, user);
         return ResponseEntity.ok(ResultsResponse.of(BOARD_CREATED_SUCCESS));
     }
@@ -189,10 +168,13 @@ public class BoardController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "비디오 생성", description = "비디오 생성 메서드입니다. videoUrl을 반환합니다")
     public ResponseEntity<ResultsResponse> uploadVideo(
-            @RequestParam(value = "video", required = false) MultipartFile videoFile) {
-
+            @RequestParam(value = "video", required = false) MultipartFile videoFile
+            , @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
         BoardVideoDto boardVideoDto = boardService.uploadVideo(videoFile);
-
         return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardVideoDto));
     }
 
@@ -201,8 +183,12 @@ public class BoardController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "썸네일 생성", description = "썸네일 생성 메서드입니다. thumbnailUrl을 반환합니다")
     public ResponseEntity<ResultsResponse> uploadThumbnail(
-            @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
-
+            @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile
+            , @AuthenticationPrincipal User user
+    ) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
         BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
 
         return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
@@ -222,10 +208,10 @@ public class BoardController {
     @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
     public ResponseEntity<ResultsResponse> findsAllBoard(
             @ParameterObject
-            @PageableDefault(size = 20, sort = "updateAt", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 20)
             Pageable pageable) {
 
-        List<BoardDto> allBoard = boardService.findAllBoard(pageable);
+        Page<BoardDto> allBoard = boardService.findAllBoard(pageable);
 
         return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
     }
