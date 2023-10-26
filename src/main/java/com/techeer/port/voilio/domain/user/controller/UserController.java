@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.user.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.UserProfileDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
@@ -13,6 +15,7 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,10 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
-import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Tag(name = "User", description = "User API Document")
 @RequestMapping("api/v1/users")
@@ -78,12 +77,12 @@ public class UserController {
   }
 
   @PostMapping(
-          value = "/profileImage",
-          consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+      value = "/profileImage",
+      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   @Operation(summary = "프로필 이미지", description = "프로필 이미지 변경 메서드입니다.")
   public ResponseEntity<ResultsResponse> updateProfileImage(
-          @RequestParam(value = "profileImage") MultipartFile profileImage,
-          @AuthenticationPrincipal User user) {
+      @RequestParam(value = "profileImage") MultipartFile profileImage,
+      @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
