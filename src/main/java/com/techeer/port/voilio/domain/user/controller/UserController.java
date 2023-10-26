@@ -59,6 +59,14 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+  @GetMapping("/nickname/random")
+  @Operation(summary = "랜덤 닉네임", description = "랜덤 닉네임 생성 메서드입니다.")
+  public ResponseEntity<ResultResponse> createRandomNickname() {
+    String nickname = userService.createRandomNickname();
+    ResultResponse<?> resultResponse = new ResultResponse<>(CREATE_NICKNAME_SUCCESS, nickname);
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
   @GetMapping("/latest/5")
   @Operation(summary = "최근 가입순 회원 이름 조회")
   public ResponseEntity<ResultResponse> getLatestMember() {

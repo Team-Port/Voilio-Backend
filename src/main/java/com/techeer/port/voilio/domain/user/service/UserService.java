@@ -12,9 +12,7 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -81,6 +79,29 @@ public class UserService {
       return false;
     }
     return activatedAt.isBefore(LocalDateTime.now().minusYears(1));
+  }
+
+  public String createRandomNickname() {
+    String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는", "귀여윤"};
+    String[] nounList = {"강아지", "고양이", "코알라", "꺼차", "뻐꾸기", "판다", "여우"};
+
+    Random random = new Random();
+
+    while (true) {
+      int index = random.nextInt(adjectiveList.length);
+      String adjective = adjectiveList[index];
+
+      index = random.nextInt(nounList.length);
+      String noun = nounList[index];
+
+      String nickname = adjective + " " + noun;
+
+      Optional<User> findUser = userRepository.findUserByNicknameAndDelYn(nickname, N);
+
+      if (findUser.isEmpty()) {
+        return nickname;
+      }
+    }
   }
 
   public List<Top5LatestUserResponseDto> getLatestMember() {
