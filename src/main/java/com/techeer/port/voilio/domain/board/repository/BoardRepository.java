@@ -26,7 +26,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.delYn = 'N'")
   Optional<Board> findBoardByIdExceptHide(@Param("board_id") Long id);
 
-  Page<Board> findAllByDelYnAndIsPublic(Pageable pageable, YnType delYn, YnType isPublic);
+  Page<Board> findAllByDelYnAndIsPublicOrderByUpdateAtDesc(
+      Pageable pageable, YnType delYn, YnType isPublic);
 
   @Query(
       "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND (b.category1 ="

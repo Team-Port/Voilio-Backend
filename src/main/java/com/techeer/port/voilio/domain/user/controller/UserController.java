@@ -3,6 +3,7 @@ package com.techeer.port.voilio.domain.user.controller;
 import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 import com.techeer.port.voilio.domain.user.dto.UserDto;
+import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -24,12 +25,6 @@ public class UserController {
 
   private final UserService userService;
   private final JwtProvider jwtProvider;
-
-  @GetMapping("/me")
-  public ResponseEntity<UserResponse> getMyMemberInfo() {
-    UserResponse myInfoBySecurity = userService.getMyInfoBySecurity();
-    return ResponseEntity.ok((myInfoBySecurity));
-  }
 
   @GetMapping("/list")
   @Operation(summary = "회원 출력", description = "전체 회원 출력 메서드입니다.")
@@ -71,15 +66,14 @@ public class UserController {
     ResultResponse<?> resultResponse = new ResultResponse<>(CREATE_NICKNAME_SUCCESS, nickname);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
+  
+  @GetMapping("/latest/5")
+  @Operation(summary = "최근 가입순 회원 이름 조회")
+  public ResponseEntity<ResultResponse> getLatestMember() {
+    List<Top5LatestUserResponseDto> top5LatestUserResponseDtos = userService.getLatestMember();
+    ResultResponse<?> resultResponse =
+        new ResultResponse<>(GET_USER_SUCCESS, top5LatestUserResponseDtos);
 
-  //  @GetMapping("/showAll")
-  //  @Operation(summary = "최근 가입순 회원 이름 조회")
-  //  public ResponseEntity<ResultResponse> getLatestMember() {
-  //    List<Top5LatestMemberResponseDto> top5LatestMemberResponseDtos =
-  // userService.getLatestMember();
-  //    ResultResponse<?> resultResponse =
-  //        new ResultResponse<>(GET_USER_SUCCESS, top5LatestMemberResponseDtos);
-  //
-  //    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  //  }
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 }

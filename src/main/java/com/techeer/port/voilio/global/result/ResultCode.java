@@ -23,10 +23,10 @@ public enum ResultCode {
   BOARD_UPDATED_SUCCESS("B002", "200", "게시물이 정상적으로 수정되었습니다."),
   BOARD_FINDALL_SUCCESS("B003", "200", "전체 게시물 입니다."),
 
-  COMMENT_CREATED_SUCCESS("C001", "301", "댓글이 정상적으로 등록되었습니다."),
-  UPDATE_COMMENT_SUCCESS("C002", "302", "댓글이 정상적으로 수정되었습니다."),
-  DELETE_COMMENT_SUCCESS("C003", "303", "댓글이 정상적으로 삭제되었습니다."),
-  GET_COMMENT_SUCCESS("C004", "304", "댓글이 정상적으로 출력되었습니다."),
+  COMMENT_CREATED_SUCCESS("C001", "201", "댓글이 정상적으로 등록되었습니다."),
+  UPDATE_COMMENT_SUCCESS("C002", "201", "댓글이 정상적으로 수정되었습니다."),
+  DELETE_COMMENT_SUCCESS("C003", "200", "댓글이 정상적으로 삭제되었습니다."),
+  GET_COMMENT_SUCCESS("C004", "200", "댓글이 정상적으로 출력되었습니다."),
 
   FILE_UPLOAD_SUCCESS("F001", "201", "파일을 정상적으로 등록했습니다."),
 

@@ -1,22 +1,25 @@
 package com.techeer.port.voilio.domain.comment.entity;
 
 import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.YnType;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comments")
 public class Comment extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comment_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String content;
@@ -32,18 +35,22 @@ public class Comment extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private YnType delYn;
 
-  @Builder
-  private Comment(String content, Board board, User user) {
-    this.content = content;
-    this.board = board;
-    this.user = user;
-  }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_comment_id")
+  private Comment parentComment;
 
-  public void updateComment(CommentUpdateRequest commentUpdateRequest) {
-    this.content = commentUpdateRequest.getContent();
+  @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> childComments = new ArrayList<>();
+
+  public void updateComment(String newContent) {
+    this.content = newContent;
   }
 
   public void deleteComment() {
     this.delYn = YnType.Y;
+  }
+
+  public void updateParentComment(Comment parentComment) {
+    this.parentComment = parentComment;
   }
 }

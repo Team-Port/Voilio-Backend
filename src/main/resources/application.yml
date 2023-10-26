@@ -11,8 +11,8 @@ spring:
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: create #update
+#    hibernate:
+#      ddl-auto: create #update
     properties:
       hibernate:
         show_sql: true  # 생성된 sql 출력

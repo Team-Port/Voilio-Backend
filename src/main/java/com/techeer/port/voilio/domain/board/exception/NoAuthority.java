@@ -5,6 +5,6 @@ import com.techeer.port.voilio.global.error.exception.BusinessException;
 
 public class NoAuthority extends BusinessException {
   public NoAuthority() {
-    super(ErrorCode.NO_AUTHORITY);
+    super(ErrorCode.INVALID_AUTH_TOKEN);
   }
 }

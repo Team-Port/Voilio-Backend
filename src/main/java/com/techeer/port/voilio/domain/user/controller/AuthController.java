@@ -1,22 +1,23 @@
 package com.techeer.port.voilio.domain.user.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.LOGIN_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.USER_REGISTRATION_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 
+import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.AuthService;
-import com.techeer.port.voilio.global.config.security.TokenDto;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
-import java.rmi.AlreadyBoundException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Auth", description = "Auth API Document")
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -34,11 +35,20 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ResultResponse<TokenDto>> login(
-      @RequestBody UserLoginRequest userLoginRequest) throws AlreadyBoundException {
-    TokenDto tokenDto = authService.login(userLoginRequest);
-    ResultResponse<TokenDto> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, tokenDto);
+  public ResponseEntity<ResultResponse<String>> login(
+      @RequestBody UserLoginRequest userLoginRequest) {
+    String token = authService.login(userLoginRequest);
+    ResultResponse<String> resultResponse = new ResultResponse<>(LOGIN_SUCCESS, token);
+    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
 
+  @GetMapping("/me")
+  public ResponseEntity<ResultResponse<UserDto>> me(@AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
+    UserDto userDto = authService.me(user);
+    ResultResponse<UserDto> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, userDto);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 }
