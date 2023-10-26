@@ -11,14 +11,11 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import lombok.RequiredArgsConstructor;
-import net.minidev.asm.ex.ConvertException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,16 +94,10 @@ public class UserService {
     return top5LatestUserResponseDtos;
   }
 
-  public UserProfileDto uploadProfileImage(MultipartFile profileImageFile, User user) {
-    String imageUrl = "";
-    try {
-      imageUrl = (s3Manager.upload(profileImageFile, "profile"));
-    } catch (IOException e) {
-      throw new ConvertException();
-    }
-    user.changeImageUrl(imageUrl);
+  public UserProfileDto uploadProfileImage(String profileImageUrl, User user) {
+    user.changeImageUrl(profileImageUrl);
     userRepository.save(user);
 
-    return UserMapper.INSTANCE.toDto(imageUrl);
+    return UserMapper.INSTANCE.toDto(profileImageUrl);
   }
 }

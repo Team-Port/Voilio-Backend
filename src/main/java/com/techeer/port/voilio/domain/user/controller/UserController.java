@@ -15,11 +15,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -77,17 +75,16 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
-  @PostMapping(
-          value = "/profileImage",
-          consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @PostMapping("/profileImage")
   @Operation(summary = "프로필 이미지", description = "프로필 이미지 변경 메서드입니다.")
   public ResponseEntity<ResultsResponse> updateProfileImage(
-          @RequestParam(value = "profileImage") MultipartFile profileImage,
+          @RequestParam(value = "profileImage") String profileImageUrl,
           @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    UserProfileDto userProfileDto = userService.uploadProfileImage(profileImage, user);
+
+    UserProfileDto userProfileDto = userService.uploadProfileImage(profileImageUrl, user);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, userProfileDto));
   }
