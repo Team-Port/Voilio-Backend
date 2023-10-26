@@ -66,7 +66,7 @@ public class UserController {
     ResultResponse<?> resultResponse = new ResultResponse<>(CREATE_NICKNAME_SUCCESS, nickname);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
-  
+
   @GetMapping("/latest/5")
   @Operation(summary = "최근 가입순 회원 이름 조회")
   public ResponseEntity<ResultResponse> getLatestMember() {
