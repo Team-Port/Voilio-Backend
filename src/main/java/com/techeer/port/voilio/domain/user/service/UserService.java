@@ -112,9 +112,9 @@ public class UserService {
 
   public String createRandomNickname() {
     String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는", "귀여윤"};
-//    String[] adjectiveList1 = {"멋있는"};
+    //    String[] adjectiveList1 = {"멋있는"};
     String[] nounList = {"강아지", "고양이", "코알라", "꺼차", "뻐꾸기", "판다", "여우"};
-//    String[] nounList1 = {"강아지"};
+    //    String[] nounList1 = {"강아지"};
 
     Random random = new Random();
 
