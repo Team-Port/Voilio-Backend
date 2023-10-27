@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.exception.AlreadySubscribe;
+import com.techeer.port.voilio.domain.subscribe.exception.AlreadyUnsubscribe;
 import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
 import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
@@ -39,6 +40,7 @@ public class SubscribeService {
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
     Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
+
     if(findSubscribe != null){
       throw new AlreadySubscribe();
     }
@@ -56,6 +58,12 @@ public class SubscribeService {
             .findUserByNicknameAndDelYn(userName, YnType.N)
             .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+
+    Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
+
+    if(findSubscribe == null){
+      throw new AlreadyUnsubscribe();
+    }
 
     Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);
     subscribeRepository.delete(followerToDelete);
