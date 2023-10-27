@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SubscribeSimpleDto {
-    private Long id;
+  private Long id;
 
-    private UserSimpleDto toUser;
+  private UserSimpleDto toUser;
 }

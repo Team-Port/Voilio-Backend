@@ -11,21 +11,20 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.YnType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SubscribeService {
 
-//  @Autowired private SubscribeRepository subscribeRepository;
-//@Autowired private UserRepository userRepository;
+  //  @Autowired private SubscribeRepository subscribeRepository;
+  // @Autowired private UserRepository userRepository;
 
   private final SubscribeRepository subscribeRepository;
   private final UserRepository userRepository;
@@ -41,7 +40,7 @@ public class SubscribeService {
 
     Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
 
-    if(findSubscribe != null){
+    if (findSubscribe != null) {
       throw new AlreadySubscribe();
     }
 
@@ -61,7 +60,7 @@ public class SubscribeService {
 
     Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
 
-    if(findSubscribe == null){
+    if (findSubscribe == null) {
       throw new AlreadyUnsubscribe();
     }
 
@@ -85,10 +84,9 @@ public class SubscribeService {
     return null;
   }
 
-  public List<SubscribeSimpleDto> getSubscribeUserList(Long fromUserId){
-    User user = userRepository.
-            findUserByIdAndDelYn(fromUserId, YnType.N)
-            .orElseThrow(NotFoundUser::new);
+  public List<SubscribeSimpleDto> getSubscribeUserList(Long fromUserId) {
+    User user =
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
     List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
     return SubscribeMapper.INSTANCE.toSubscribeSimpleDtos(subscribeList);
   }
