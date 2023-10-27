@@ -53,8 +53,8 @@ public class BoardService {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
       Page<Board> boards =
-          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(pageable, YnType.N,
-              foundUser);
+          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, foundUser);
       Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
       return boardDtoPage;
     } else {

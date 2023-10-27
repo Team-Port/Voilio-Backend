@@ -66,7 +66,7 @@ public class BoardController {
       @AuthenticationPrincipal User user) {
 
     Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
-      return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
   //
