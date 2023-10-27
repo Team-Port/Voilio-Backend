@@ -33,4 +33,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Long findUserIdByBoardId(@Param("boardId") Long boardId);
 
   List<User> findTop5ByDelYnOrderByIdDesc(YnType delYn);
+
+  User findUserById(Long userId);
 }
