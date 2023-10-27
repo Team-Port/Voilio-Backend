@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.controller;
 
+import static com.techeer.port.voilio.domain.user.entity.QUser.user;
 import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -55,6 +56,17 @@ public class BoardController {
     BoardDto boardDto = boardService.findBoardById(boardId, user);
     ResultResponse<BoardDto> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, boardDto);
     return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+  }
+
+  @GetMapping("/{userId}/result")
+  @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
+  public ResponseEntity<ResultsResponse> findBoardByUserId(
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable,
+      @PathVariable Long userId,
+      @AuthenticationPrincipal User user) {
+
+    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
   //
@@ -253,65 +265,4 @@ public class BoardController {
   //
   //        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   //    }
-
-  //  @GetMapping("/lists/@{nickname}")
-  //  @Operation(summary = "유저 별 게시물 출력", description = "유저 닉네임을 통한 유저 별 게시물 출력 메서드입니다.")
-  //  public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>>
-  // findBoardByUserId(
-  //      @PathVariable("nickname") String nickname,
-  //      @RequestParam(defaultValue = "0") int page,
-  //      @RequestParam(defaultValue = "30") int size,
-  //      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-  //          String authorizationHeader) {
-  //
-  //    Long currentLoginUserNickname = userService.getCurrentLoginUser(authorizationHeader);
-  //
-  //    boolean isAuthenticated =
-  //        !authorizationHeader.isEmpty()
-  //            && currentLoginUserNickname.equals(userService.getUserByNickname(nickname));
-  //
-  //    Page<Board> boardPage =
-  //        isAuthenticated
-  //            ? boardService.findBoardByUserNicknameExceptHide(nickname, PageRequest.of(page,
-  // size))
-  //            : boardService.findBoardByUserNickname(nickname, PageRequest.of(page, size));
-  //
-  //    List<EntityModel<BoardResponse>> boardLists =
-  //        boardPage.getContent().stream()
-  //            .map(
-  //                board -> {
-  //                  Link selfLink =
-  //                      isAuthenticated
-  //                          ? linkTo(
-  //                                  methodOn(BoardController.class)
-  //                                      .findBoardById(board.getId(), nickname))
-  //                              .withSelfRel()
-  //                          : linkTo(
-  //                                  methodOn(BoardController.class)
-  //                                      .findBoardById(board.getId(), authorizationHeader))
-  //                              .withSelfRel();
-  //                  BoardResponse boardResponse = boardMapper.toDto(board);
-  //                  boardResponse.setAuth(isAuthenticated);
-  //                  return EntityModel.of(boardResponse, selfLink);
-  //                })
-  //            .collect(Collectors.toList());
-  //
-  //    Pagination<EntityModel<BoardResponse>> result =
-  //        new Pagination<>(
-  //            boardLists,
-  //            boardPage.getNumber(),
-  //            boardPage.getSize(),
-  //            boardPage.getTotalElements(),
-  //            boardPage.getTotalPages(),
-  //            linkTo(
-  //                    methodOn(BoardController.class)
-  //                        .findBoardByUserId(nickname, page, size, authorizationHeader))
-  //                .withSelfRel());
-  //
-  //    ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-  //        new ResultResponse<>(BOARD_FINDALL_SUCCESS, result);
-  //
-  //    return ResponseEntity.ok().body(resultResponse);
-  //  }
-  // }
 }

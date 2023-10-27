@@ -47,6 +47,29 @@ public class BoardService {
     return BoardMapper.INSTANCE.toDto(board);
   }
 
+  public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
+
+    if (user == null || user.getId() == userId) {
+      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
+
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, foundUser);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      return boardDtoPage;
+    } else {
+
+      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
+
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, YnType.Y, foundUser);
+
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      return boardDtoPage;
+    }
+  }
+
   public BoardDto findBoardByIdExceptHide(Long board_id) {
     Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
