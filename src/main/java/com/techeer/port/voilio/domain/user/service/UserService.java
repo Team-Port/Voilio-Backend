@@ -69,8 +69,9 @@ public class UserService {
   }
 
   public void deleteUser(Long userId) {
-    UserDto userDto = getUserDto(userId);
-    User user = UserMapper.INSTANCE.toEntity(userDto);
+//    UserDto userDto = getUserDto(userId);
+//    User user = UserMapper.INSTANCE.toEntity(userDto);
+    User user = userRepository.findUserByIdAndDelYn(userId, N).get();
     user.changeDelYn(Y);
     userRepository.save(user);
   }
