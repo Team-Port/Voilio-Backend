@@ -47,44 +47,27 @@ public class BoardService {
     return BoardMapper.INSTANCE.toDto(board);
   }
 
-  public Page<BoardDto> findBoardByNotUser(Long userId, Pageable pageable) {
-
-    Page<BoardDto> boardDtoPage = getDtosByDelYnAndIsPublicAndUser(userId, pageable);
-    return boardDtoPage;
-  }
-
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
-    if (user.getId() == userId) {
+    if (user == null || user.getId() == userId) {
+      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
-      Page<BoardDto> boardDtoPage = getDtosByDelYnAndUser(user, pageable);
-
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(pageable, YnType.N,
+              foundUser);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
       return boardDtoPage;
     } else {
 
-      Page<BoardDto> boardDtoPage = getDtosByDelYnAndIsPublicAndUser(userId, pageable);
+      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, YnType.Y, foundUser);
+
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
       return boardDtoPage;
     }
-  }
-
-  private Page<BoardDto> getDtosByDelYnAndIsPublicAndUser(Long userId, Pageable pageable) {
-
-    User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
-
-    Page<Board> boards =
-        boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
-            pageable, YnType.N, YnType.Y, foundUser);
-
-    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-    return boardDtoPage;
-  }
-
-  private Page<BoardDto> getDtosByDelYnAndUser(User user, Pageable pageable) {
-    Page<Board> boards =
-        boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(pageable, YnType.N, user);
-    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-    return boardDtoPage;
   }
 
   public BoardDto findBoardByIdExceptHide(Long board_id) {

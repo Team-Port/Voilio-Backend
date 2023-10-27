@@ -64,13 +64,9 @@ public class BoardController {
       @ParameterObject @PageableDefault(size = 20) Pageable pageable,
       @PathVariable Long userId,
       @AuthenticationPrincipal User user) {
-    if (user == null) {
-      Page<BoardDto> allBoard = boardService.findBoardByNotUser(userId, pageable);
+
+    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
       return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
-    } else {
-      Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
-      return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
-    }
   }
 
   //
