@@ -34,5 +34,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   List<User> findTop5ByDelYnOrderByIdDesc(YnType delYn);
 
-  User findUserById(Long userId);
 }
