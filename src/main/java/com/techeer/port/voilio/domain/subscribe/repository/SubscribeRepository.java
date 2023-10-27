@@ -15,8 +15,6 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, SubscribeI
 
   List<Subscribe> findByFromUserOrderByIdDesc(User user);
 
-  List<Subscribe> findById(Long id);
-
   Subscribe findByFromUserAndToUser(User user, User subscribe);
 
   @Query("SELECT s FROM Subscribe s WHERE s.fromUser.nickname = :nickname")

@@ -113,7 +113,7 @@ public class SubscribeController {
   }
 
   @GetMapping("/list")
-  @Operation(summary = "구독 리스트", description = "구독한 회원의 리스트를 출력하는 메서드입니다.")
+  @Operation(summary = "구독 회원 목록", description = "구독한 회원의 목록을 출력하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> getSubscribeList(
           @RequestParam Long fromUserid,
           @AuthenticationPrincipal User user){

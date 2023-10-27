@@ -86,7 +86,10 @@ public class SubscribeService {
   }
 
   public List<SubscribeSimpleDto> getSubscribeUserList(Long fromUserId){
-    List<Subscribe> subscribeList = subscribeRepository.findById(fromUserId);
+    User user = userRepository.
+            findUserByIdAndDelYn(fromUserId, YnType.N)
+            .orElseThrow(NotFoundUser::new);
+    List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
     return SubscribeMapper.INSTANCE.toSubscribeSimpleDtos(subscribeList);
   }
 }
