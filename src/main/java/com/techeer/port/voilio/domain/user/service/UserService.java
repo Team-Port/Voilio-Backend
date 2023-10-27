@@ -11,6 +11,7 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
+import com.techeer.port.voilio.s3.util.S3Manager;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
+  private final S3Manager s3Manager;
   private AuthenticationManagerBuilder authenticationManagerBuilder;
 
   public List<UserResponse> getUserList() {
@@ -63,9 +65,9 @@ public class UserService {
     return id;
   }
 
+  @Transactional
   public void deleteUser(Long userId) {
-    UserDto userDto = getUserDto(userId);
-    User user = UserMapper.INSTANCE.toEntity(userDto);
+    User user = userRepository.findUserByIdAndDelYn(userId, N).get();
     user.changeDelYn(Y);
     userRepository.save(user);
   }
@@ -109,5 +111,13 @@ public class UserService {
     List<Top5LatestUserResponseDto> top5LatestUserResponseDtos =
         UserMapper.INSTANCE.toTop5LatestUserDto(userList);
     return top5LatestUserResponseDtos;
+  }
+
+  @Transactional
+  public String uploadProfileImage(String profileImageUrl, User user) {
+    user.changeImageUrl(profileImageUrl);
+    userRepository.save(user);
+
+    return profileImageUrl;
   }
 }

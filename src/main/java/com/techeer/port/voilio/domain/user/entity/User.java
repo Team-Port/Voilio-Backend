@@ -80,6 +80,10 @@ public class User extends BaseEntity implements UserDetails {
     this.isStopped = ynType;
   }
 
+  public void changeImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return null;

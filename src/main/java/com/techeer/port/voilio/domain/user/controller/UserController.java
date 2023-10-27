@@ -8,13 +8,17 @@ import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
+import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "User API Document")
@@ -75,5 +79,19 @@ public class UserController {
         new ResultResponse<>(GET_USER_SUCCESS, top5LatestUserResponseDtos);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @PostMapping("/profile_image")
+  @Operation(summary = "프로필 이미지", description = "프로필 이미지 변경 메서드입니다.")
+  public ResponseEntity<ResultsResponse> updateProfileImage(
+      @RequestParam(value = "profileImage") String profileImageUrl,
+      @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
+
+    String imageUrl = userService.uploadProfileImage(profileImageUrl, user);
+
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, imageUrl));
   }
 }
