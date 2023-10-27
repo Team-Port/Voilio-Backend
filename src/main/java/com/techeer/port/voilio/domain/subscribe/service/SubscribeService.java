@@ -1,29 +1,36 @@
 package com.techeer.port.voilio.domain.subscribe.service;
 
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
+import com.techeer.port.voilio.domain.subscribe.exception.AlreadySubscribe;
+import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
 import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.YnType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SubscribeService {
 
-  @Autowired private SubscribeRepository subscribeRepository;
+//  @Autowired private SubscribeRepository subscribeRepository;
+//@Autowired private UserRepository userRepository;
 
-  @Autowired private UserRepository userRepository;
+  private final SubscribeRepository subscribeRepository;
+  private final UserRepository userRepository;
   private final UserService userService;
 
+  @Transactional
   public void subscribe(String userName, Long follow_id) {
     User user =
         userRepository
@@ -31,12 +38,18 @@ public class SubscribeService {
             .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
+    Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
+    if(findSubscribe != null){
+      throw new AlreadySubscribe();
+    }
+
     Subscribe newFollower = new Subscribe();
     newFollower.setFromUser(user);
     newFollower.setToUser(subscribe);
     subscribeRepository.save(newFollower);
   }
 
+  @Transactional
   public void unsubscribe(String userName, Long follow_id) {
     User user =
         userRepository
@@ -62,5 +75,10 @@ public class SubscribeService {
     if (user1.equals(user2)) return true;
     //    return subscribeRepository.existsByUserNicknameAndAndSubscribeId(nickname, subscribeId);
     return null;
+  }
+
+  public List<SubscribeSimpleDto> getSubscribeUserList(Long fromUserId){
+    List<Subscribe> subscribeList = subscribeRepository.findById(fromUserId);
+    return SubscribeMapper.INSTANCE.toSubscribeSimpleDtos(subscribeList);
   }
 }

@@ -1,25 +1,34 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
+import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.CheckSubscribeRequestDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.SubscribeRequest;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.service.SubscribeService;
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
-import javax.validation.Valid;
+import com.techeer.port.voilio.global.result.ResultsResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Subscribe", description = "Subscribe API Document")
 @RequestMapping("/api/v1/subscribes")
 public class SubscribeController {
 
@@ -27,25 +36,32 @@ public class SubscribeController {
   private final UserService userService;
 
   @PostMapping("/")
+  @Operation(summary = "구독", description = "특정 회원을 구독하는 메서드입니다.")
   public ResponseEntity<ResultResponse> subscribe(
-      @Valid @RequestBody SubscribeRequest subscribeRequest) {
+      @Valid @RequestBody SubscribeRequest subscribeRequest,
+      @AuthenticationPrincipal User user) {
+
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
 
     subscribeService.subscribe(subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(SUBSCRIBE_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).subscribe(subscribeRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
   @PostMapping("/unsubscribe")
+  @Operation(summary = "구독 해지", description = "특정 회원을 구독을 해지하는 메서드입니다.")
   public ResponseEntity<ResultResponse> unsubscribe(
-      @Valid @RequestBody SubscribeRequest subscribeRequest) {
+      @Valid @RequestBody SubscribeRequest subscribeRequest,
+      @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
 
     subscribeService.unsubscribe(subscribeRequest.getNickname(), subscribeRequest.getSubscribeId());
     ResultResponse<Subscribe> resultResponse = new ResultResponse<>(UNSUBSCRIBE_SUCCESS);
-    resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).unsubscribe(subscribeRequest)).withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
@@ -92,10 +108,20 @@ public class SubscribeController {
         subscribeService.checkSubscribe(
             checkSubscribeRequestDto.getNickname(), checkSubscribeRequestDto.getSubscribeId());
     ResultResponse<Boolean> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, check);
-    resultResponse.add(
-        linkTo(methodOn(SubscribeController.class).checkSubscribe(checkSubscribeRequestDto))
-            .withSelfRel());
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  }
+
+  @GetMapping("/list")
+  @Operation(summary = "구독 리스트", description = "구독한 회원의 리스트를 출력하는 메서드입니다.")
+  public ResponseEntity<ResultsResponse> getSubscribeList(
+          @RequestParam Long fromUserid,
+          @AuthenticationPrincipal User user){
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
+    List<SubscribeSimpleDto> subscribeList = subscribeService.getSubscribeUserList(fromUserid);
+
+    return ResponseEntity.ok(ResultsResponse.of(SUBSCRIBE_FINDALL_SUCCESS, subscribeList));
   }
 }
