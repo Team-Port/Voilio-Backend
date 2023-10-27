@@ -1,8 +1,5 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
-
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
@@ -12,18 +9,22 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.s3.util.S3Manager;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
+
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
@@ -67,9 +68,8 @@ public class UserService {
     return id;
   }
 
+  @Transactional
   public void deleteUser(Long userId) {
-//    UserDto userDto = getUserDto(userId);
-//    User user = UserMapper.INSTANCE.toEntity(userDto);
     User user = userRepository.findUserByIdAndDelYn(userId, N).get();
     user.changeDelYn(Y);
     userRepository.save(user);
