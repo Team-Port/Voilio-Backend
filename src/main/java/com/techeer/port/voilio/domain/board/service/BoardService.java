@@ -53,7 +53,6 @@ public class BoardService {
     return boardDtoPage;
   }
 
-
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
     if (user.getId() == userId) {
