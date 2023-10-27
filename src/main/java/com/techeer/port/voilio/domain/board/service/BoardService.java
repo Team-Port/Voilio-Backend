@@ -46,6 +46,39 @@ public class BoardService {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
   }
+  public Page<BoardDto> findBoardByUser1(Long userId, Pageable pageable) {
+
+    User foundUser = userRepository.findUserById(userId);
+
+    Page<Board> boards = boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+        pageable, YnType.N, YnType.Y, foundUser);
+
+    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+
+    return boardDtoPage;
+  }
+  public Page<BoardDto> findBoardByUser2(User user, Long userId, Pageable pageable) {
+
+    int comparisonResult = user.getId().compareTo(userId);
+
+    if (comparisonResult == 0) {
+
+      Page<Board> boards = boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
+          pageable, YnType.N, user);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      return boardDtoPage;
+
+    }else{
+      User foundUser = userRepository.findUserById(userId);
+
+      Page<Board> boards = boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+          pageable, YnType.N, YnType.Y, foundUser);
+
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+
+      return boardDtoPage;
+    }
+  }
 
   public BoardDto findBoardByIdExceptHide(Long board_id) {
     Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
