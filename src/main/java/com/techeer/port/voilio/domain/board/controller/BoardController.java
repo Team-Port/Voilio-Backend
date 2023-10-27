@@ -60,12 +60,13 @@ public class BoardController {
 
   @GetMapping("/{userId}/result")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
-      @ParameterObject @PageableDefault(size = 20) Pageable pageable, @PathVariable Long userId,
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable,
+      @PathVariable Long userId,
       @AuthenticationPrincipal User user) {
     if (user == null) {
       Page<BoardDto> allBoard = boardService.findBoardByUser1(userId, pageable);
       return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
-    }else{
+    } else {
       Page<BoardDto> allBoard = boardService.findBoardByUser2(user, userId, pageable);
       return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
     }

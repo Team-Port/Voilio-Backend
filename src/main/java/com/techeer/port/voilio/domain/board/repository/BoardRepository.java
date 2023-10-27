@@ -30,11 +30,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Page<Board> findAllByDelYnAndIsPublicOrderByUpdateAtDesc(
       Pageable pageable, YnType delYn, YnType isPublic);
 
-  Page<Board> findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(Pageable pageable,
-      YnType delYn, YnType isPublic, User user);
+  Page<Board> findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+      Pageable pageable, YnType delYn, YnType isPublic, User user);
 
-  Page<Board> findBoardsByDelYnAndUserOrderByUpdateAtDesc(Pageable pageable,
-      YnType delYn, User user);
+  Page<Board> findBoardsByDelYnAndUserOrderByUpdateAtDesc(
+      Pageable pageable, YnType delYn, User user);
 
   @Query(
       "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND (b.category1 ="

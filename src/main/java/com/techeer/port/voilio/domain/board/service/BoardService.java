@@ -46,33 +46,37 @@ public class BoardService {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
   }
+
   public Page<BoardDto> findBoardByUser1(Long userId, Pageable pageable) {
 
     User foundUser = userRepository.findUserById(userId);
 
-    Page<Board> boards = boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
-        pageable, YnType.N, YnType.Y, foundUser);
+    Page<Board> boards =
+        boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+            pageable, YnType.N, YnType.Y, foundUser);
 
     Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
 
     return boardDtoPage;
   }
+
   public Page<BoardDto> findBoardByUser2(User user, Long userId, Pageable pageable) {
 
     int comparisonResult = user.getId().compareTo(userId);
 
     if (comparisonResult == 0) {
 
-      Page<Board> boards = boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
-          pageable, YnType.N, user);
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(pageable, YnType.N, user);
       Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
       return boardDtoPage;
 
-    }else{
+    } else {
       User foundUser = userRepository.findUserById(userId);
 
-      Page<Board> boards = boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
-          pageable, YnType.N, YnType.Y, foundUser);
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, YnType.Y, foundUser);
 
       Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
 
