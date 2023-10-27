@@ -59,15 +59,16 @@ public class BoardController {
   }
 
   @GetMapping("/{userId}/result")
+  @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
       @ParameterObject @PageableDefault(size = 20) Pageable pageable,
       @PathVariable Long userId,
       @AuthenticationPrincipal User user) {
     if (user == null) {
-      Page<BoardDto> allBoard = boardService.findBoardByUser1(userId, pageable);
+      Page<BoardDto> allBoard = boardService.findBoardByNotUser(userId, pageable);
       return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
     } else {
-      Page<BoardDto> allBoard = boardService.findBoardByUser2(user, userId, pageable);
+      Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
       return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
     }
   }
