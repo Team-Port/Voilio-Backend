@@ -1,14 +1,14 @@
 package com.techeer.port.voilio.domain.user.mapper;
 
 import com.techeer.port.voilio.domain.user.dto.UserDto;
-import com.techeer.port.voilio.domain.user.dto.UserProfileDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -26,6 +26,4 @@ public interface UserMapper {
   List<UserResponse> toDtos(List<User> users);
 
   List<Top5LatestUserResponseDto> toTop5LatestUserDto(List<User> users);
-
-  UserProfileDto toDto(String imageUrl);
 }
