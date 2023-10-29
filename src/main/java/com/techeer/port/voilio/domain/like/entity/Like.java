@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.like.entity;
 
+import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.BaseEntity;
 import com.techeer.port.voilio.global.common.LikeDivision;
 import javax.persistence.*;
@@ -16,6 +17,10 @@ public class Like extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "like_id")
   private Long id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
   private Long contentId;
 
