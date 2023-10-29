@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
+import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.CheckSubscribeRequestDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.SubscribeRequest;
@@ -112,16 +113,25 @@ public class SubscribeController {
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
 
+
   @GetMapping("/list")
   @Operation(summary = "구독 회원 목록", description = "구독한 회원의 목록을 출력하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> getSubscribeList(
-          @RequestParam Long fromUserid,
+          @RequestParam Long fromUserid){
+    List<SubscribeSimpleDto> subscribeList = subscribeService.getSubscribeUserList(fromUserid);
+
+    return ResponseEntity.ok(ResultsResponse.of(SUBSCRIBE_FINDALL_SUCCESS, subscribeList));
+  }
+
+  @GetMapping("/list/board")
+  @Operation(summary = "구독 회원 게시글 목록", description = "구독한 회원의 게시글 목록을 출력하는 메서드입니다.")
+  public ResponseEntity<ResultsResponse> getSubscribeBoardList(
           @AuthenticationPrincipal User user){
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    List<SubscribeSimpleDto> subscribeList = subscribeService.getSubscribeUserList(fromUserid);
 
-    return ResponseEntity.ok(ResultsResponse.of(SUBSCRIBE_FINDALL_SUCCESS, subscribeList));
+    List<BoardDto> boardDtoList = subscribeService.getSubscribeUserBoardList(user);
+    return ResponseEntity.ok(ResultsResponse.of(SUBSCRIBE_BOARD_FINDALL_SUCCESS, boardDtoList));
   }
 }

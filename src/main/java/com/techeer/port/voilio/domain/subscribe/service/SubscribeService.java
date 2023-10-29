@@ -1,6 +1,10 @@
 package com.techeer.port.voilio.domain.subscribe.service;
 
+import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.exception.AlreadySubscribe;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +35,7 @@ public class SubscribeService {
   private final SubscribeRepository subscribeRepository;
   private final UserRepository userRepository;
   private final UserService userService;
+  private final BoardRepository boardRepository;
 
   @Transactional
   public void subscribe(String userName, Long follow_id) {
@@ -89,7 +95,21 @@ public class SubscribeService {
     User user = userRepository.
             findUserByIdAndDelYn(fromUserId, YnType.N)
             .orElseThrow(NotFoundUser::new);
+
     List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
     return SubscribeMapper.INSTANCE.toSubscribeSimpleDtos(subscribeList);
+  }
+
+  public List<BoardDto> getSubscribeUserBoardList(User user){
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
+    List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
+    for (Subscribe subscribe : subscribeList) {
+      User toUser = subscribe.getToUser();
+      List<Board> boards = toUser.getBoards();
+      boardDtoList.addAll(BoardMapper.INSTANCE.toDtos(boards));
+    }
+
+    return boardDtoList;
   }
 }
