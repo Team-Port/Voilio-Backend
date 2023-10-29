@@ -25,7 +25,7 @@ public class BoardDto {
 
   private String thumbnailUrl;
 
-  //  private Long view;
+  private Integer view;
 
   private BoardDivision division;
 

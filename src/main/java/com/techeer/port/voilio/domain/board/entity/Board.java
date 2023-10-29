@@ -46,7 +46,8 @@ public class Board extends BaseEntity {
   @Column(name = "thumbnail_url")
   private String thumbnailUrl;
 
-  //  private Long view;
+  @ColumnDefault("0")
+  private Integer view;
 
   @Enumerated(EnumType.STRING)
   private BoardDivision division;
@@ -110,5 +111,9 @@ public class Board extends BaseEntity {
 
   public YnType getIsPublic() {
     return this.isPublic;
+  }
+
+  public void addView(){
+    this.view++;
   }
 }
