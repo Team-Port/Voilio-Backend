@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.subscribe.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.dto.request.CheckSubscribeRequestDto;
@@ -14,17 +16,14 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-
-import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Slf4j
 @RestController
@@ -114,7 +113,7 @@ public class SubscribeController {
   @GetMapping("/list")
   @Operation(summary = "구독 회원 목록", description = "구독한 회원의 목록을 출력하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> getSubscribeList(
-          @RequestParam Long fromUserid, @AuthenticationPrincipal User user) {
+      @RequestParam Long fromUserid, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
