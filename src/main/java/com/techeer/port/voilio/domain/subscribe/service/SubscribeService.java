@@ -15,14 +15,14 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.YnType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,9 +42,7 @@ public class SubscribeService {
             .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
-    Optional<Subscribe> findSubscribe =
-        subscribeRepository.findByFromUserAndToUser(user, subscribe);
-    if (findSubscribe.isPresent()) {
+    if (subscribeRepository.existsByFromUserAndToUser(user, subscribe)) {
       throw new AlreadySubscribe();
     }
 
