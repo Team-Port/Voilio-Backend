@@ -4,7 +4,6 @@ import com.techeer.port.voilio.domain.like.dto.LikeCreateRequestDto;
 import com.techeer.port.voilio.domain.like.dto.LikeDto;
 import com.techeer.port.voilio.domain.like.entity.Like;
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

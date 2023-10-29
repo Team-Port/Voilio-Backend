@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.like.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 import com.techeer.port.voilio.domain.like.dto.LikeCreateRequestDto;
 import com.techeer.port.voilio.domain.like.dto.LikeDto;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
@@ -19,8 +21,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Slf4j
 @RestController
@@ -44,19 +44,18 @@ public class LikeController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, likeDtoPage));
   }
 
-    @PostMapping("/")
-    @Operation(summary = "게시글 좋아요 / 게시글 보관 / 댓글 좋아요 및 좋아요 취소", description = "로그인 필요")
-    public ResponseEntity<ResultsResponse> createLike(
-            @RequestBody LikeCreateRequestDto likeCreateRequestDto,
-            @AuthenticationPrincipal User user){
-        if (user == null) {
-            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
-        }
-        LikeDto likeDto = likeService.manageLike(user, likeCreateRequestDto);
-        if(likeDto.getFlag().equals("like")){
-            return ResponseEntity.ok(ResultsResponse.of(LIKE_CREATED_SUCCESS, likeDto));
-        } else {
-            return ResponseEntity.ok(ResultsResponse.of(LIKE_DELETED_SUCCESS, likeDto));
-        }
+  @PostMapping("/")
+  @Operation(summary = "게시글 좋아요 / 게시글 보관 / 댓글 좋아요 및 좋아요 취소", description = "로그인 필요")
+  public ResponseEntity<ResultsResponse> createLike(
+      @RequestBody LikeCreateRequestDto likeCreateRequestDto, @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
+    LikeDto likeDto = likeService.manageLike(user, likeCreateRequestDto);
+    if (likeDto.getFlag().equals("like")) {
+      return ResponseEntity.ok(ResultsResponse.of(LIKE_CREATED_SUCCESS, likeDto));
+    } else {
+      return ResponseEntity.ok(ResultsResponse.of(LIKE_DELETED_SUCCESS, likeDto));
+    }
+  }
 }
