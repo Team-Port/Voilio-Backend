@@ -32,7 +32,10 @@ public enum ErrorCode {
   UPLOAD_FILE_ERROR(400, "F002", "파일이 존재하지 않음"),
 
   API_ERROR_CHATROOM_NOT_FOUND(400, "R001", "채팅방이 존재하지 않음"),
-  ;
+
+  // like
+  LIKE_NOT_FOUND_ERROR(400, "L001", "좋아요한 대상이 존재하지 않습니다."),
+  LIKE_DUPLICATE_ERROR(400, "L002", "이미 좋아요된 대상입니다.");
   private final int status;
   private final String code;
   private final String message;

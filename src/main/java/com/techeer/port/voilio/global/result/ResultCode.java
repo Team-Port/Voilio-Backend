@@ -38,6 +38,9 @@ public enum ResultCode {
   API_SUCCESS_GET_ALL_CHATROOM("R001", "200", "모든 채팅방을 정상적으로 불러왔습니다."),
   API_SUCCESS_CREATE_CHATROOM("R002", "200", "채팅방이 정상적으로 등록되었습니다."),
   API_SUCCESS_GET_CHATROOM("R003", "200", "채팅방을 정상적으로 불러왔습니다."),
+
+  LIKE_CREATED_SUCCESS("L001", "201", "좋아요가 정상적으로 등록되었습니다."),
+  LIKE_DELETED_SUCCESS("L002", "200", "좋아요가 정상적으로 취소되었습니다."),
   ;
 
   private final String code;
