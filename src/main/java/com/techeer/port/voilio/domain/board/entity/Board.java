@@ -113,7 +113,7 @@ public class Board extends BaseEntity {
     return this.isPublic;
   }
 
-  public void addView(){
+  public void addView() {
     this.view++;
   }
 }
