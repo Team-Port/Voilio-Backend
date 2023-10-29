@@ -1,8 +1,10 @@
-package com.techeer.port.voilio.domain.like;
+package com.techeer.port.voilio.domain.like.mapper;
 
+import com.techeer.port.voilio.domain.like.dto.LikeCreateRequestDto;
 import com.techeer.port.voilio.domain.like.dto.LikeDto;
 import com.techeer.port.voilio.domain.like.entity.Like;
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,4 +16,6 @@ public interface LikeMapper {
   LikeDto toDto(Like like);
 
   List<LikeDto> toDtos(List<Like> likes);
+
+  Like toEntity(LikeCreateRequestDto likeCreateRequestDto);
 }
