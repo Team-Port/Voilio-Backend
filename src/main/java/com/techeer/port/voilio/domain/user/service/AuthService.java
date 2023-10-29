@@ -17,14 +17,13 @@ import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,7 +46,8 @@ public class AuthService {
       user.changeUserRole(Authority.ROLE_USER);
       user.changeDelYn(YnType.N);
       user.changeIsStopped(YnType.N);
-      user.changeImageUrl("https://voilio.s3.ap-northeast-2.amazonaws.com/profile/default_profile.jpeg");
+      user.changeImageUrl(
+          "https://voilio.s3.ap-northeast-2.amazonaws.com/profile/default_profile.jpeg");
       userRepository.save(user);
       return true;
     } catch (Exception e) {
