@@ -42,6 +42,15 @@ public class BoardService {
     boardRepository.save(board);
   }
 
+  public void addBoardView(Long boardId, User user) {
+
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+
+    if (user == null || user.getId() != board.getUser().getId()) {
+      board.addView();
+    }
+  }
+
   public BoardDto findBoardById(Long boardId, User user) {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
