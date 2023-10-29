@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.like.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FIND_SUCCESS;
 
 import com.techeer.port.voilio.domain.like.dto.LikeDto;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
@@ -23,8 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FIND_SUCCESS;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,19 +31,18 @@ import static com.techeer.port.voilio.global.result.ResultCode.BOARD_FIND_SUCCES
 @Tag(name = "Like", description = "Like API Document")
 public class LikeController {
 
-    private final LikeService likeService;
+  private final LikeService likeService;
 
-    @GetMapping("/{division}")
-    @Operation(summary = "로그인한 유저가 좋아요/보관한 게시물 목록")
-    public ResponseEntity<ResultsResponse> findByUserId(
-            @PathVariable(value = "division") LikeDivision division
-            , @AuthenticationPrincipal User user
-            ,  @ParameterObject @PageableDefault(size = 20) Pageable pageable
-    ){
-        if(user == null){
-            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
-        }
-        Page<LikeDto> likeDtoPage = likeService.findByUserId(division, user, pageable);
-        return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, likeDtoPage));
+  @GetMapping("/{division}")
+  @Operation(summary = "로그인한 유저가 좋아요/보관한 게시물 목록")
+  public ResponseEntity<ResultsResponse> findByUserId(
+      @PathVariable(value = "division") LikeDivision division,
+      @AuthenticationPrincipal User user,
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
+    Page<LikeDto> likeDtoPage = likeService.findByUserId(division, user, pageable);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, likeDtoPage));
+  }
 }

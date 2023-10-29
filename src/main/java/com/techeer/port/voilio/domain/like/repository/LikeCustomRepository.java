@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface LikeCustomRepository {
 
-    Page<Like> findByDivisionAndUser(LikeDivision division, User user, Pageable pageable);
+  Page<Like> findByDivisionAndUser(LikeDivision division, User user, Pageable pageable);
 }
