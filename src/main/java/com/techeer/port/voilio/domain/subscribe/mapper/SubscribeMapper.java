@@ -3,10 +3,9 @@ package com.techeer.port.voilio.domain.subscribe.mapper;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper
 public interface SubscribeMapper {
