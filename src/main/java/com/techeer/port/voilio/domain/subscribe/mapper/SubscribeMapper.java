@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.subscribe.mapper;
 
 import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
+import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
 import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -14,4 +15,6 @@ public interface SubscribeMapper {
   SubscribeDto toDto(Subscribe entity);
 
   List<SubscribeDto> toDtos(List<Subscribe> entities);
+
+  List<SubscribeSimpleDto> toSubscribeSimpleDtos(List<Subscribe> entities);
 }

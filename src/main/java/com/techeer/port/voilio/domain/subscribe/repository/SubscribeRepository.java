@@ -4,6 +4,7 @@ import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
 import com.techeer.port.voilio.domain.subscribe.entity.SubscribeId;
 import com.techeer.port.voilio.domain.user.entity.User;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,9 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, SubscribeI
 
   List<Subscribe> findByFromUserOrderByIdDesc(User user);
 
-  Subscribe findByFromUserAndToUser(User user, User subscribe);
+  Optional<Subscribe> findByFromUserAndToUser(User user, User subscribe);
+
+  boolean existsByFromUserAndToUser(User user, User subscribe);
 
   @Query("SELECT s FROM Subscribe s WHERE s.fromUser.nickname = :nickname")
   Page<Subscribe> findSubscribeByNickname(@Param("nickname") String nickname, Pageable pageable);
