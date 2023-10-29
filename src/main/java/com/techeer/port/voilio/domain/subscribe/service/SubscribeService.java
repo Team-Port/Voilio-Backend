@@ -15,21 +15,20 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.YnType;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SubscribeService {
-
-  //  @Autowired private SubscribeRepository subscribeRepository;
-  // @Autowired private UserRepository userRepository;
 
   private final SubscribeRepository subscribeRepository;
   private final UserRepository userRepository;
@@ -44,9 +43,8 @@ public class SubscribeService {
             .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
-    Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
-
-    if (findSubscribe != null) {
+    Optional<Subscribe> findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
+    if (findSubscribe.isPresent()) {
       throw new AlreadySubscribe();
     }
 
@@ -64,13 +62,7 @@ public class SubscribeService {
             .orElseThrow(NotFoundUser::new);
     User subscribe = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
 
-    Subscribe findSubscribe = subscribeRepository.findByFromUserAndToUser(user, subscribe);
-
-    if (findSubscribe == null) {
-      throw new AlreadyUnsubscribe();
-    }
-
-    Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe);
+    Subscribe followerToDelete = subscribeRepository.findByFromUserAndToUser(user, subscribe).orElseThrow(AlreadyUnsubscribe::new);
     subscribeRepository.delete(followerToDelete);
   }
 
