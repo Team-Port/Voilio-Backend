@@ -44,4 +44,8 @@ public class BoardCreateRequest {
   @Schema(description = "게시글 유형")
   @NotNull
   private BoardDivision division;
+
+  @Schema(description = "조회수")
+  @NotNull
+  private Integer view;
 }

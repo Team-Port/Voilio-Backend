@@ -58,6 +58,16 @@ public class BoardController {
     return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
   }
 
+  @PatchMapping("/{boardId}/view")
+  @Operation(summary = "조회수 수정", description = "조회수 증가하는 메서드입니다.")
+  public ResponseEntity<ResultsResponse> addBoardViewCounts(
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
+
+    boardService.addBoardView(boardId, user);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS));
+  }
+
   @GetMapping("/{userId}/result")
   @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
