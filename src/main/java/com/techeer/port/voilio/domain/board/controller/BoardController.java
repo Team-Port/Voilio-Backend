@@ -4,7 +4,7 @@ import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
-import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.dto.request.CategoryRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.service.UserService;
@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -227,14 +226,18 @@ public class BoardController {
   @GetMapping("/lists/category")
   @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByCategory(
-          @RequestParam("category") String category,
-          @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "30") int size,
-          @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-          String authorizationHeader) {
+//          @RequestParam("category") String category,
+          @RequestParam("category") CategoryRequest category,
+          @ParameterObject @PageableDefault(size = 30) Pageable pageable,
+          @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
+//    Category category1 = Category.valueOf(category.toUpperCase());
+    Category category1 = Category.valueOf(category.getCategory1() != null ? category.getCategory1().toUpperCase() : "");
+//    Category category2 = Category.valueOf(category.getCategory2() != null ? category.getCategory2().toUpperCase() : "");
+    Page<BoardDto> boardPage = boardService.findBoardByCategory(category1, pageable);
 
-    Category category1 = Category.valueOf(category.toUpperCase());
-    Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page, size));
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardPage));
   }
 }
