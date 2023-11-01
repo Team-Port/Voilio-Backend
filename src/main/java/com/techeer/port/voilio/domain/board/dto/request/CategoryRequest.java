@@ -6,9 +6,7 @@ import org.springframework.lang.Nullable;
 @Getter
 public class CategoryRequest {
 
-    @Nullable
-    private String category1;
+  @Nullable private String category1;
 
-    @Nullable
-    private String category2;
+  @Nullable private String category2;
 }
