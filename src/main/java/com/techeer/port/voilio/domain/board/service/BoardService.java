@@ -5,7 +5,6 @@ import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
-import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
@@ -56,13 +55,15 @@ public class BoardService {
     }
   }
 
-  public BoardDto findBoardById(Long boardId, User user, LikeDivision likeDivision, Long contentId) {
+  public BoardDto findBoardById(
+      Long boardId, User user, LikeDivision likeDivision, Long contentId) {
     Long likeCount = likeService.getLikeCount(likeDivision, contentId);
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board, likeCount);
   }
 
-  public Page<BoardDto> findBoardByUser(User user, Long userId, LikeDivision likeDivision, Long contentId, Pageable pageable) {
+  public Page<BoardDto> findBoardByUser(
+      User user, Long userId, LikeDivision likeDivision, Long contentId, Pageable pageable) {
 
     Long likeCount = likeService.getLikeCount(likeDivision, contentId);
 
@@ -87,10 +88,11 @@ public class BoardService {
     }
   }
 
-//  public BoardDto findBoardByIdExceptHide(Long board_id) {
-//    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
-//    return BoardMapper.INSTANCE.toDto(board);
-//  }
+  //  public BoardDto findBoardByIdExceptHide(Long board_id) {
+  //    Board board =
+  // boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
+  //    return BoardMapper.INSTANCE.toDto(board);
+  //  }
 
   @Transactional
   public void createBoard(BoardCreateRequest boardCreateRequest, User user) {
@@ -136,8 +138,6 @@ public class BoardService {
     return boardDtoPage;
   }
 
-
-
   public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
     Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
 
@@ -146,8 +146,6 @@ public class BoardService {
     }
     return result;
   }
-
-
 
   public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
     Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);

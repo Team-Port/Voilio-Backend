@@ -32,5 +32,4 @@ public interface BoardMapper {
   default Page<BoardDto> toPageList(Page<Board> boardList, Long likeCount) {
     return boardList.map(board -> toDto(board, likeCount));
   }
-
 }

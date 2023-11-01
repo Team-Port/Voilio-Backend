@@ -42,9 +42,11 @@ public class BoardController {
 
   @GetMapping("/{boardId}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultsResponse> findBoardById(@RequestParam LikeDivision likeDivision,
+  public ResponseEntity<ResultsResponse> findBoardById(
+      @RequestParam LikeDivision likeDivision,
       @RequestParam Long contentId,
-      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
+      @PathVariable Long boardId,
+      @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
@@ -66,12 +68,13 @@ public class BoardController {
   @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
       @ParameterObject @PageableDefault(size = 20) Pageable pageable,
-      @RequestParam LikeDivision likeDivision, @RequestParam Long contentId,
+      @RequestParam LikeDivision likeDivision,
+      @RequestParam Long contentId,
       @RequestParam Long userId,
       @AuthenticationPrincipal User user) {
 
-    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, likeDivision, contentId,
-        pageable);
+    Page<BoardDto> allBoard =
+        boardService.findBoardByUser(user, userId, likeDivision, contentId, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
@@ -210,7 +213,8 @@ public class BoardController {
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findsAllBoard(
-      @RequestParam LikeDivision likeDivision, @RequestParam Long contentId,
+      @RequestParam LikeDivision likeDivision,
+      @RequestParam Long contentId,
       @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
 
     Page<BoardDto> allBoard = boardService.findAllBoard(pageable, likeDivision, contentId);
