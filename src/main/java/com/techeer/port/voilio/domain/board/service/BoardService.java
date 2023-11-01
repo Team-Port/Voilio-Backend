@@ -119,7 +119,8 @@ public class BoardService {
   }
 
   public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {
-    Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
+//    Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
+    Page<Board> result = boardRepository.findByDelYnAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(YnType.N, YnType.Y, category, category, pageable);
 
     Page<BoardDto> pageDtos = BoardMapper.INSTANCE.toPageList(result);
 
