@@ -7,14 +7,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Category {
   IT(1),
-  BACKEND(2),
-  JAVA(3),
-  KOTLIN(4),
-  PYTHON(5),
-  REACT(6),
-  DANCE(7),
-  LANGUAGE(8),
-  ETC(9);
+  DESIGN(2),
+  DANCE(3),
+  EXERCISE(4),
+  LANGUAGE(5),
+  SALES(6),
+  ETC(7),
+  ALL(8);
 
   private final int value;
 }
