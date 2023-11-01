@@ -16,6 +16,9 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
@@ -23,10 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -119,8 +118,10 @@ public class BoardService {
   }
 
   public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {
-//    Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
-    Page<Board> result = boardRepository.findByDelYnAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(YnType.N, YnType.Y, category, category, pageable);
+    //    Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
+    Page<Board> result =
+        boardRepository.findByDelYnAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(
+            YnType.N, YnType.Y, category, category, pageable);
 
     Page<BoardDto> pageDtos = BoardMapper.INSTANCE.toPageList(result);
 
