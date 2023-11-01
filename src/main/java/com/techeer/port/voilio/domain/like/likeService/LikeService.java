@@ -56,4 +56,9 @@ public class LikeService {
       return likeDto;
     }
   }
+
+  public Long getLikeCount(LikeDivision likeDivision, Long contentId) {
+    Long likeCount = likeRepository.countByDivisionAndAndContentId(likeDivision, contentId);
+    return likeCount;
+  }
 }
