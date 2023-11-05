@@ -25,11 +25,11 @@ public interface BoardMapper {
 
   BoardThumbnailDto toThumbnail(String thumbnailUrl);
 
-  BoardDto toDto(Board board);
+  BoardDto toDto(Board board, Long likeCount);
 
   List<BoardDto> toDtos(List<Board> boards);
 
-  default Page<BoardDto> toPageList(Page<Board> boardList) {
-    return boardList.map(this::toDto);
+  default Page<BoardDto> toPageList(Page<Board> boardList, Long likeCount) {
+    return boardList.map(board -> toDto(board, likeCount));
   }
 }

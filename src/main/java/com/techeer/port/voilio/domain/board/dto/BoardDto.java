@@ -27,6 +27,8 @@ public class BoardDto {
 
   private Integer view;
 
+  private Integer likeCount;
+
   private BoardDivision division;
 
   private YnType isPublic;

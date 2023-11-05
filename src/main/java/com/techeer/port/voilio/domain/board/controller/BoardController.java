@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.board.controller;
 
-import static com.techeer.port.voilio.domain.user.entity.QUser.user;
 import static com.techeer.port.voilio.global.result.ResultCode.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -11,13 +10,11 @@ import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.service.UserService;
-import com.techeer.port.voilio.global.config.security.JwtProvider;
+import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
-import com.techeer.port.voilio.s3.util.S3Manager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -42,20 +39,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardController {
 
   private final BoardService boardService;
-  private final S3Manager s3Manager;
-  private final JwtProvider jwtProvider;
-  private final UserService userService;
 
   @GetMapping("/{boardId}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultResponse> findBoardById(
-      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
+  public ResponseEntity<ResultsResponse> findBoardById(
+      @RequestParam LikeDivision likeDivision,
+      @RequestParam Long contentId,
+      @PathVariable Long boardId,
+      @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    BoardDto boardDto = boardService.findBoardById(boardId, user);
-    ResultResponse<BoardDto> responseFormat = new ResultResponse<>(BOARD_FIND_SUCCESS, boardDto);
-    return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
+    BoardDto boardDto = boardService.findBoardById(boardId, user, likeDivision, contentId);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
   }
 
   @PatchMapping("/{boardId}/view")
@@ -72,10 +68,13 @@ public class BoardController {
   @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
       @ParameterObject @PageableDefault(size = 20) Pageable pageable,
-      @PathVariable Long userId,
+      @RequestParam LikeDivision likeDivision,
+      @RequestParam Long contentId,
+      @RequestParam Long userId,
       @AuthenticationPrincipal User user) {
 
-    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
+    Page<BoardDto> allBoard =
+        boardService.findBoardByUser(user, userId, likeDivision, contentId, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
@@ -211,22 +210,14 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
   }
 
-  @PostMapping(value = "/files", consumes = "multipart/form-data")
-  public ResponseEntity<ResultsResponse> uploadVideos(
-      @RequestParam(value = "video", required = false) MultipartFile videoFile,
-      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile) {
-
-    boardService.uploadFiles(videoFile, thumbnailFile); // S3에 올리기
-
-    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS));
-  }
-
   @GetMapping("/lists")
   @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findsAllBoard(
+      @RequestParam LikeDivision likeDivision,
+      @RequestParam Long contentId,
       @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
 
-    Page<BoardDto> allBoard = boardService.findAllBoard(pageable);
+    Page<BoardDto> allBoard = boardService.findAllBoard(pageable, likeDivision, contentId);
 
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
