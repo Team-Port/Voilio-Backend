@@ -11,7 +11,6 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -54,8 +53,7 @@ public class BoardController {
   @GetMapping("/{boardId}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardById(
-      @PathVariable Long boardId,
-      @AuthenticationPrincipal User user) {
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
@@ -80,8 +78,7 @@ public class BoardController {
       @PathVariable Long userId,
       @AuthenticationPrincipal User user) {
 
-    Page<BoardDto> allBoard =
-        boardService.findBoardByUser(user, userId, pageable);
+    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
@@ -191,8 +188,6 @@ public class BoardController {
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
   }
-
-
 
   @GetMapping("/lists/category/{category}")
   @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")

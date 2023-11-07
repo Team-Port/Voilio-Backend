@@ -15,7 +15,6 @@ import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
@@ -55,14 +54,12 @@ public class BoardService {
     }
   }
 
-  public BoardDto findBoardById(
-      Long boardId, User user) {
+  public BoardDto findBoardById(Long boardId, User user) {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
   }
 
-  public Page<BoardDto> findBoardByUser(
-      User user, Long userId, Pageable pageable) {
+  public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
     if (user == null || user.getId() != userId) {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
@@ -172,5 +169,4 @@ public class BoardService {
       throw new ConvertException();
     }
   }
-
 }
