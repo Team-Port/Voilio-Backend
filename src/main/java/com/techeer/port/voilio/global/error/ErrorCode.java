@@ -24,12 +24,18 @@ public enum ErrorCode {
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),
   // comment
   COMMENT_NOT_FOUND_EXCEPTION(400, "C001", "댓글을 찾을 수 없음"),
+  // subscribe
+  ALREADY_SUBSCRIBE_USER(400, "S001", "이미 구독한 유저입니다."),
+  ALREADY_UNSUBSCRIBE_USER(400, "S002", "아직 구독하지 않은 유저입니다."),
 
-  CONVERT_FILE_ERROR(400, "S001", "파일 변환 실패"),
-  UPLOAD_FILE_ERROR(400, "S002", "파일이 존재하지 않음"),
+  CONVERT_FILE_ERROR(400, "F001", "파일 변환 실패"),
+  UPLOAD_FILE_ERROR(400, "F002", "파일이 존재하지 않음"),
 
   API_ERROR_CHATROOM_NOT_FOUND(400, "R001", "채팅방이 존재하지 않음"),
-  ;
+
+  // like
+  LIKE_NOT_FOUND_ERROR(400, "L001", "좋아요한 대상이 존재하지 않습니다."),
+  LIKE_DUPLICATE_ERROR(400, "L002", "이미 좋아요된 대상입니다.");
   private final int status;
   private final String code;
   private final String message;

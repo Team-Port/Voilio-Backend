@@ -5,15 +5,17 @@ import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
-import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.like.likeService.LikeService;
+import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
@@ -32,8 +34,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class BoardService {
 
+  private final LikeService likeService;
   private final BoardRepository boardRepository;
   private final UserRepository userRepository;
+  private final LikeRepository likeRepository;
   private final S3Manager s3Manager;
 
   public void deleteBoard(Long board_id) {
@@ -42,12 +46,26 @@ public class BoardService {
     boardRepository.save(board);
   }
 
-  public BoardDto findBoardById(Long boardId, User user) {
-    Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
-    return BoardMapper.INSTANCE.toDto(board);
+  public void addBoardView(Long boardId, User user) {
+
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+
+    if (user == null || user.getId() != board.getUser().getId()) {
+      board.addView();
+    }
   }
 
-  public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
+  public BoardDto findBoardById(
+      Long boardId, User user, LikeDivision likeDivision, Long contentId) {
+    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
+    Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
+    return BoardMapper.INSTANCE.toDto(board, likeCount);
+  }
+
+  public Page<BoardDto> findBoardByUser(
+      User user, Long userId, LikeDivision likeDivision, Long contentId, Pageable pageable) {
+
+    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
 
     if (user == null || user.getId() == userId) {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
@@ -55,7 +73,7 @@ public class BoardService {
       Page<Board> boards =
           boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, foundUser);
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards, likeCount);
       return boardDtoPage;
     } else {
 
@@ -65,15 +83,16 @@ public class BoardService {
           boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, YnType.Y, foundUser);
 
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards, likeCount);
       return boardDtoPage;
     }
   }
 
-  public BoardDto findBoardByIdExceptHide(Long board_id) {
-    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
-    return BoardMapper.INSTANCE.toDto(board);
-  }
+  //  public BoardDto findBoardByIdExceptHide(Long board_id) {
+  //    Board board =
+  // boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
+  //    return BoardMapper.INSTANCE.toDto(board);
+  //  }
 
   @Transactional
   public void createBoard(BoardCreateRequest boardCreateRequest, User user) {
@@ -104,15 +123,17 @@ public class BoardService {
     return boardRepository.save(request.toEntity(board));
   }
 
-  public Page<BoardDto> findAllBoard(Pageable pageable) {
+  public Page<BoardDto> findAllBoard(Pageable pageable, LikeDivision likeDivision, Long contentId) {
     Page<Board> boardPage =
         boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
+
+    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
     }
 
-    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boardPage);
+    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boardPage, likeCount);
 
     return boardDtoPage;
   }
@@ -127,20 +148,6 @@ public class BoardService {
     return pageDtos;
   }
 
-  public Page<Board> findBoardByUserNickname(String nickname, Pageable pageable) {
-    Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
-    Page<Board> result = boardRepository.findBoardByUserNickname(nickname, pageable);
-
-    if (result.isEmpty()) {
-      if (user == null) {
-        throw new NotFoundUser();
-      } else {
-        throw new NotFoundBoard();
-      }
-    }
-    return result;
-  }
-
   public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {
     Optional<User> user = userRepository.findUserByNicknameAndDelYn(nickname, YnType.N);
     Page<Board> result = boardRepository.findBoardByUserNicknameExceptHide(nickname, pageable);
@@ -153,15 +160,6 @@ public class BoardService {
       }
     }
     return result;
-  }
-
-  public UploadFileResponse uploadFiles(MultipartFile videoFile, MultipartFile thumbnailFile) {
-    try {
-      return BoardMapper.INSTANCE.toVideoAndThumbnail(
-          s3Manager.upload(videoFile, "video"), s3Manager.upload(thumbnailFile, "thumbnail"));
-    } catch (IOException e) {
-      throw new ConvertException();
-    }
   }
 
   public BoardVideoDto uploadVideo(MultipartFile videoFile) {

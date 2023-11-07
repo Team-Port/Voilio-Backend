@@ -46,6 +46,8 @@ public class AuthService {
       user.changeUserRole(Authority.ROLE_USER);
       user.changeDelYn(YnType.N);
       user.changeIsStopped(YnType.N);
+      user.changeImageUrl(
+          "https://voilio.s3.ap-northeast-2.amazonaws.com/profile/default_profile.jpeg");
       userRepository.save(user);
       return true;
     } catch (Exception e) {
