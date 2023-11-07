@@ -6,15 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Category {
-  IT(1),
-  BACKEND(2),
-  JAVA(3),
-  KOTLIN(4),
-  PYTHON(5),
-  REACT(6),
-  DANCE(7),
-  LANGUAGE(8),
-  ETC(9);
-
-  private final int value;
+  ALL,
+  IT,
+  DESIGN,
+  DANCE,
+  EXERCISE,
+  LANGUAGE,
+  SALES,
+  ETC;
 }

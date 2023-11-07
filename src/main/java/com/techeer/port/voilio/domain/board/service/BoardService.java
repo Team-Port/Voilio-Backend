@@ -138,13 +138,14 @@ public class BoardService {
     return boardDtoPage;
   }
 
-  public Page<Board> findBoardByCategory(Category category, Pageable pageable) {
-    Page<Board> result = boardRepository.findBoardByCategory(category, category, pageable);
+  public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {
+    Page<Board> result =
+        boardRepository.findByDelYnAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(
+            YnType.N, YnType.Y, category, category, pageable);
 
-    if (result.isEmpty()) {
-      throw new NotFoundBoard();
-    }
-    return result;
+    Page<BoardDto> pageDtos = BoardMapper.INSTANCE.toPageList(result);
+
+    return pageDtos;
   }
 
   public Page<Board> findBoardByUserNicknameExceptHide(String nickname, Pageable pageable) {

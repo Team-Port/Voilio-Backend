@@ -10,6 +10,7 @@ import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
@@ -222,48 +223,13 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
-  //    @GetMapping("/lists/category")
-  //    @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
-  //    public ResponseEntity<ResultResponse<Pagination<EntityModel<BoardResponse>>>>
-  // findBoardByCategory(
-  //            @RequestParam("category") String category,
-  //            @RequestParam(defaultValue = "0") int page,
-  //            @RequestParam(defaultValue = "30") int size,
-  //            @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-  //            String authorizationHeader) {
-  //
-  //        Category category1 = Category.valueOf(category.toUpperCase());
-  //        Page<Board> boardPage = boardService.findBoardByCategory(category1, PageRequest.of(page,
-  // size));
-  //        List<EntityModel<BoardResponse>> boardLists =
-  //                boardPage.getContent().stream()
-  //                        .map(
-  //                                board ->
-  //                                        EntityModel.of(
-  //                                                boardMapper.toDto(board),
-  //                                                linkTo(
-  //                                                        methodOn(BoardController.class)
-  //                                                                .findBoardById(board.getId(),
-  // authorizationHeader))
-  //                                                        .withSelfRel()))
-  //                        .collect(Collectors.toList());
-  //
-  //        Pagination<EntityModel<BoardResponse>> result =
-  //                new Pagination<>(
-  //                        boardLists,
-  //                        boardPage.getNumber(),
-  //                        boardPage.getSize(),
-  //                        boardPage.getTotalElements(),
-  //                        boardPage.getTotalPages(),
-  //                        linkTo(
-  //                                methodOn(BoardController.class)
-  //                                        .findBoardByCategory(category, page, size,
-  // authorizationHeader))
-  //                                .withSelfRel());
-  //
-  //        ResultResponse<Pagination<EntityModel<BoardResponse>>> resultResponse =
-  //                new ResultResponse<>(BOARD_FIND_SUCCESS, result);
-  //
-  //        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  //    }
+  @GetMapping("/lists/category/{category}")
+  @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
+  public ResponseEntity<ResultsResponse> findBoardByCategory(
+      @PathVariable("category") Category category,
+      @ParameterObject @PageableDefault(size = 30) Pageable pageable) {
+    Page<BoardDto> boardPage = boardService.findBoardByCategory(category, pageable);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardPage));
+  }
 }
