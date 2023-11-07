@@ -46,7 +46,7 @@ public class CommentService {
             .delYn(YnType.N)
             .build();
 
-    if (commentRequest.getParentId() != null) {
+    if (commentRequest.getParentId() != null && commentRequest.getParentId() != 0) {
       Comment parentComment =
           commentRepository
               .findByBoardIdAndId(commentRequest.getBoardId(), commentRequest.getParentId())
