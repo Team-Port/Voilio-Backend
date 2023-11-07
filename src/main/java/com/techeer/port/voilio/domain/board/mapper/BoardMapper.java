@@ -27,9 +27,15 @@ public interface BoardMapper {
 
   BoardDto toDto(Board board, Long likeCount);
 
+  BoardDto toDto(Board board);
+
   List<BoardDto> toDtos(List<Board> boards);
 
   default Page<BoardDto> toPageList(Page<Board> boardList, Long likeCount) {
     return boardList.map(board -> toDto(board, likeCount));
+  }
+
+  default Page<BoardDto> toPageList(Page<Board> boardList) {
+    return boardList.map(this::toDto);
   }
 }
