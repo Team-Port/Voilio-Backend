@@ -7,11 +7,10 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 @Mapper
 public interface BoardMapper {
@@ -27,6 +26,7 @@ public interface BoardMapper {
   BoardThumbnailDto toThumbnail(String thumbnailUrl);
 
   BoardDto toDto(Board board, Long likeCount);
+
   BoardDto toDto(Board board);
 
   List<BoardDto> toDtos(List<Board> boards);
@@ -34,6 +34,7 @@ public interface BoardMapper {
   default Page<BoardDto> toPageList(Page<Board> boardList, Long likeCount) {
     return boardList.map(board -> toDto(board, likeCount));
   }
+
   default Page<BoardDto> toPageList(Page<Board> boardList) {
     return boardList.map(this::toDto);
   }
