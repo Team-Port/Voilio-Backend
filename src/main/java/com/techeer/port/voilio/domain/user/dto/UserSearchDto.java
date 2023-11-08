@@ -1,6 +1,5 @@
 package com.techeer.port.voilio.domain.user.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class UserSearchDto {
 
-    private Long id;
-    private String content;
+  private Long id;
+  private String content;
 }
