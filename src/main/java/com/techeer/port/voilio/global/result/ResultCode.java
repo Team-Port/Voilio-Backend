@@ -17,6 +17,8 @@ public enum ResultCode {
   LOGIN_SUCCESS("U005", "200", "정상적으로 로그인 되었습니다."),
   CREATE_NICKNAME_SUCCESS("U006", "200", "닉네임이 정상적으로 생성되었습니다."),
 
+  GET_USER_SEARCH_SUCCESS("S001", "200", "지정 사용자의 검색 히스토리를 정상적으로 불러왔습니다."),
+
   BOARD_CREATED_SUCCESS("B001", "201", "게시물이 정상적으로 생성되었습니다."),
 
   BOARD_FIND_SUCCESS("B003", "200", "게시물을 정상적으로 가져왔습니다."),
