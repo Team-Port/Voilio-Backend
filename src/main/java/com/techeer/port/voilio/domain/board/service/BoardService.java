@@ -9,6 +9,7 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+import com.techeer.port.voilio.domain.board.repository.BoardCustomRepository;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
@@ -35,6 +36,7 @@ public class BoardService {
 
   private final LikeService likeService;
   private final BoardRepository boardRepository;
+  private final BoardCustomRepository boardCustomRepository;
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
   private final S3Manager s3Manager;
@@ -100,12 +102,12 @@ public class BoardService {
     boardRepository.save(board);
   }
 
-  public List<BoardDto> findBoardByKeyword(String keyword) {
-    List<Board> boards = boardRepository.findBoardByKeyword(keyword);
-    if (boards.isEmpty()) {
-      throw new NotFoundBoard();
-    }
-    return BoardMapper.INSTANCE.toDtos(boards);
+  public Page<BoardDto> findBoardByKeyword(Pageable pageable, String keyword) {
+
+    Page<Board> boards = boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y,
+        pageable);
+
+    return BoardMapper.INSTANCE.toPageList(boards);
   }
 
   @Transactional
