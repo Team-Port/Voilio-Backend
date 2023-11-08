@@ -12,4 +12,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
       LikeDivision division, Long contentId, User user);
 
   Long countByDivisionAndAndContentId(LikeDivision division, Long contentId);
+
+  boolean existsLikeByDivisionAndContentId(LikeDivision division, Long contentId);
 }
