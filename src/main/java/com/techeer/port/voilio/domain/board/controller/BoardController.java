@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
@@ -54,11 +55,8 @@ public class BoardController {
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardById(
       @PathVariable Long boardId, @AuthenticationPrincipal User user) {
-    if (user == null) {
-      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
-    }
-    BoardDto boardDto = boardService.findBoardById(boardId, user);
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
+    BoardSimpleDto boardDto = boardService.findBoardById(boardId, user);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDto));
   }
 
   @GetMapping("/{userId}/result")

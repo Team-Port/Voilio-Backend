@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.board.service;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
@@ -14,8 +15,10 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
@@ -55,9 +58,32 @@ public class BoardService {
     }
   }
 
-  public BoardDto findBoardById(Long boardId, User user) {
+  public BoardSimpleDto findBoardById(Long boardId, User user) {
+
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
-    return BoardMapper.INSTANCE.toDto(board);
+    BoardSimpleDto boardSimpleDto = BoardMapper.INSTANCE.toSimpleDto(board);
+
+    //게시글을 찾는 유저와 게시글을 작성한 유저가 같을 경우 좋아요 여부 표시
+    //로그인 하지 않거나 유저가 같지 않을 경우 false 반환
+    if(user !=  null && board.getUser().getId() == user.getId()){
+      boolean existsLikeByDivisionAndContentId = likeRepository.existsLikeByDivisionAndContentId(LikeDivision.BOARD_LIKE,
+          boardSimpleDto.getId());
+      boardSimpleDto.setExistLike(existsLikeByDivisionAndContentId);
+    }else{
+      boardSimpleDto.setExistLike(false);
+    }
+    //좋아요 개수 넣기
+    Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
+    boardSimpleDto.setLikeCount(likeCount);
+
+    //유저 정보 넣기
+    User boardUser = board.getUser();
+    boardSimpleDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(boardUser));
+
+    //조회수 증가
+    board.addView();
+
+    return boardSimpleDto;
   }
 
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
