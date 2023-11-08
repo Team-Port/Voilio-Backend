@@ -61,16 +61,6 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
   }
 
-  @PatchMapping("/{boardId}/view")
-  @Operation(summary = "조회수 증가", description = "조회수 증가하는 메서드입니다.")
-  public ResponseEntity<ResultsResponse> addBoardViewCounts(
-      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
-
-    boardService.addBoardView(boardId, user);
-
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS));
-  }
-
   @GetMapping("/{userId}/result")
   @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
@@ -80,6 +70,24 @@ public class BoardController {
 
     Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
+  }
+
+  @GetMapping("/lists/category/{category}")
+  @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
+  public ResponseEntity<ResultsResponse> findBoardByCategory(
+      @PathVariable("category") Category category,
+      @ParameterObject @PageableDefault(size = 30) Pageable pageable) {
+    Page<BoardDto> boardPage = boardService.findBoardByCategory(category, pageable);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardPage));
+  }
+
+  @GetMapping("/lists/keyword/{search}")
+  @Operation(summary = "키워드가 있는 게시물 출력", description = "키워드가 있는 게시물 출력 입니다.")
+  public ResponseEntity<ResultsResponse> findBoardByKeyWord(
+      @PathVariable String search, @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+    Page<BoardDto> boardDtos = boardService.findBoardByKeyword(pageable, search);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
 
   //
@@ -189,13 +197,13 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
   }
 
-  @GetMapping("/lists/category/{category}")
-  @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultsResponse> findBoardByCategory(
-      @PathVariable("category") Category category,
-      @ParameterObject @PageableDefault(size = 30) Pageable pageable) {
-    Page<BoardDto> boardPage = boardService.findBoardByCategory(category, pageable);
+  @PatchMapping("/{boardId}/view")
+  @Operation(summary = "조회수 증가", description = "조회수 증가하는 메서드입니다.")
+  public ResponseEntity<ResultsResponse> addBoardViewCounts(
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
 
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardPage));
+    boardService.addBoardView(boardId, user);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS));
   }
 }

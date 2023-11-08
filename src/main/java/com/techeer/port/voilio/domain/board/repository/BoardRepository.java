@@ -4,7 +4,6 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +14,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-
-  @Query(
-      "SELECT b FROM Board b WHERE b.title LIKE %:keyword% AND b.isPublic = 'N' AND b.delYn ="
-          + " 'N' ORDER BY b.createAt DESC")
-  List<Board> findBoardByKeyword(@Param("keyword") String keyword);
 
   @Query("SELECT b FROM Board b WHERE b.id = :board_id AND b.delYn = 'N' AND b.isPublic = 'Y'")
   Optional<Board> findBoardById(@Param("board_id") Long id);
