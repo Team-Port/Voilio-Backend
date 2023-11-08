@@ -20,4 +20,12 @@ public class UserSearch extends BaseEntity {
     private Long userId;
 
     private String content;
+
+    protected UserSearch() {
+    }
+
+    public UserSearch(Long userId, String content) {
+        this.userId = userId;
+        this.content = content;
+    }
 }

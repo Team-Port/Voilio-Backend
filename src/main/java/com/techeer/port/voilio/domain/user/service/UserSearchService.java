@@ -10,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,17 @@ public class UserSearchService {
         List<UserSearch> userSearchList = userSearchRepository.findAllByUserIdOrderByUpdateAtDesc(user.getId());
         List<UserSearchDto> userSearchDtoList = UserSearchMapper.INSTANCE.toDtos(userSearchList);
         return userSearchDtoList;
+    }
+
+    @Transactional
+    public UserSearchDto create(User user, String searchKeyword){
+        Optional<UserSearch> optionalUserSearch = userSearchRepository.findByUserIdAndContent(user.getId(), searchKeyword);
+        if (optionalUserSearch.isPresent()){
+            optionalUserSearch.get().setUpdateAt(LocalDateTime.now());
+            return UserSearchMapper.INSTANCE.toDto(optionalUserSearch.get());
+        }
+        UserSearch userSearch = new UserSearch(user.getId(), searchKeyword);
+        userSearchRepository.save(userSearch);
+        return UserSearchMapper.INSTANCE.toDto(userSearch);
     }
 }
