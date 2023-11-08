@@ -1,10 +1,8 @@
 package com.techeer.port.voilio.domain.user.entity;
 
-
 import com.techeer.port.voilio.global.common.BaseEntity;
-import lombok.*;
-
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -12,20 +10,19 @@ import javax.persistence.*;
 @Table(name = "user_searchs")
 public class UserSearch extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_search_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_search_id")
+  private Long id;
 
-    private Long userId;
+  private Long userId;
 
-    private String content;
+  private String content;
 
-    protected UserSearch() {
-    }
+  protected UserSearch() {}
 
-    public UserSearch(Long userId, String content) {
-        this.userId = userId;
-        this.content = content;
-    }
+  public UserSearch(Long userId, String content) {
+    this.userId = userId;
+    this.content = content;
+  }
 }
