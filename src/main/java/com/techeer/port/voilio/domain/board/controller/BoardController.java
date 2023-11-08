@@ -11,7 +11,6 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -41,22 +40,29 @@ public class BoardController {
 
   private final BoardService boardService;
 
+  @GetMapping("/lists")
+  @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
+  public ResponseEntity<ResultsResponse> findsAllBoard(
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+
+    Page<BoardDto> allBoard = boardService.findAllBoard(pageable);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
+  }
+
   @GetMapping("/{boardId}")
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardById(
-      @RequestParam LikeDivision likeDivision,
-      @RequestParam Long contentId,
-      @PathVariable Long boardId,
-      @AuthenticationPrincipal User user) {
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    BoardDto boardDto = boardService.findBoardById(boardId, user, likeDivision, contentId);
+    BoardDto boardDto = boardService.findBoardById(boardId, user);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
   }
 
   @PatchMapping("/{boardId}/view")
-  @Operation(summary = "조회수 수정", description = "조회수 증가하는 메서드입니다.")
+  @Operation(summary = "조회수 증가", description = "조회수 증가하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> addBoardViewCounts(
       @PathVariable Long boardId, @AuthenticationPrincipal User user) {
 
@@ -69,13 +75,10 @@ public class BoardController {
   @Operation(summary = "유저별 게시물 출력", description = "유저아이디로 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByUserId(
       @ParameterObject @PageableDefault(size = 20) Pageable pageable,
-      @RequestParam LikeDivision likeDivision,
-      @RequestParam Long contentId,
-      @RequestParam Long userId,
+      @PathVariable Long userId,
       @AuthenticationPrincipal User user) {
 
-    Page<BoardDto> allBoard =
-        boardService.findBoardByUser(user, userId, likeDivision, contentId, pageable);
+    Page<BoardDto> allBoard = boardService.findBoardByUser(user, userId, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
@@ -136,31 +139,6 @@ public class BoardController {
   //    return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
   //  }
 
-  //  @GetMapping
-  //  @Operation(summary = "키워드가 있는 게시물 출력", description = "키워드를 통한 게시물 출력 메서드입니다.")
-  //  public ResponseEntity<ResultResponse<List<EntityModel<BoardResponse>>>> findBoardByKeyword(
-  //      @RequestParam("search") String search,
-  //      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-  //          String authorizationHeader) {
-  //    List<EntityModel<BoardResponse>> boards =
-  //        boardService.findBoardByKeyword(search).stream()
-  //            .map(
-  //                board ->
-  //                    EntityModel.of(
-  //                        board,
-  //                        linkTo(
-  //                                methodOn(BoardController.class)
-  //                                    .findBoardById(board.getId(), authorizationHeader))
-  //                            .withSelfRel()))
-  //            .collect(Collectors.toList());
-  //    ResultResponse<List<EntityModel<BoardResponse>>> resultResponse =
-  //        new ResultResponse<>(BOARD_FIND_SUCCESS, boards);
-  //    resultResponse.add(
-  //        linkTo(methodOn(BoardController.class).findBoardByKeyword(search, authorizationHeader))
-  //            .withSelfRel());
-  //    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  //  }
-
   @PatchMapping("{boardId}/hide")
   @Operation(summary = "게시물 숨김", description = "게시물 숨기기 메서드입니다.")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
@@ -209,18 +187,6 @@ public class BoardController {
     BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
-  }
-
-  @GetMapping("/lists")
-  @Operation(summary = "전체 게시물 출력", description = "전체 게시물 출력 메서드입니다.")
-  public ResponseEntity<ResultsResponse> findsAllBoard(
-      @RequestParam LikeDivision likeDivision,
-      @RequestParam Long contentId,
-      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
-
-    Page<BoardDto> allBoard = boardService.findAllBoard(pageable, likeDivision, contentId);
-
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
   @GetMapping("/lists/category/{category}")

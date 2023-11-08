@@ -15,7 +15,6 @@ import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
@@ -55,35 +54,30 @@ public class BoardService {
     }
   }
 
-  public BoardDto findBoardById(
-      Long boardId, User user, LikeDivision likeDivision, Long contentId) {
-    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
+  public BoardDto findBoardById(Long boardId, User user) {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
-    return BoardMapper.INSTANCE.toDto(board, likeCount);
+    return BoardMapper.INSTANCE.toDto(board);
   }
 
-  public Page<BoardDto> findBoardByUser(
-      User user, Long userId, LikeDivision likeDivision, Long contentId, Pageable pageable) {
+  public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
-    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
-
-    if (user == null || user.getId() == userId) {
-      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
-
-      Page<Board> boards =
-          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
-              pageable, YnType.N, foundUser);
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards, likeCount);
-      return boardDtoPage;
-    } else {
-
+    if (user == null || user.getId() != userId) {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
       Page<Board> boards =
           boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, YnType.Y, foundUser);
 
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards, likeCount);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
+      return boardDtoPage;
+
+    } else {
+      User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
+
+      Page<Board> boards =
+          boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
+              pageable, YnType.N, foundUser);
+      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
       return boardDtoPage;
     }
   }
@@ -123,17 +117,15 @@ public class BoardService {
     return boardRepository.save(request.toEntity(board));
   }
 
-  public Page<BoardDto> findAllBoard(Pageable pageable, LikeDivision likeDivision, Long contentId) {
+  public Page<BoardDto> findAllBoard(Pageable pageable) {
     Page<Board> boardPage =
         boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
-
-    Long likeCount = likeService.getLikeCount(likeDivision, contentId);
 
     if (boardPage.isEmpty()) {
       throw new NotFoundBoard();
     }
 
-    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boardPage, likeCount);
+    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boardPage);
 
     return boardDtoPage;
   }
@@ -177,12 +169,4 @@ public class BoardService {
       throw new ConvertException();
     }
   }
-
-  //  public UploadFileResponse updateFiles(MultipartFile thumbnailFile) {
-  //    try {
-  //      return boardMapper.toDto(s3Manager.upload(thumbnailFile, "thumbnail"));
-  //    } catch (IOException e) {
-  //      throw new ConvertException();
-  //    }
-  //  }
 }
