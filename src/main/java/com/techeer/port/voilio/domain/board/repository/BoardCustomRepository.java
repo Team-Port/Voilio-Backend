@@ -4,7 +4,6 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.YnType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 public interface BoardCustomRepository {
 

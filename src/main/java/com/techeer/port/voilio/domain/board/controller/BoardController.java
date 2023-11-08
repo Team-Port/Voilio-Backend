@@ -72,7 +72,6 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, allBoard));
   }
 
-
   @GetMapping("/lists/category/{category}")
   @Operation(summary = "카테고리 별 게시물 출력", description = "카테고리 별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardByCategory(
@@ -85,11 +84,12 @@ public class BoardController {
 
   @GetMapping("/lists/keyword/{search}")
   @Operation(summary = "키워드가 있는 게시물 출력", description = "키워드가 있는 게시물 출력 입니다.")
-  public ResponseEntity<ResultsResponse> findBoardByKeyWord(@PathVariable String search,
-      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+  public ResponseEntity<ResultsResponse> findBoardByKeyWord(
+      @PathVariable String search, @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
     Page<BoardDto> boardDtos = boardService.findBoardByKeyword(pageable, search);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
+
   //
   //  @PutMapping(value = "/update/{boardId}", consumes = "multipart/form-data")
   //  @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")

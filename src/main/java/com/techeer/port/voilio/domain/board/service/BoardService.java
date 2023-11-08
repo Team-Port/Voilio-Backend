@@ -19,7 +19,6 @@ import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
@@ -104,8 +103,8 @@ public class BoardService {
 
   public Page<BoardDto> findBoardByKeyword(Pageable pageable, String keyword) {
 
-    Page<Board> boards = boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y,
-        pageable);
+    Page<Board> boards =
+        boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y, pageable);
 
     return BoardMapper.INSTANCE.toPageList(boards);
   }

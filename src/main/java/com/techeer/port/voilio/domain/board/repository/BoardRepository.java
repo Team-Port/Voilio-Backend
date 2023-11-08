@@ -4,7 +4,6 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
