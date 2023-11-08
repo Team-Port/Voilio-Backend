@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
-import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
@@ -102,8 +101,7 @@ public class BoardController {
   @PostMapping(value = "/create")
   @Operation(summary = "게시물 생성", description = "게시물 생성 메서드입니다.")
   public ResponseEntity<ResultsResponse> createBoard(
-      @RequestBody BoardCreateRequest boardCreateRequest,
-      @AuthenticationPrincipal User user) {
+      @RequestBody BoardCreateRequest boardCreateRequest, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }

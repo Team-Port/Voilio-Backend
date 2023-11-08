@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.board.service;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
-import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
@@ -61,12 +60,12 @@ public class BoardService {
 
     for (Board board : boardPage) {
 
-      //user 정보 넣기
+      // user 정보 넣기
       BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
       User user = board.getUser();
       boardDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(user));
 
-      //좋아요 개수 넣기
+      // 좋아요 개수 넣기
       Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
       boardDto.setLikeCount(likeCount);
 
@@ -118,8 +117,8 @@ public class BoardService {
     List<BoardImage> boardImageList = new ArrayList<>();
     List<String> boardImageUrls = boardCreateRequest.getBoardImageUrls();
 
-    //게시글 이미지 url BoardImage에 등록하기
-    for(String url : boardImageUrls){
+    // 게시글 이미지 url BoardImage에 등록하기
+    for (String url : boardImageUrls) {
       BoardImage boardImage = new BoardImage(board, url);
       boardImageList.add(boardImage);
     }
@@ -152,7 +151,6 @@ public class BoardService {
     }
     return boardRepository.save(request.toEntity(board));
   }
-
 
   public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {
     Page<Board> result =

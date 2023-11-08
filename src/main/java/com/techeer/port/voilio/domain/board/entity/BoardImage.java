@@ -2,8 +2,6 @@ package com.techeer.port.voilio.domain.board.entity;
 
 import com.techeer.port.voilio.global.common.BaseEntity;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
