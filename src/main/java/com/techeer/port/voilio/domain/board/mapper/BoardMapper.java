@@ -7,7 +7,6 @@ import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.response.UploadFileResponse;
 import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.domain.user.dto.UserSimpleDto;
 import com.techeer.port.voilio.domain.user.entity.User;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -30,6 +29,7 @@ public interface BoardMapper {
   BoardDto toDto(Board board);
 
   BoardSimpleDto toSimpleDto(Board board);
+
   List<BoardDto> toDtos(List<Board> boards);
 
   default Page<BoardDto> toPageList(Page<Board> boardList) {
