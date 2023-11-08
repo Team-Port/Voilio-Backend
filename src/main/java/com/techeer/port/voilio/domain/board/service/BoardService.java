@@ -1,11 +1,13 @@
 package com.techeer.port.voilio.domain.board.service;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.entity.BoardImage;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
@@ -51,13 +53,27 @@ public class BoardService {
     boardRepository.save(board);
   }
 
-  public void addBoardView(Long boardId, User user) {
+  public Page<BoardDto> findAllBoard(Pageable pageable) {
+    Page<Board> boardPage =
+        boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
 
-    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    List<BoardDto> boardDtoList = new ArrayList<>();
 
-    if (user == null || user.getId() != board.getUser().getId()) {
-      board.addView();
+    for (Board board : boardPage) {
+
+      //user 정보 넣기
+      BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+      User user = board.getUser();
+      boardDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(user));
+
+      //좋아요 개수 넣기
+      Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+      boardDto.setLikeCount(likeCount);
+
+      boardDtoList.add(boardDto);
     }
+
+    return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
   }
 
   public BoardDto findBoardById(Long boardId, User user) {
