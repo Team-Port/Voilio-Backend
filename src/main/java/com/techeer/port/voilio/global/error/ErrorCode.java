@@ -19,6 +19,7 @@ public enum ErrorCode {
   INVALID_AUTH_TOKEN(401, "U005", "권한 정보가 없는 토큰입니다."),
 
   ALREADY_EXIST_USER_BY_NICKNAME(400, "U006", "이미 가입된 유저 nickname 입니다."),
+  NOT_FOUND_SEARCH_KEYWORD(400, "S006", "해당 검색어를 삭제할 수 없습니다."),
 
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),

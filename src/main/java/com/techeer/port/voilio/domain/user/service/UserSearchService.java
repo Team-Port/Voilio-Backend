@@ -6,6 +6,8 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.entity.UserSearch;
 import com.techeer.port.voilio.domain.user.mapper.UserSearchMapper;
 import com.techeer.port.voilio.domain.user.repository.UserSearchRepository;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +39,11 @@ public class UserSearchService {
         UserSearch userSearch = new UserSearch(user.getId(), searchKeyword);
         userSearchRepository.save(userSearch);
         return UserSearchMapper.INSTANCE.toDto(userSearch);
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        UserSearch userSearch = userSearchRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_SEARCH_KEYWORD));
+        userSearchRepository.deleteById(userSearch.getId());
     }
 }

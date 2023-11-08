@@ -13,15 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.techeer.port.voilio.global.result.ResultCode.CREATE_USER_SEARCH_SUCCESS;
-import static com.techeer.port.voilio.global.result.ResultCode.GET_USER_SEARCH_SUCCESS;
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Tag(name = "User Search", description = "User Search API Document")
 @RequestMapping("api/v1/user_search")
@@ -54,6 +50,20 @@ public class UserSearchController {
         }
         UserSearchDto userSearchDto = userSearchService.create(user, searchKeyword);
         ResultResponse<UserSearchDto> resultResponse = new ResultResponse<>(CREATE_USER_SEARCH_SUCCESS, userSearchDto);
+        return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "검색어 단일 삭제", description = "로그인한 사용자의 검색어를 단일 삭제")
+    public ResponseEntity<ResultResponse> deleteById(
+            @AuthenticationPrincipal User user
+            , @PathVariable(value = "id") Long id) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+        userSearchService.deleteById(id);
+        ResultResponse resultResponse = new ResultResponse<>(DELETE_USER_SEARCH_SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
     }
 }
