@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CheckFollowRequestDto {
-  String nickname;
-  Long followId;
+  Long fromUserId;
+  Long toUserId;
 }

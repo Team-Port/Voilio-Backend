@@ -75,12 +75,11 @@ public class FollowService {
     return result;
   }
 
-  public Boolean checkFollow(String nickname, Long followId) {
-    User user1 = userService.getUser(nickname);
-    User user2 = userService.getUser(followId);
-    if (user1.equals(user2)) return true;
-    //    return followRepository.existsByUserNicknameAndAndFollowId(nickname, followId);
-    return null;
+  public Boolean checkFollow(Long fromUserId, Long toUserId) {
+    User fromUser = userService.getUser(fromUserId);
+    User toUser = userService.getUser(toUserId);
+    if (followRepository.existsByFromUserAndToUser(fromUser, toUser)) return true;
+    else return false;
   }
 
   public List<FollowSimpleDto> getFollowUserList(Long fromUserId) {

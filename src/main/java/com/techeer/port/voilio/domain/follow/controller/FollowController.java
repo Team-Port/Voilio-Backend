@@ -37,7 +37,7 @@ public class FollowController {
   private final UserService userService;
 
   @PostMapping("/")
-  @Operation(summary = "구독", description = "특정 회원을 구독하는 메서드입니다.")
+  @Operation(summary = "팔로우", description = "fromUser가 toUser를 id를 통해 팔로우하는 메서드입니다.")
   public ResponseEntity<ResultResponse> follow(
           @Valid @RequestBody FollowRequest FollowRequest, @AuthenticationPrincipal User user) {
 
@@ -52,7 +52,7 @@ public class FollowController {
   }
 
   @PostMapping("/unFollow")
-  @Operation(summary = "구독 해지", description = "특정 회원을 구독을 해지하는 메서드입니다.")
+  @Operation(summary = "팔로우 취소", description = "fromUser가 toUser를 id를 통해 팔로우를 취소하는 메서드입니다.")
   public ResponseEntity<ResultResponse> unFollow(
       @Valid @RequestBody FollowRequest FollowRequest, @AuthenticationPrincipal User user) {
     if (user == null) {
@@ -101,12 +101,13 @@ public class FollowController {
   //  }
 
   @PostMapping("/check")
+  @Operation(summary = "팔로우 체크", description = "fromUser의 toUser 팔로우여부를 확인하는 메서드입니다.")
   public ResponseEntity<ResultResponse> checkFollow(
       @Valid @RequestBody CheckFollowRequestDto checkFollowRequestDto) {
     Boolean check =
         followService.checkFollow(
-            checkFollowRequestDto.getNickname(), checkFollowRequestDto.getFollowId());
-    ResultResponse<Boolean> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, check);
+            checkFollowRequestDto.getFromUserId(), checkFollowRequestDto.getToUserId());
+    ResultResponse<Boolean> resultResponse = new ResultResponse<>(FOLLOW_CHECK_SUCCESS, check);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

@@ -30,10 +30,11 @@ public enum ResultCode {
 
   FILE_UPLOAD_SUCCESS("F001", "201", "파일을 정상적으로 등록했습니다."),
 
-  FOLLOW_SUCCESS("S001", "200", "구독 하였습니다."),
-  UNFOLLOW_SUCCESS("S002", "200", "구독을 취소하였습니다."),
-  FOLLOW_FINDALL_SUCCESS("S003", "200", "구독자 목록입니다."),
-  FOLLOW_BOARD_FINDALL_SUCCESS("S004", "200", "구독자 게시물 목록입니다."),
+  FOLLOW_SUCCESS("S001", "200", "팔로우 하였습니다."),
+  UNFOLLOW_SUCCESS("S002", "200", "팔로우를 취소하였습니다."),
+  FOLLOW_FINDALL_SUCCESS("S003", "200", "팔로우 회원 목록입니다."),
+  FOLLOW_BOARD_FINDALL_SUCCESS("S004", "200", "팔로우 회원의 게시물 목록입니다."),
+  FOLLOW_CHECK_SUCCESS("S005", "200", "팔로우 여부를 정상적으로 확인했습니다."),
 
   API_SUCCESS_GET_ALL_CHATROOM("R001", "200", "모든 채팅방을 정상적으로 불러왔습니다."),
   API_SUCCESS_CREATE_CHATROOM("R002", "200", "채팅방이 정상적으로 등록되었습니다."),
