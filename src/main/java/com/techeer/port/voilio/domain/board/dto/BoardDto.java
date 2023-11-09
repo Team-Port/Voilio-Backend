@@ -1,5 +1,6 @@
 package com.techeer.port.voilio.domain.board.dto;
 
+import com.techeer.port.voilio.domain.user.dto.UserSimpleDto;
 import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
@@ -15,7 +16,7 @@ public class BoardDto {
 
   private String title;
 
-  private String content;
+  private String summary;
 
   private Category category1;
 
@@ -27,7 +28,7 @@ public class BoardDto {
 
   private Integer view;
 
-  private Integer likeCount;
+  private Long likeCount;
 
   private BoardDivision division;
 
@@ -39,5 +40,5 @@ public class BoardDto {
 
   private LocalDateTime updateAt;
 
-  //  private List<BoardImageDto> boardImages = new ArrayList<>();
+  private UserSimpleDto userSimpleDto;
 }
