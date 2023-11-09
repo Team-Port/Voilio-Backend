@@ -15,14 +15,13 @@ import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;
 import com.techeer.port.voilio.global.common.YnType;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,9 +36,7 @@ public class FollowService {
   @Transactional
   public void follow(Long fromUserId, Long toUserId) {
     User fromUser =
-        userRepository
-            .findUserByIdAndDelYn(fromUserId, YnType.N)
-            .orElseThrow(NotFoundUser::new);
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
     User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
     if (followRepository.existsByFromUserAndToUser(fromUser, toUser)) {
@@ -55,9 +52,7 @@ public class FollowService {
   @Transactional
   public void unFollow(Long fromUserId, Long toUserId) {
     User fromUser =
-        userRepository
-            .findUserByIdAndDelYn(fromUserId, YnType.N)
-            .orElseThrow(NotFoundUser::new);
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
     User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
     Follow followerToDelete =
