@@ -35,34 +35,34 @@ public class FollowService {
   private final BoardRepository boardRepository;
 
   @Transactional
-  public void follow(String userName, Long follow_id) {
-    User user =
+  public void follow(Long fromUserId, Long toUserId) {
+    User fromUser =
         userRepository
-            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .findUserByIdAndDelYn(fromUserId, YnType.N)
             .orElseThrow(NotFoundUser::new);
-    User Follow = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+    User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
-    if (followRepository.existsByFromUserAndToUser(user, Follow)) {
+    if (followRepository.existsByFromUserAndToUser(fromUser, toUser)) {
       throw new AlreadyFollow();
     }
 
     Follow newFollower = new Follow();
-    newFollower.setFromUser(user);
-    newFollower.setToUser(Follow);
+    newFollower.setFromUser(fromUser);
+    newFollower.setToUser(toUser);
     followRepository.save(newFollower);
   }
 
   @Transactional
-  public void unFollow(String userName, Long follow_id) {
-    User user =
+  public void unFollow(Long fromUserId, Long toUserId) {
+    User fromUser =
         userRepository
-            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .findUserByIdAndDelYn(fromUserId, YnType.N)
             .orElseThrow(NotFoundUser::new);
-    User Follow = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+    User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
     Follow followerToDelete =
         followRepository
-            .findByFromUserAndToUser(user, Follow)
+            .findByFromUserAndToUser(fromUser, toUser)
             .orElseThrow(AlreadyUnfollow::new);
     followRepository.delete(followerToDelete);
   }

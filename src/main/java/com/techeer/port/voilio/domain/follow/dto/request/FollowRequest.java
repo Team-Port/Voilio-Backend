@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class FollowRequest {
 
-  @NotNull private String nickname;
+  @NotNull private Long fromUserId;
 
-  @NotNull private Long followId;
+  @NotNull private Long toUserId;
 }

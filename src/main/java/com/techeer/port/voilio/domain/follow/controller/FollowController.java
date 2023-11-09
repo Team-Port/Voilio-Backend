@@ -45,7 +45,7 @@ public class FollowController {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
 
-    followService.follow(FollowRequest.getNickname(), FollowRequest.getFollowId());
+    followService.follow(FollowRequest.getFromUserId(), FollowRequest.getToUserId());
     ResultResponse<Follow> resultResponse = new ResultResponse<>(FOLLOW_SUCCESS);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
@@ -59,7 +59,7 @@ public class FollowController {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
 
-    followService.unFollow(FollowRequest.getNickname(), FollowRequest.getFollowId());
+    followService.unFollow(FollowRequest.getFromUserId(), FollowRequest.getToUserId());
     ResultResponse<Follow> resultResponse = new ResultResponse<>(UNFOLLOW_SUCCESS);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
