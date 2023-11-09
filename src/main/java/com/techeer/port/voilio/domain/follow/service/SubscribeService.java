@@ -1,16 +1,16 @@
-package com.techeer.port.voilio.domain.subscribe.service;
+package com.techeer.port.voilio.domain.follow.service;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
-import com.techeer.port.voilio.domain.subscribe.dto.SubscribeSimpleDto;
-import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
-import com.techeer.port.voilio.domain.subscribe.exception.AlreadySubscribe;
-import com.techeer.port.voilio.domain.subscribe.exception.AlreadyUnsubscribe;
-import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
-import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
+import com.techeer.port.voilio.domain.follow.dto.SubscribeSimpleDto;
+import com.techeer.port.voilio.domain.follow.entity.Subscribe;
+import com.techeer.port.voilio.domain.follow.exception.AlreadySubscribe;
+import com.techeer.port.voilio.domain.follow.exception.AlreadyUnsubscribe;
+import com.techeer.port.voilio.domain.follow.mapper.SubscribeMapper;
+import com.techeer.port.voilio.domain.follow.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.domain.user.service.UserService;

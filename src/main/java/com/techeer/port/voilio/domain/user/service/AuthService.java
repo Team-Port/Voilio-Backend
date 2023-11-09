@@ -1,8 +1,8 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
-import com.techeer.port.voilio.domain.subscribe.mapper.SubscribeMapper;
-import com.techeer.port.voilio.domain.subscribe.repository.SubscribeRepository;
+import com.techeer.port.voilio.domain.follow.entity.Subscribe;
+import com.techeer.port.voilio.domain.follow.mapper.SubscribeMapper;
+import com.techeer.port.voilio.domain.follow.repository.SubscribeRepository;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;

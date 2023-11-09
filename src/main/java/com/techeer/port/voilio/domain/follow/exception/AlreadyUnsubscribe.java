@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.exception;
+package com.techeer.port.voilio.domain.follow.exception;
 
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;

@@ -1,7 +1,7 @@
-package com.techeer.port.voilio.domain.subscribe.repository;
+package com.techeer.port.voilio.domain.follow.repository;
 
-import com.techeer.port.voilio.domain.subscribe.entity.Subscribe;
-import com.techeer.port.voilio.domain.subscribe.entity.SubscribeId;
+import com.techeer.port.voilio.domain.follow.entity.Subscribe;
+import com.techeer.port.voilio.domain.follow.entity.SubscribeId;
 import com.techeer.port.voilio.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;

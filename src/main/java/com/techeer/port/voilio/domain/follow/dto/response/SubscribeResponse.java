@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.dto.response;
+package com.techeer.port.voilio.domain.follow.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

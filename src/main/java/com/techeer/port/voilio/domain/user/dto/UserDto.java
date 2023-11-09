@@ -1,6 +1,6 @@
 package com.techeer.port.voilio.domain.user.dto;
 
-import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
+import com.techeer.port.voilio.domain.follow.dto.SubscribeDto;
 import com.techeer.port.voilio.domain.user.entity.Authority;
 import com.techeer.port.voilio.global.common.YnType;
 import java.time.LocalDateTime;

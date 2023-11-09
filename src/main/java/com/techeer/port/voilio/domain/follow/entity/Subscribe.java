@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.entity;
+package com.techeer.port.voilio.domain.follow.entity;
 
 import com.techeer.port.voilio.domain.user.entity.User;
 import javax.persistence.*;

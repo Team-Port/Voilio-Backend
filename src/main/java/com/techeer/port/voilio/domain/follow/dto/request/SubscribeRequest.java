@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.dto.request;
+package com.techeer.port.voilio.domain.follow.dto.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.entity;
+package com.techeer.port.voilio.domain.follow.entity;
 
 import java.io.Serializable;
 
