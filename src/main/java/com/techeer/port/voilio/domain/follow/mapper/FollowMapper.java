@@ -3,10 +3,9 @@ package com.techeer.port.voilio.domain.follow.mapper;
 import com.techeer.port.voilio.domain.follow.dto.FollowDto;
 import com.techeer.port.voilio.domain.follow.dto.FollowSimpleDto;
 import com.techeer.port.voilio.domain.follow.entity.Follow;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper
 public interface FollowMapper {

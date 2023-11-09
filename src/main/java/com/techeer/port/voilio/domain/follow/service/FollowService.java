@@ -37,9 +37,7 @@ public class FollowService {
   @Transactional
   public void follow(Long fromUserId, Long toUserId) {
     User fromUser =
-        userRepository
-            .findUserByIdAndDelYn(fromUserId, YnType.N)
-            .orElseThrow(NotFoundUser::new);
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
     User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
     if (followRepository.existsByFromUserAndToUser(fromUser, toUser)) {
@@ -55,9 +53,7 @@ public class FollowService {
   @Transactional
   public void unFollow(Long fromUserId, Long toUserId) {
     User fromUser =
-        userRepository
-            .findUserByIdAndDelYn(fromUserId, YnType.N)
-            .orElseThrow(NotFoundUser::new);
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
     User toUser = userRepository.findById(toUserId).orElseThrow(NotFoundUser::new);
 
     Follow followerToDelete =

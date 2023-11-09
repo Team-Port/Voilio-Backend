@@ -1,8 +1,7 @@
 package com.techeer.port.voilio.domain.follow.dto.request;
 
-import lombok.*;
-
 import javax.validation.constraints.NotNull;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
