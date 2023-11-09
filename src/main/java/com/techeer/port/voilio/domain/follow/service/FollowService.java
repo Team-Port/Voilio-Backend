@@ -86,8 +86,8 @@ public class FollowService {
     User user =
         userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
 
-    List<Follow> FollowList = followRepository.findByFromUserOrderByIdDesc(user);
-    return FollowMapper.INSTANCE.toFollowSimpleDtos(FollowList);
+    List<Follow> followList = followRepository.findByFromUserOrderByIdDesc(user);
+    return FollowMapper.INSTANCE.toFollowSimpleDtos(followList);
   }
 
   public List<BoardDto> getFollowUserBoardList(User user) {

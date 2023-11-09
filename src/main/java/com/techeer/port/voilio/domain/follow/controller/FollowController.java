@@ -39,13 +39,13 @@ public class FollowController {
   @PostMapping("/")
   @Operation(summary = "팔로우", description = "fromUser가 toUser를 id를 통해 팔로우하는 메서드입니다.")
   public ResponseEntity<ResultResponse> follow(
-          @Valid @RequestBody FollowRequest FollowRequest, @AuthenticationPrincipal User user) {
+          @Valid @RequestBody FollowRequest followRequest, @AuthenticationPrincipal User user) {
 
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
 
-    followService.follow(FollowRequest.getFromUserId(), FollowRequest.getToUserId());
+    followService.follow(followRequest.getFromUserId(), followRequest.getToUserId());
     ResultResponse<Follow> resultResponse = new ResultResponse<>(FOLLOW_SUCCESS);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
@@ -54,12 +54,12 @@ public class FollowController {
   @PostMapping("/unFollow")
   @Operation(summary = "팔로우 취소", description = "fromUser가 toUser를 id를 통해 팔로우를 취소하는 메서드입니다.")
   public ResponseEntity<ResultResponse> unFollow(
-      @Valid @RequestBody FollowRequest FollowRequest, @AuthenticationPrincipal User user) {
+      @Valid @RequestBody FollowRequest followRequest, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
 
-    followService.unFollow(FollowRequest.getFromUserId(), FollowRequest.getToUserId());
+    followService.unFollow(followRequest.getFromUserId(), followRequest.getToUserId());
     ResultResponse<Follow> resultResponse = new ResultResponse<>(UNFOLLOW_SUCCESS);
 
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
@@ -120,9 +120,9 @@ public class FollowController {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
 
-    List<FollowSimpleDto> FollowList = followService.getFollowUserList(fromUserid);
+    List<FollowSimpleDto> followList = followService.getFollowUserList(fromUserid);
 
-    return ResponseEntity.ok(ResultsResponse.of(FOLLOW_FINDALL_SUCCESS, FollowList));
+    return ResponseEntity.ok(ResultsResponse.of(FOLLOW_FINDALL_SUCCESS, followList));
   }
 
   @GetMapping("/list/board")

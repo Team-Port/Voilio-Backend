@@ -17,13 +17,14 @@ import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -73,8 +74,8 @@ public class AuthService {
 
   public UserDto me(User user) {
     UserDto userDto = UserMapper.INSTANCE.toDto(user);
-    List<Follow> FollowList = followRepository.findByFromUserOrderByIdDesc(user);
-    userDto.updateFollowing(FollowMapper.INSTANCE.toDtos(FollowList));
+    List<Follow> followList = followRepository.findByFromUserOrderByIdDesc(user);
+    userDto.updateFollowing(FollowMapper.INSTANCE.toDtos(followList));
     return userDto;
   }
 }
