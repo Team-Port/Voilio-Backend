@@ -63,12 +63,12 @@ public class BoardService {
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
     BoardSimpleDto boardSimpleDto = BoardMapper.INSTANCE.toSimpleDto(board);
 
-    // 게시글을 찾는 유저와 게시글을 작성한 유저가 같을 경우 좋아요 여부 표시
+    // 게시글을 작성한 유저의 좋아요 여부 표시
     // 로그인 하지 않거나 유저가 같지 않을 경우 false 반환
     if (user != null && board.getUser().getId() == user.getId()) {
       boolean existsLikeByDivisionAndContentId =
-          likeRepository.existsLikeByDivisionAndContentId(
-              LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
+          likeRepository.existsLikeByDivisionAndContentIdAndUser(
+              LikeDivision.BOARD_LIKE, boardSimpleDto.getId(), user);
       boardSimpleDto.setExistLike(existsLikeByDivisionAndContentId);
     } else {
       boardSimpleDto.setExistLike(false);
