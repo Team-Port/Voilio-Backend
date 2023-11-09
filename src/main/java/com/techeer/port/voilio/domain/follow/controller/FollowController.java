@@ -101,7 +101,7 @@ public class FollowController {
   //  }
 
   @PostMapping("/check")
-  @Operation(summary = "팔로우 체크", description = "fromUser의 toUser 팔로우여부를 확인하는 메서드입니다.")
+  @Operation(summary = "팔로우 체크", description = "fromUser의 toUser 팔로우 여부를 id를 통해 확인하는 메서드입니다.")
   public ResponseEntity<ResultResponse> checkFollow(
       @Valid @RequestBody CheckFollowRequestDto checkFollowRequestDto) {
     Boolean check =
@@ -113,7 +113,7 @@ public class FollowController {
   }
 
   @GetMapping("/list")
-  @Operation(summary = "구독 회원 목록", description = "구독한 회원의 목록을 출력하는 메서드입니다.")
+  @Operation(summary = "팔로우 회원 목록", description = "팔로우한 회원의 목록을 출력하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> getFollowList(
       @RequestParam Long fromUserid, @AuthenticationPrincipal User user) {
     if (user == null) {
@@ -126,7 +126,7 @@ public class FollowController {
   }
 
   @GetMapping("/list/board")
-  @Operation(summary = "구독 회원 게시글 목록", description = "구독한 회원의 게시글 목록을 출력하는 메서드입니다.")
+  @Operation(summary = "팔로우 회원 게시글 목록", description = "팔로우한 회원의 게시글 목록을 출력하는 메서드입니다.")
   public ResponseEntity<ResultsResponse> getFollowBoardList(@AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
