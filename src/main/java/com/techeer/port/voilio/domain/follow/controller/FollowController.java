@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.follow.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.follow.dto.FollowSimpleDto;
 import com.techeer.port.voilio.domain.follow.dto.request.CheckFollowRequestDto;
@@ -14,17 +16,14 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-
-import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Slf4j
 @RestController
@@ -39,7 +38,7 @@ public class FollowController {
   @PostMapping("/")
   @Operation(summary = "팔로우", description = "fromUser가 toUser를 id를 통해 팔로우하는 메서드입니다.")
   public ResponseEntity<ResultResponse> follow(
-          @Valid @RequestBody FollowRequest followRequest, @AuthenticationPrincipal User user) {
+      @Valid @RequestBody FollowRequest followRequest, @AuthenticationPrincipal User user) {
 
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
