@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubscribeDto {
+public class FollowDto {
 
   private Long id;
 

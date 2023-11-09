@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class SubscribeResponse {
-  private String subscribe_nickname;
-  private Long subscribe_id;
+public class FollowResponse {
+  private String follow_nickname;
+  private Long follow_id;
 }

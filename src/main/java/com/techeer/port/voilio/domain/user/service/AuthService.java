@@ -1,8 +1,8 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import com.techeer.port.voilio.domain.follow.entity.Subscribe;
-import com.techeer.port.voilio.domain.follow.mapper.SubscribeMapper;
-import com.techeer.port.voilio.domain.follow.repository.SubscribeRepository;
+import com.techeer.port.voilio.domain.follow.entity.Follow;
+import com.techeer.port.voilio.domain.follow.mapper.FollowMapper;
+import com.techeer.port.voilio.domain.follow.repository.FollowRepository;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserLoginRequest;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
@@ -33,7 +33,7 @@ public class AuthService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
-  private final SubscribeRepository subscribeRepository;
+  private final FollowRepository followRepository;
 
   @Transactional
   public Boolean signup(UserSignUpRequest userSignUpRequest) {
@@ -73,8 +73,8 @@ public class AuthService {
 
   public UserDto me(User user) {
     UserDto userDto = UserMapper.INSTANCE.toDto(user);
-    List<Subscribe> subscribeList = subscribeRepository.findByFromUserOrderByIdDesc(user);
-    userDto.updateFollowing(SubscribeMapper.INSTANCE.toDtos(subscribeList));
+    List<Follow> FollowList = followRepository.findByFromUserOrderByIdDesc(user);
+    userDto.updateFollowing(FollowMapper.INSTANCE.toDtos(FollowList));
     return userDto;
   }
 }

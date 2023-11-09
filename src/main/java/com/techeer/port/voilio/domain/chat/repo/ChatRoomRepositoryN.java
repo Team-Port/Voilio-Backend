@@ -1,6 +1,6 @@
 package com.techeer.port.voilio.domain.chat.repo;
 
-import com.techeer.port.voilio.domain.chat.pubsub.RedisSubscriber;
+import com.techeer.port.voilio.domain.chat.pubsub.RedisFollower;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -17,7 +17,7 @@ public class ChatRoomRepositoryN {
   // 채팅방(topic)에 발행되는 메시지를 처리할 Listner
   private final RedisMessageListenerContainer redisMessageListener;
   // 구독 처리 서비스
-  private final RedisSubscriber redisSubscriber;
+  private final RedisFollower redisFollowr;
 
   // 채팅방의 대화 메시지를 발행하기 위한 redis topic 정보. 서버별로 채팅방에 매치되는 topic정보를 Map에 넣어 roomId로 찾을수 있도록 한다.
   private Map<String, ChannelTopic> topics;
@@ -32,7 +32,7 @@ public class ChatRoomRepositoryN {
     log.info("[ws] enterChatRoom :{}", roomUuid);
     ChannelTopic topic = topics.get(roomUuid);
     if (topic == null) topic = new ChannelTopic(roomUuid);
-    redisMessageListener.addMessageListener(redisSubscriber, topic);
+    redisMessageListener.addMessageListener(redisFollowr, topic);
     topics.put(roomUuid, topic);
   }
 

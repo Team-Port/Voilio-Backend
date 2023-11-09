@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CheckSubscribeRequestDto {
+public class CheckFollowRequestDto {
   String nickname;
-  Long subscribeId;
+  Long followId;
 }

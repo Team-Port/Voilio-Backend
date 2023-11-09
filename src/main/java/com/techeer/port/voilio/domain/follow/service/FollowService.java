@@ -1,0 +1,106 @@
+package com.techeer.port.voilio.domain.follow.service;
+
+import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
+import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.follow.dto.FollowSimpleDto;
+import com.techeer.port.voilio.domain.follow.entity.Follow;
+import com.techeer.port.voilio.domain.follow.exception.AlreadyFollow;
+import com.techeer.port.voilio.domain.follow.exception.AlreadyUnfollow;
+import com.techeer.port.voilio.domain.follow.mapper.FollowMapper;
+import com.techeer.port.voilio.domain.follow.repository.FollowRepository;
+import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.domain.user.service.UserService;
+import com.techeer.port.voilio.global.common.YnType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class FollowService {
+
+  private final FollowRepository followRepository;
+  private final UserRepository userRepository;
+  private final UserService userService;
+  private final BoardRepository boardRepository;
+
+  @Transactional
+  public void follow(String userName, Long follow_id) {
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
+    User Follow = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+
+    if (followRepository.existsByFromUserAndToUser(user, Follow)) {
+      throw new AlreadyFollow();
+    }
+
+    Follow newFollower = new Follow();
+    newFollower.setFromUser(user);
+    newFollower.setToUser(Follow);
+    followRepository.save(newFollower);
+  }
+
+  @Transactional
+  public void unFollow(String userName, Long follow_id) {
+    User user =
+        userRepository
+            .findUserByNicknameAndDelYn(userName, YnType.N)
+            .orElseThrow(NotFoundUser::new);
+    User Follow = userRepository.findById(follow_id).orElseThrow(NotFoundUser::new);
+
+    Follow followerToDelete =
+        followRepository
+            .findByFromUserAndToUser(user, Follow)
+            .orElseThrow(AlreadyUnfollow::new);
+    followRepository.delete(followerToDelete);
+  }
+
+  public Page<Follow> findFollowsByNickname(String nickname, Pageable pageable) {
+    Page<Follow> result = followRepository.findFollowByNickname(nickname, pageable);
+    if (result.isEmpty()) {
+      throw new NotFoundUser();
+    }
+    return result;
+  }
+
+  public Boolean checkFollow(String nickname, Long followId) {
+    User user1 = userService.getUser(nickname);
+    User user2 = userService.getUser(followId);
+    if (user1.equals(user2)) return true;
+    //    return followRepository.existsByUserNicknameAndAndFollowId(nickname, followId);
+    return null;
+  }
+
+  public List<FollowSimpleDto> getFollowUserList(Long fromUserId) {
+    User user =
+        userRepository.findUserByIdAndDelYn(fromUserId, YnType.N).orElseThrow(NotFoundUser::new);
+
+    List<Follow> FollowList = followRepository.findByFromUserOrderByIdDesc(user);
+    return FollowMapper.INSTANCE.toFollowSimpleDtos(FollowList);
+  }
+
+  public List<BoardDto> getFollowUserBoardList(User user) {
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
+    List<Follow> FollowList = followRepository.findByFromUserOrderByIdDesc(user);
+    for (Follow follow : FollowList) {
+      User toUser = follow.getToUser();
+      List<Board> boards = toUser.getBoards();
+      boardDtoList.addAll(BoardMapper.INSTANCE.toDtos(boards));
+    }
+
+    return boardDtoList;
+  }
+}

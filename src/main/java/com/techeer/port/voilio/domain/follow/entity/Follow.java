@@ -1,17 +1,18 @@
 package com.techeer.port.voilio.domain.follow.entity;
 
 import com.techeer.port.voilio.domain.user.entity.User;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "subscribes")
-public class Subscribe {
+@Table(name = "follows")
+public class Follow {
 
   @Id
   @Column(name = "subscribe_id")

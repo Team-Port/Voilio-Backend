@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RedisSubscriber implements MessageListener {
+public class RedisFollower implements MessageListener {
 
   private final ObjectMapper objectMapper;
   private final RedisTemplate redisTemplate;
