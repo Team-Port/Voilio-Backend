@@ -28,6 +28,4 @@ public interface UserMapper {
   List<UserResponse> toDtos(List<User> users);
 
   List<Top5LatestUserResponseDto> toTop5LatestUserDto(List<User> users);
-
-  UserSimpleDto toSimpleDto1(User user);
 }
