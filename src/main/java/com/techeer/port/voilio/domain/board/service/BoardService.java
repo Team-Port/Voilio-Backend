@@ -21,7 +21,10 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.LikeDivision;
+import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.common.YnType;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -207,9 +210,17 @@ public class BoardService {
     }
   }
 
-  public BoardThumbnailDto uploadThumbnail(MultipartFile thumbnailFile) {
+  public BoardThumbnailDto createImageUrl(MultipartFile imageFile, UploadDivision uploadDivision) {
     try {
-      return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(thumbnailFile, "thumbnail"));
+      if(uploadDivision.equals(UploadDivision.THUMBNAIL)){
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/thumbnail"));
+      } else if (uploadDivision.equals(UploadDivision.BOARD)) {
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/board"));
+      } else if (uploadDivision.equals(UploadDivision.PROFILE)) {
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/profile"));
+      }
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+
     } catch (IOException e) {
       throw new ConvertException();
     }
