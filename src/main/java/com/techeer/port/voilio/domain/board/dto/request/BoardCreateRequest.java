@@ -49,5 +49,6 @@ public class BoardCreateRequest {
   @NotNull
   private BoardDivision division;
 
+
   private List<String> boardImageUrls;
 }

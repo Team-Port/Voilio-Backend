@@ -18,7 +18,7 @@ public interface BoardMapper {
 
   BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
-  Board toEntityDto(BoardCreateRequest boardCreateRequest, User user);
+  Board toEntity(BoardCreateRequest boardCreateRequest);
 
   UploadFileResponse toVideoAndThumbnail(String videoUrl, String thumbnail);
 
