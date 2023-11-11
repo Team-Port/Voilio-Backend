@@ -12,6 +12,7 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.global.result.ResultResponse;
@@ -122,16 +123,17 @@ public class BoardController {
   }
 
   @PostMapping(
-      value = "/thumbnail",
+      value = "/{division}",
       consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  @Operation(summary = "썸네일 생성", description = "썸네일 생성 메서드입니다. thumbnailUrl을 반환합니다")
+  @Operation(summary = "이미지 업로드", description = "이미지를 S3에 업로드 후, image URL 을 반환합니다")
   public ResponseEntity<ResultsResponse> uploadThumbnail(
-      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnailFile,
+      @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+      @PathVariable(value = "division") UploadDivision uploadDivision,
       @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
+    BoardThumbnailDto boardThumbnailDto = boardService.createImageUrl(imageFile, uploadDivision);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
   }

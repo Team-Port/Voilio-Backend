@@ -12,6 +12,7 @@ import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
 import com.techeer.port.voilio.domain.board.repository.BoardCustomRepository;
+import com.techeer.port.voilio.domain.board.repository.BoardImageRepository;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
@@ -20,7 +21,10 @@ import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.LikeDivision;
+import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.common.YnType;
+import com.techeer.port.voilio.global.error.ErrorCode;
+import com.techeer.port.voilio.global.error.exception.BusinessException;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class BoardService {
 
   private final LikeService likeService;
   private final BoardRepository boardRepository;
+  private final BoardImageRepository boardImageRepository;
   private final BoardCustomRepository boardCustomRepository;
   private final UserRepository userRepository;
   private final LikeRepository likeRepository;
@@ -60,7 +65,6 @@ public class BoardService {
     List<BoardDto> boardDtoList = new ArrayList<>();
 
     for (Board board : boardPage) {
-
       // user 정보 넣기
       BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
       User user = board.getUser();
@@ -72,7 +76,6 @@ public class BoardService {
 
       boardDtoList.add(boardDto);
     }
-
     return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
   }
 
@@ -135,23 +138,22 @@ public class BoardService {
   //  }
 
   @Transactional
-  public Board createBoard(BoardCreateRequest boardCreateRequest, User user) {
+  public BoardDto createBoard(BoardCreateRequest boardCreateRequest, User user) {
+    Board board = BoardMapper.INSTANCE.toEntity(boardCreateRequest);
+    board.addUser(user);
+    Board savedBoard = boardRepository.save(board);
 
-    Board board = BoardMapper.INSTANCE.toEntityDto(boardCreateRequest, user);
+    if (boardCreateRequest.getBoardImageUrls() != null
+        || !boardCreateRequest.getBoardImageUrls().isEmpty()) {
+      List<String> boardImageUrls = boardCreateRequest.getBoardImageUrls();
 
-    List<BoardImage> boardImageList = new ArrayList<>();
-    List<String> boardImageUrls = boardCreateRequest.getBoardImageUrls();
-
-    // 게시글 이미지 url BoardImage에 등록하기
-    for (String url : boardImageUrls) {
-      BoardImage boardImage = new BoardImage(board, url);
-      boardImageList.add(boardImage);
+      // 게시글 이미지 url BoardImage에 등록하기
+      for (String url : boardImageUrls) {
+        BoardImage boardImage = new BoardImage(savedBoard, url);
+        boardImageRepository.save(boardImage);
+      }
     }
-
-    board.setBoardImages(boardImageList);
-
-    boardRepository.save(board);
-    return board;
+    return BoardMapper.INSTANCE.toDto(savedBoard);
   }
 
   public void hideBoard(Long board_id) {
@@ -209,9 +211,17 @@ public class BoardService {
     }
   }
 
-  public BoardThumbnailDto uploadThumbnail(MultipartFile thumbnailFile) {
+  public BoardThumbnailDto createImageUrl(MultipartFile imageFile, UploadDivision uploadDivision) {
     try {
-      return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(thumbnailFile, "thumbnail"));
+      if (uploadDivision.equals(UploadDivision.THUMBNAIL)) {
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/thumbnail"));
+      } else if (uploadDivision.equals(UploadDivision.BOARD)) {
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/board"));
+      } else if (uploadDivision.equals(UploadDivision.PROFILE)) {
+        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/profile"));
+      }
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+
     } catch (IOException e) {
       throw new ConvertException();
     }

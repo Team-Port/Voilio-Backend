@@ -74,6 +74,10 @@ public class Board extends BaseEntity {
     this.delYn = delYn;
   }
 
+  public void addUser(User user) {
+    this.user = user;
+  }
+
   @Builder
   public Board(
       String title,
