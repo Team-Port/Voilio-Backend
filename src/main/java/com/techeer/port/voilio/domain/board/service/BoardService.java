@@ -143,7 +143,8 @@ public class BoardService {
     board.addUser(user);
     Board savedBoard = boardRepository.save(board);
 
-    if(boardCreateRequest.getBoardImageUrls() != null || !boardCreateRequest.getBoardImageUrls().isEmpty()){
+    if (boardCreateRequest.getBoardImageUrls() != null
+        || !boardCreateRequest.getBoardImageUrls().isEmpty()) {
       List<String> boardImageUrls = boardCreateRequest.getBoardImageUrls();
 
       // 게시글 이미지 url BoardImage에 등록하기
@@ -212,7 +213,7 @@ public class BoardService {
 
   public BoardThumbnailDto createImageUrl(MultipartFile imageFile, UploadDivision uploadDivision) {
     try {
-      if(uploadDivision.equals(UploadDivision.THUMBNAIL)){
+      if (uploadDivision.equals(UploadDivision.THUMBNAIL)) {
         return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/thumbnail"));
       } else if (uploadDivision.equals(UploadDivision.BOARD)) {
         return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/board"));
