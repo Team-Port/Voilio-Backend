@@ -5,18 +5,18 @@ import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class BoardDto {
-
+public class BoardSimpleDto {
   private Long id;
 
   private String title;
 
-  private String summary;
+  private String content;
 
   private Category category1;
 
@@ -30,6 +30,8 @@ public class BoardDto {
 
   private Long likeCount;
 
+  private Boolean existLike;
+
   private BoardDivision division;
 
   private YnType isPublic;
@@ -41,4 +43,6 @@ public class BoardDto {
   private LocalDateTime updateAt;
 
   private UserSimpleDto userSimpleDto;
+
+  private List<BoardImageDto> boardImages;
 }

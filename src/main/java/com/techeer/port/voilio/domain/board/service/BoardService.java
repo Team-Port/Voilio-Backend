@@ -1,11 +1,13 @@
 package com.techeer.port.voilio.domain.board.service;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.entity.Board;
+import com.techeer.port.voilio.domain.board.entity.BoardImage;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.mapper.BoardMapper;
@@ -14,15 +16,20 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
+import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.minidev.asm.ex.ConvertException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,18 +53,56 @@ public class BoardService {
     boardRepository.save(board);
   }
 
-  public void addBoardView(Long boardId, User user) {
+  public Page<BoardDto> findAllBoard(Pageable pageable) {
+    Page<Board> boardPage =
+        boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
 
-    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    List<BoardDto> boardDtoList = new ArrayList<>();
 
-    if (user == null || user.getId() != board.getUser().getId()) {
-      board.addView();
+    for (Board board : boardPage) {
+
+      // user 정보 넣기
+      BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+      User user = board.getUser();
+      boardDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(user));
+
+      // 좋아요 개수 넣기
+      Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+      boardDto.setLikeCount(likeCount);
+
+      boardDtoList.add(boardDto);
     }
+
+    return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
   }
 
-  public BoardDto findBoardById(Long boardId, User user) {
+  public BoardSimpleDto findBoardById(Long boardId, User user) {
+
     Board board = boardRepository.findBoardById(boardId).orElseThrow(NotFoundBoard::new);
-    return BoardMapper.INSTANCE.toDto(board);
+    BoardSimpleDto boardSimpleDto = BoardMapper.INSTANCE.toSimpleDto(board);
+
+    // 게시글을 작성한 유저의 좋아요 여부 표시
+    // 로그인 하지 않거나 유저가 같지 않을 경우 false 반환
+    if (user != null && board.getUser().getId() == user.getId()) {
+      boolean existsLikeByDivisionAndContentId =
+          likeRepository.existsLikeByDivisionAndContentIdAndUser(
+              LikeDivision.BOARD_LIKE, boardSimpleDto.getId(), user);
+      boardSimpleDto.setExistLike(existsLikeByDivisionAndContentId);
+    } else {
+      boardSimpleDto.setExistLike(false);
+    }
+    // 좋아요 개수 넣기
+    Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
+    boardSimpleDto.setLikeCount(likeCount);
+
+    // 유저 정보 넣기
+    User boardUser = board.getUser();
+    boardSimpleDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(boardUser));
+
+    // 조회수 증가
+    board.addView();
+
+    return boardSimpleDto;
   }
 
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
@@ -90,9 +135,23 @@ public class BoardService {
   //  }
 
   @Transactional
-  public void createBoard(BoardCreateRequest boardCreateRequest, User user) {
+  public Board createBoard(BoardCreateRequest boardCreateRequest, User user) {
+
     Board board = BoardMapper.INSTANCE.toEntityDto(boardCreateRequest, user);
+
+    List<BoardImage> boardImageList = new ArrayList<>();
+    List<String> boardImageUrls = boardCreateRequest.getBoardImageUrls();
+
+    // 게시글 이미지 url BoardImage에 등록하기
+    for (String url : boardImageUrls) {
+      BoardImage boardImage = new BoardImage(board, url);
+      boardImageList.add(boardImage);
+    }
+
+    board.setBoardImages(boardImageList);
+
     boardRepository.save(board);
+    return board;
   }
 
   public void hideBoard(Long board_id) {
@@ -116,19 +175,6 @@ public class BoardService {
       throw new NotFoundBoard();
     }
     return boardRepository.save(request.toEntity(board));
-  }
-
-  public Page<BoardDto> findAllBoard(Pageable pageable) {
-    Page<Board> boardPage =
-        boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
-
-    if (boardPage.isEmpty()) {
-      throw new NotFoundBoard();
-    }
-
-    Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boardPage);
-
-    return boardDtoPage;
   }
 
   public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {

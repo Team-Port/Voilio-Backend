@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
+import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
@@ -17,7 +18,6 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
@@ -54,11 +54,8 @@ public class BoardController {
   @Operation(summary = "개별 게시물 출력", description = "개별 게시물 출력 메서드입니다.")
   public ResponseEntity<ResultsResponse> findBoardById(
       @PathVariable Long boardId, @AuthenticationPrincipal User user) {
-    if (user == null) {
-      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
-    }
-    BoardDto boardDto = boardService.findBoardById(boardId, user);
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
+    BoardSimpleDto boardDto = boardService.findBoardById(boardId, user);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDto));
   }
 
   @GetMapping("/{userId}/result")
@@ -90,63 +87,6 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
 
-  //
-  //  @PutMapping(value = "/update/{boardId}", consumes = "multipart/form-data")
-  //  @Operation(summary = "게시물 수정", description = "게시물 수정 메서드입니다.")
-  //  public ResponseEntity<ResultResponse> updateBoard(
-  //      @PathVariable Long boardId,
-  //      @RequestParam String title,
-  //      @RequestParam String content,
-  //      @RequestParam Category category1,
-  //      @RequestParam Category category2,
-  //      @RequestParam MultipartFile thumbnailFile,
-  //      @RequestHeader(value = "Authorization", required = false, defaultValue = "")
-  //          String authorizationHeader) {
-  //    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
-  //    boolean isAuthenticated =
-  //        !authorizationHeader.isEmpty()
-  //            && currentLoginUserId.equals(userService.getUserIdByBoardId(boardId));
-  //
-  //    if (isAuthenticated) {
-  //      UploadFileResponse updateFiles = boardService.updateFiles(thumbnailFile);
-  //      BoardUpdateRequest boardUpdateRequest =
-  //          BoardUpdateRequest.builder()
-  //              .title(title)
-  //              .content(content)
-  //              .category1(category1)
-  //              .category2(category2)
-  //              .thumbnail_url(updateFiles.getThumbnailUrl())
-  //              .build();
-  //      boardService.updateBoard(boardId, boardUpdateRequest);
-  //      ResultResponse<Board> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
-  //      resultResponse.add(
-  //          linkTo(
-  //                  methodOn(BoardController.class)
-  //                      .updateBoard(
-  //                          boardId,
-  //                          title,
-  //                          content,
-  //                          category1,
-  //                          category2,
-  //                          thumbnailFile,
-  //                          authorizationHeader))
-  //              .withSelfRel());
-  //      return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
-  //    } else {
-  //      throw new NoAuthority();
-  //    }
-  //  }
-  //
-  //  @DeleteMapping("/{boardId}")
-  //  @Operation(summary = "게시물 삭제", description = "게시물 삭제 메서드입니다.")
-  //  public ResponseEntity<ResultResponse> deleteBoard(@PathVariable Long boardId) {
-  //    boardService.deleteBoard(boardId);
-  //    ResultResponse<?> responseFormat = new ResultResponse<>(USER_REGISTRATION_SUCCESS);
-  //
-  // responseFormat.add(linkTo(methodOn(BoardController.class).deleteBoard(boardId)).withSelfRel());
-  //    return ResponseEntity.status(HttpStatus.OK).body(responseFormat);
-  //  }
-
   @PatchMapping("{boardId}/hide")
   @Operation(summary = "게시물 숨김", description = "게시물 숨기기 메서드입니다.")
   public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
@@ -159,8 +99,7 @@ public class BoardController {
   @PostMapping(value = "/create")
   @Operation(summary = "게시물 생성", description = "게시물 생성 메서드입니다.")
   public ResponseEntity<ResultsResponse> createBoard(
-      @RequestBody @Valid BoardCreateRequest boardCreateRequest,
-      @AuthenticationPrincipal User user) {
+      @RequestBody BoardCreateRequest boardCreateRequest, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
@@ -195,15 +134,5 @@ public class BoardController {
     BoardThumbnailDto boardThumbnailDto = boardService.uploadThumbnail(thumbnailFile);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
-  }
-
-  @PatchMapping("/{boardId}/view")
-  @Operation(summary = "조회수 증가", description = "조회수 증가하는 메서드입니다.")
-  public ResponseEntity<ResultsResponse> addBoardViewCounts(
-      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
-
-    boardService.addBoardView(boardId, user);
-
-    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS));
   }
 }

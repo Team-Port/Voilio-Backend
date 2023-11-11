@@ -1,6 +1,7 @@
 package com.techeer.port.voilio.domain.user.mapper;
 
 import com.techeer.port.voilio.domain.user.dto.UserDto;
+import com.techeer.port.voilio.domain.user.dto.UserSimpleDto;
 import com.techeer.port.voilio.domain.user.dto.request.UserSignUpRequest;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
@@ -17,6 +18,8 @@ public interface UserMapper {
   UserResponse toSimpleDto(User user);
 
   UserDto toDto(User user);
+
+  UserSimpleDto toSimpleDto1(User user);
 
   User toEntity(UserDto userDto);
 
