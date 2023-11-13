@@ -41,12 +41,12 @@
 //        .body(EntityModel.of(new ResultResponse<>(API_SUCCESS_CREATE_CHATROOM)));
 //  }
 //
-//  @GetMapping("/{subscribeId}")
-//  public ResponseEntity<EntityModel<ResultResponse<UUID>>> getRoomBySubscribeId(
+//  @GetMapping("/{FollowId}")
+//  public ResponseEntity<EntityModel<ResultResponse<UUID>>> getRoomByFollowId(
 //      @RequestHeader(value = "Authorization") String authorizationHeader,
-//      @PathVariable Long subscribeId) {
+//      @PathVariable Long FollowId) {
 //    Long currentLoginUserId = userService.getCurrentLoginUser(authorizationHeader);
-//    UUID roomUuid = chatRoomService.getChatRoom(currentLoginUserId, subscribeId);
+//    UUID roomUuid = chatRoomService.getChatRoom(currentLoginUserId, FollowId);
 //    return ResponseEntity.ok(
 //        EntityModel.of(new ResultResponse<>(API_SUCCESS_GET_CHATROOM, roomUuid)));
 //  }
