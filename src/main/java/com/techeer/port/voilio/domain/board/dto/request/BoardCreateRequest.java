@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-@Builder
 @Getter
+@Setter
 public class BoardCreateRequest {
 
   @Schema(description = "게시글 제목")
