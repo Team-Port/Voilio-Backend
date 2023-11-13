@@ -30,21 +30,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Page<Board> findBoardsByDelYnAndUserOrderByUpdateAtDesc(
       Pageable pageable, YnType delYn, User user);
 
-  @Query(
-      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND (b.category1 ="
-          + " :category1 OR b.category2 = :category2) ORDER BY b.createAt DESC")
-  Page<Board> findBoardByCategory(
-      @Param("category1") Category category1,
-      @Param("category2") Category category2,
-      Pageable pageable);
-
   Page<Board> findByDelYnAndIsPublicAndCategory1OrCategory2OrderByCreateAtDesc(
       YnType delYn, YnType isPublic, Category category1, Category category2, Pageable pageable);
-
-  @Query(
-      "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.isPublic = 'Y' AND b.user.nickname ="
-          + " :nickname ORDER BY b.createAt DESC")
-  Page<Board> findBoardByUserNickname(@Param("nickname") String nickname, Pageable pageable);
 
   @Query(
       "SELECT b FROM Board b WHERE b.delYn = 'N' AND b.user.nickname ="
