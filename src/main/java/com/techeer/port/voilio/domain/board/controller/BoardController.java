@@ -140,8 +140,10 @@ public class BoardController {
   }
 
   @PutMapping("/update/{boardId}")
-  public ResponseEntity<ResultsResponse> updateBoard(@PathVariable Long boardId, @RequestBody
-  BoardUpdateRequest boardUpdateRequest, @AuthenticationPrincipal User user) {
+  public ResponseEntity<ResultsResponse> updateBoard(
+      @PathVariable Long boardId,
+      @RequestBody BoardUpdateRequest boardUpdateRequest,
+      @AuthenticationPrincipal User user) {
 
     if (user == null) {
       throw new BusinessException(ErrorCode.USER_NOT_FOUND_ERROR);
@@ -152,8 +154,7 @@ public class BoardController {
 
   @PatchMapping("/delete/{boardId}")
   public ResponseEntity<ResultsResponse> deleteBoard(
-      @PathVariable Long boardId, @AuthenticationPrincipal User user
-  ) {
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
     if (user == null) {
       throw new BusinessException(ErrorCode.USER_NOT_FOUND_ERROR);
     }
