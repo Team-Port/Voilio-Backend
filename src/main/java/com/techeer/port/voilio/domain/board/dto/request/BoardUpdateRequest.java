@@ -1,18 +1,13 @@
 package com.techeer.port.voilio.domain.board.dto.request;
 
-import com.techeer.port.voilio.domain.board.entity.Board;
-import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
-import com.techeer.port.voilio.global.common.YnType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.URL;
 
 @Getter
 @Setter

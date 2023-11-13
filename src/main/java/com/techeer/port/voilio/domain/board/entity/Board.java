@@ -80,7 +80,11 @@ public class Board extends BaseEntity {
   }
 
   public void updateBoard(
-      String title, String content, String summary, Category category1, Category category2,
+      String title,
+      String content,
+      String summary,
+      Category category1,
+      Category category2,
       String thumbnailUrl) {
     this.title = title;
     this.summary = summary;

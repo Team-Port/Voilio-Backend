@@ -126,8 +126,7 @@ public class BoardService {
   }
 
   public BoardDto findBoardByIdExceptHide(Long board_id) {
-    Board board =
-        boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
+    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
   }
 
@@ -216,9 +215,13 @@ public class BoardService {
 
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
 
-    board.updateBoard(boardUpdateRequest.getTitle(), boardUpdateRequest.getContent(),
-        boardUpdateRequest.getSummary(), boardUpdateRequest.getCategory1(),
-        boardUpdateRequest.getCategory2(), boardUpdateRequest.getThumbnailUrl());
+    board.updateBoard(
+        boardUpdateRequest.getTitle(),
+        boardUpdateRequest.getContent(),
+        boardUpdateRequest.getSummary(),
+        boardUpdateRequest.getCategory1(),
+        boardUpdateRequest.getCategory2(),
+        boardUpdateRequest.getThumbnailUrl());
 
     List<BoardImage> existBoardImage = boardImageRepository.findByBoard(board);
     List<String> boardImageUrls = boardUpdateRequest.getBoardImageUrls();
@@ -229,7 +232,6 @@ public class BoardService {
       boardImageRepository.save(newBoardImage);
     }
   }
-
 
   public void deleteBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
