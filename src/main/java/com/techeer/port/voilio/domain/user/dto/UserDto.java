@@ -16,10 +16,7 @@ public class UserDto {
   private String email;
   private String nickname;
   private String imageUrl;
-  private LocalDateTime activatedAt;
-  private YnType isStopped;
   //  private List<BoardDto> boards;
-  private Authority authority;
   private YnType delYn;
   private List<SubscribeDto> following;
 
