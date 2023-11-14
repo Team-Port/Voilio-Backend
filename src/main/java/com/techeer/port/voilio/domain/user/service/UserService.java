@@ -1,5 +1,8 @@
 package com.techeer.port.voilio.domain.user.service;
 
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
+
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
@@ -12,17 +15,13 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.s3.util.S3Manager;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,7 +46,7 @@ public class UserService {
     Long videoCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.VIDEO);
     userDetailDto.changeNormalCount(normalCount);
     userDetailDto.changeVideoCount(videoCount);
-//    userDetailDto.changeFollowerCount(); 추후 변경 예정
+    //    userDetailDto.changeFollowerCount(); 추후 변경 예정
 
     return userDetailDto;
   }

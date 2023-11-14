@@ -1,5 +1,7 @@
 package com.techeer.port.voilio.domain.user.controller;
 
+import static com.techeer.port.voilio.global.result.ResultCode.*;
+
 import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
@@ -13,15 +15,12 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Tag(name = "User", description = "User API Document")
 @RequestMapping("api/v1/users")
