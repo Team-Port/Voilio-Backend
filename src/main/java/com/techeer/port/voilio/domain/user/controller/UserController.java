@@ -1,7 +1,6 @@
 package com.techeer.port.voilio.domain.user.controller;
 
-import static com.techeer.port.voilio.global.result.ResultCode.*;
-
+import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
@@ -14,12 +13,15 @@ import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 @Tag(name = "User", description = "User API Document")
 @RequestMapping("api/v1/users")
@@ -41,7 +43,7 @@ public class UserController {
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
   public ResponseEntity<ResultResponse> getUserById(@PathVariable("user_id") Long userId) {
-    UserDto user = userService.getUserDto(userId);
+    UserDetailDto user = userService.getUserDto(userId);
     ResultResponse<UserDto> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }
