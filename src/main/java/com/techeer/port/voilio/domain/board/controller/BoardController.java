@@ -9,6 +9,7 @@ import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
 import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
 import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
+import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
@@ -136,5 +137,30 @@ public class BoardController {
     BoardThumbnailDto boardThumbnailDto = boardService.createImageUrl(imageFile, uploadDivision);
 
     return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
+  }
+
+  @PutMapping("/update/{boardId}")
+  public ResponseEntity<ResultsResponse> updateBoard(
+      @PathVariable Long boardId,
+      @RequestBody BoardUpdateRequest boardUpdateRequest,
+      @AuthenticationPrincipal User user) {
+
+    if (user == null) {
+      throw new BusinessException(ErrorCode.USER_NOT_FOUND_ERROR);
+    }
+    boardService.changeBoard(boardId, boardUpdateRequest);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS));
+  }
+
+  @PatchMapping("/delete/{boardId}")
+  public ResponseEntity<ResultsResponse> deleteBoard(
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.USER_NOT_FOUND_ERROR);
+    }
+
+    boardService.deleteBoard(boardId);
+
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_DELETE_SUCCESS));
   }
 }

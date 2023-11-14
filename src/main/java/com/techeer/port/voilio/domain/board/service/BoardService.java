@@ -52,12 +52,6 @@ public class BoardService {
   private final LikeRepository likeRepository;
   private final S3Manager s3Manager;
 
-  public void deleteBoard(Long board_id) {
-    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
-    board.changeDelYn(YnType.Y);
-    boardRepository.save(board);
-  }
-
   public Page<BoardDto> findAllBoard(Pageable pageable) {
     Page<Board> boardPage =
         boardRepository.findAllByDelYnAndIsPublicOrderByUpdateAtDesc(pageable, YnType.N, YnType.Y);
@@ -131,11 +125,10 @@ public class BoardService {
     }
   }
 
-  //  public BoardDto findBoardByIdExceptHide(Long board_id) {
-  //    Board board =
-  // boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
-  //    return BoardMapper.INSTANCE.toDto(board);
-  //  }
+  public BoardDto findBoardByIdExceptHide(Long board_id) {
+    Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
+    return BoardMapper.INSTANCE.toDto(board);
+  }
 
   @Transactional
   public BoardDto createBoard(BoardCreateRequest boardCreateRequest, User user) {
@@ -168,15 +161,6 @@ public class BoardService {
         boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y, pageable);
 
     return BoardMapper.INSTANCE.toPageList(boards);
-  }
-
-  @Transactional
-  public Board updateBoard(Long board_id, BoardUpdateRequest request) {
-    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
-    if (board.getDelYn().equals(YnType.Y)) {
-      throw new NotFoundBoard();
-    }
-    return boardRepository.save(request.toEntity(board));
   }
 
   public Page<BoardDto> findBoardByCategory(Category category, Pageable pageable) {
@@ -225,5 +209,32 @@ public class BoardService {
     } catch (IOException e) {
       throw new ConvertException();
     }
+  }
+
+  public void changeBoard(Long boardId, BoardUpdateRequest boardUpdateRequest) {
+
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+
+    board.updateBoard(
+        boardUpdateRequest.getTitle(),
+        boardUpdateRequest.getContent(),
+        boardUpdateRequest.getSummary(),
+        boardUpdateRequest.getCategory1(),
+        boardUpdateRequest.getCategory2(),
+        boardUpdateRequest.getThumbnailUrl());
+
+    List<BoardImage> existBoardImage = boardImageRepository.findByBoard(board);
+    List<String> boardImageUrls = boardUpdateRequest.getBoardImageUrls();
+    boardImageRepository.deleteAll(existBoardImage);
+
+    for (String boardImageUrl : boardImageUrls) {
+      BoardImage newBoardImage = new BoardImage(board, boardImageUrl);
+      boardImageRepository.save(newBoardImage);
+    }
+  }
+
+  public void deleteBoard(Long boardId) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    board.changeDelYn(YnType.Y);
   }
 }

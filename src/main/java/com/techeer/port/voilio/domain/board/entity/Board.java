@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +22,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Table(name = "boards")
@@ -78,33 +79,15 @@ public class Board extends BaseEntity {
     this.user = user;
   }
 
-  @Builder
-  public Board(
+  public void updateBoard(
       String title,
       String content,
       String summary,
       Category category1,
       Category category2,
-      String videoUrl,
-      String thumbnailUrl,
-      User user,
-      BoardDivision division,
-      YnType isPublic) {
+      String thumbnailUrl) {
     this.title = title;
-    this.content = content;
     this.summary = summary;
-    this.category1 = category1;
-    this.category2 = category2;
-    this.videoUrl = videoUrl;
-    this.thumbnailUrl = thumbnailUrl;
-    this.isPublic = isPublic;
-    this.user = user;
-    this.division = division;
-  }
-
-  public void setBoard(
-      String title, String content, Category category1, Category category2, String thumbnailUrl) {
-    this.title = title;
     this.content = content;
     this.category1 = category1;
     this.category2 = category2;
