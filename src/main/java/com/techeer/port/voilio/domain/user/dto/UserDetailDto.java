@@ -1,6 +1,6 @@
 package com.techeer.port.voilio.domain.user.dto;
 
-import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
+import com.techeer.port.voilio.domain.follow.dto.FollowDto;
 import com.techeer.port.voilio.global.common.YnType;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ public class UserDetailDto {
     private String nickname;
     private String imageUrl;
     private YnType delYn;
-    private List<SubscribeDto> following;
+    private List<FollowDto> following;
     private Long videoCount;
     private Long normalCount;
     private Long followerCount;

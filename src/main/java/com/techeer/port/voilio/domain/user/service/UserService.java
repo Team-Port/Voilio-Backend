@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.service;
 
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.follow.repository.FollowRepository;
 import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
@@ -30,6 +31,7 @@ import static com.techeer.port.voilio.global.common.YnType.Y;
 public class UserService {
   private final UserRepository userRepository;
   private final BoardRepository boardRepository;
+  private final FollowRepository followRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final S3Manager s3Manager;
@@ -43,11 +45,14 @@ public class UserService {
   public UserDetailDto getUserDto(Long userId) {
     User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
     UserDetailDto userDetailDto = UserMapper.INSTANCE.toDetailDto(user);
+
     Long normalCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.NORMAL);
     Long videoCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.VIDEO);
+    Long followCount = followRepository.countFollowByFromUser(user);
+
     userDetailDto.changeNormalCount(normalCount);
     userDetailDto.changeVideoCount(videoCount);
-//    userDetailDto.changeFollowerCount(); 추후 변경 예정
+    userDetailDto.changeFollowerCount(followCount);
 
     return userDetailDto;
   }
