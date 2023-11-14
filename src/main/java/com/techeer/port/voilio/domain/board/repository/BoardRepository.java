@@ -54,5 +54,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
   Page<Board> findBoardByUserNicknameExceptHide(
       @Param("nickname") String nickname, Pageable pageable);
 
-  Long countBoardsByUserAndBoardDivision(User user, BoardDivision boardDivision);
+  Long countBoardByUserAndDivision(User user, BoardDivision boardDivision);
 }

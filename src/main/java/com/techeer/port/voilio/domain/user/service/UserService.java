@@ -43,8 +43,8 @@ public class UserService {
   public UserDetailDto getUserDto(Long userId) {
     User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
     UserDetailDto userDetailDto = UserMapper.INSTANCE.toDetailDto(user);
-    Long normalCount = boardRepository.countBoardsByUserAndBoardDivision(user, BoardDivision.NORMAL);
-    Long videoCount = boardRepository.countBoardsByUserAndBoardDivision(user, BoardDivision.VIDEO);
+    Long normalCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.NORMAL);
+    Long videoCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.VIDEO);
     userDetailDto.changeNormalCount(normalCount);
     userDetailDto.changeVideoCount(videoCount);
 //    userDetailDto.changeFollowerCount(); 추후 변경 예정
