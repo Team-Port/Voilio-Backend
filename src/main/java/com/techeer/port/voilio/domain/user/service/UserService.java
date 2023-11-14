@@ -48,7 +48,7 @@ public class UserService {
 
     Long normalCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.NORMAL);
     Long videoCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.VIDEO);
-    Long followCount = followRepository.countFollowByFromUser(user);
+    Long followCount = followRepository.countFollowByToUser(user);
 
     userDetailDto.changeNormalCount(normalCount);
     userDetailDto.changeVideoCount(videoCount);
