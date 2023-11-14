@@ -4,6 +4,7 @@ import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.YnType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
@@ -20,6 +21,9 @@ public class BoardCreateRequest {
   @Schema(description = "게시글 내용")
   @NotBlank
   private String content;
+
+  @Schema(description = "게시글 요약글")
+  private String summary;
 
   @Schema(description = "카테고리")
   @NotNull
@@ -44,4 +48,6 @@ public class BoardCreateRequest {
   @Schema(description = "게시글 유형")
   @NotNull
   private BoardDivision division;
+
+  private List<String> boardImageUrls;
 }

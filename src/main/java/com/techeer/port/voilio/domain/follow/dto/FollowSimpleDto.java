@@ -1,4 +1,4 @@
-package com.techeer.port.voilio.domain.subscribe.dto;
+package com.techeer.port.voilio.domain.follow.dto;
 
 import com.techeer.port.voilio.domain.user.dto.UserSimpleDto;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubscribeSimpleDto {
+public class FollowSimpleDto {
   private Long id;
 
   private UserSimpleDto toUser;

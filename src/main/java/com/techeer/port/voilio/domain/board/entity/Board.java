@@ -15,11 +15,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Table(name = "boards")
@@ -33,6 +35,8 @@ public class Board extends BaseEntity {
   private String title;
 
   private String content;
+
+  private String summary;
 
   @Enumerated(EnumType.STRING)
   private Category category1;
@@ -70,10 +74,15 @@ public class Board extends BaseEntity {
     this.delYn = delYn;
   }
 
+  public void addUser(User user) {
+    this.user = user;
+  }
+
   @Builder
   public Board(
       String title,
       String content,
+      String summary,
       Category category1,
       Category category2,
       String videoUrl,
@@ -83,6 +92,7 @@ public class Board extends BaseEntity {
       YnType isPublic) {
     this.title = title;
     this.content = content;
+    this.summary = summary;
     this.category1 = category1;
     this.category2 = category2;
     this.videoUrl = videoUrl;

@@ -19,14 +19,16 @@ public enum ErrorCode {
   INVALID_AUTH_TOKEN(401, "U005", "권한 정보가 없는 토큰입니다."),
 
   ALREADY_EXIST_USER_BY_NICKNAME(400, "U006", "이미 가입된 유저 nickname 입니다."),
+  NOT_FOUND_SEARCH_KEYWORD(400, "S006", "해당 검색어를 삭제할 수 없습니다."),
 
   // board
   BOARD_NOT_FOUND_ERROR(400, "B001", "게시글을 찾을 수 없음"),
+
   // comment
   COMMENT_NOT_FOUND_EXCEPTION(400, "C001", "댓글을 찾을 수 없음"),
-  // subscribe
-  ALREADY_SUBSCRIBE_USER(400, "S001", "이미 구독한 유저입니다."),
-  ALREADY_UNSUBSCRIBE_USER(400, "S002", "아직 구독하지 않은 유저입니다."),
+  // Follow
+  ALREADY_FOLLOW_USER(400, "S001", "이미 구독한 유저입니다."),
+  ALREADY_UNFOLLOW_USER(400, "S002", "아직 구독하지 않은 유저입니다."),
 
   CONVERT_FILE_ERROR(400, "F001", "파일 변환 실패"),
   UPLOAD_FILE_ERROR(400, "F002", "파일이 존재하지 않음"),
@@ -35,7 +37,10 @@ public enum ErrorCode {
 
   // like
   LIKE_NOT_FOUND_ERROR(400, "L001", "좋아요한 대상이 존재하지 않습니다."),
-  LIKE_DUPLICATE_ERROR(400, "L002", "이미 좋아요된 대상입니다.");
+  LIKE_DUPLICATE_ERROR(400, "L002", "이미 좋아요된 대상입니다."),
+
+  // division
+  NOT_FOUND_UPLOAD_DIVISION(400, "D005", "등록되지않은 분류 코드입니다. ");
   private final int status;
   private final String code;
   private final String message;

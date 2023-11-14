@@ -1,12 +1,11 @@
 package com.techeer.port.voilio.domain.user.dto;
 
-import com.techeer.port.voilio.domain.subscribe.dto.SubscribeDto;
-import com.techeer.port.voilio.domain.user.entity.Authority;
+import com.techeer.port.voilio.domain.follow.dto.FollowDto;
 import com.techeer.port.voilio.global.common.YnType;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,9 +17,9 @@ public class UserDto {
   private String imageUrl;
   //  private List<BoardDto> boards;
   private YnType delYn;
-  private List<SubscribeDto> following;
+  private List<FollowDto> following;
 
-  public void updateFollowing(List<SubscribeDto> following) {
+  public void updateFollowing(List<FollowDto> following) {
     this.following = following;
   }
 }
