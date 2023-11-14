@@ -2,10 +2,9 @@ package com.techeer.port.voilio.domain.user.dto;
 
 import com.techeer.port.voilio.domain.follow.dto.FollowDto;
 import com.techeer.port.voilio.global.common.YnType;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
