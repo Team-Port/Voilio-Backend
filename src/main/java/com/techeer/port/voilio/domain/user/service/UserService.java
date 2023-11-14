@@ -4,12 +4,16 @@ import static com.techeer.port.voilio.global.common.YnType.N;
 import static com.techeer.port.voilio.global.common.YnType.Y;
 
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+import com.techeer.port.voilio.domain.board.repository.BoardRepository;
+import com.techeer.port.voilio.domain.follow.repository.FollowRepository;
+import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.s3.util.S3Manager;
 import java.time.LocalDateTime;
@@ -25,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final BoardRepository boardRepository;
+  private final FollowRepository followRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final S3Manager s3Manager;
@@ -35,9 +41,19 @@ public class UserService {
     return UserMapper.INSTANCE.toDtos(users);
   }
 
-  public UserDto getUserDto(Long userId) {
+  public UserDetailDto getUserDto(Long userId) {
     User user = userRepository.findUserByIdAndDelYn(userId, N).orElseThrow(NotFoundUser::new);
-    return UserMapper.INSTANCE.toDto(user);
+    UserDetailDto userDetailDto = UserMapper.INSTANCE.toDetailDto(user);
+
+    Long normalCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.NORMAL);
+    Long videoCount = boardRepository.countBoardByUserAndDivision(user, BoardDivision.VIDEO);
+    Long followCount = followRepository.countFollowByToUser(user);
+
+    userDetailDto.changeNormalCount(normalCount);
+    userDetailDto.changeVideoCount(videoCount);
+    userDetailDto.changeFollowerCount(followCount);
+
+    return userDetailDto;
   }
 
   public User getUser(Long userId) {

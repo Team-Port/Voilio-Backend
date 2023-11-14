@@ -8,17 +8,27 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDetailDto {
 
   private Long id;
   private String email;
   private String nickname;
   private String imageUrl;
-  //  private List<BoardDto> boards;
   private YnType delYn;
   private List<FollowDto> following;
+  private Long videoCount;
+  private Long normalCount;
+  private Long followerCount;
 
-  public void updateFollowing(List<FollowDto> following) {
-    this.following = following;
+  public void changeVideoCount(Long videoCount) {
+    this.videoCount = videoCount;
+  }
+
+  public void changeNormalCount(Long normalCount) {
+    this.normalCount = normalCount;
+  }
+
+  public void changeFollowerCount(Long followerCount) {
+    this.followerCount = followerCount;
   }
 }

@@ -2,6 +2,7 @@ package com.techeer.port.voilio.domain.user.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.*;
 
+import com.techeer.port.voilio.domain.user.dto.UserDetailDto;
 import com.techeer.port.voilio.domain.user.dto.UserDto;
 import com.techeer.port.voilio.domain.user.dto.response.Top5LatestUserResponseDto;
 import com.techeer.port.voilio.domain.user.dto.response.UserResponse;
@@ -41,7 +42,7 @@ public class UserController {
   @GetMapping("/{user_id}")
   @Operation(summary = "회원 조회", description = "지정 회원을 조회하는 메서드입니다.")
   public ResponseEntity<ResultResponse> getUserById(@PathVariable("user_id") Long userId) {
-    UserDto user = userService.getUserDto(userId);
+    UserDetailDto user = userService.getUserDto(userId);
     ResultResponse<UserDto> resultResponse = new ResultResponse<>(GET_USER_SUCCESS, user);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
   }

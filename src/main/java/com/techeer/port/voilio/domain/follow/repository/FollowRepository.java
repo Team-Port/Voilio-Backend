@@ -23,4 +23,6 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
   Page<Follow> findFollowByNickname(@Param("nickname") String nickname, Pageable pageable);
 
   //  Boolean existsByUserNicknameAndAndFollowId(String nickname, Long FollowId);
+
+  Long countFollowByToUser(User fromUser);
 }
