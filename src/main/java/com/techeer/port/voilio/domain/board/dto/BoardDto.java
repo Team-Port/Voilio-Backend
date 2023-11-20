@@ -30,6 +30,8 @@ public class BoardDto {
 
   private Long likeCount;
 
+  private Boolean existLike;
+
   private BoardDivision division;
 
   private YnType isPublic;
@@ -40,5 +42,5 @@ public class BoardDto {
 
   private LocalDateTime updateAt;
 
-  private UserSimpleDto userSimpleDto;
+  private UserSimpleDto user;
 }

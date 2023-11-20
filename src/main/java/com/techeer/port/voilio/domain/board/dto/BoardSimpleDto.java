@@ -42,7 +42,7 @@ public class BoardSimpleDto {
 
   private LocalDateTime updateAt;
 
-  private UserSimpleDto userSimpleDto;
+  private UserSimpleDto user;
 
   private List<BoardImageDto> boardImages;
 }
