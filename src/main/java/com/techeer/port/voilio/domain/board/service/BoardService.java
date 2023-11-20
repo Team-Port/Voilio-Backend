@@ -59,10 +59,8 @@ public class BoardService {
     List<BoardDto> boardDtoList = new ArrayList<>();
 
     for (Board board : boardPage) {
-      // user 정보 넣기
+
       BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
-      User user = board.getUser();
-      boardDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(user));
 
       // 좋아요 개수 넣기
       Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
@@ -92,10 +90,6 @@ public class BoardService {
     Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
     boardSimpleDto.setLikeCount(likeCount);
 
-    // 유저 정보 넣기
-    User boardUser = board.getUser();
-    boardSimpleDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(boardUser));
-
     // 조회수 증가
     board.addView();
 
@@ -104,24 +98,48 @@ public class BoardService {
 
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
     if (user == null || user.getId() != userId) {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
-      Page<Board> boards =
+      Page<Board> boardPage =
           boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, YnType.Y, foundUser);
 
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-      return boardDtoPage;
+      for (Board board : boardPage) {
+        BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+        Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+        boardDto.setLikeCount(likeCount);
+        boardDto.setExistLike(false);
+        
+        boardDtoList.add(boardDto);
+      }
+
+      return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
 
     } else {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
-      Page<Board> boards =
+      Page<Board> boardPage =
           boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, foundUser);
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-      return boardDtoPage;
+
+      for (Board board : boardPage) {
+
+        BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+        Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+        boardDto.setLikeCount(likeCount);
+
+        boolean existsLikeByDivisionAndContentId =
+            likeRepository.existsLikeByDivisionAndContentIdAndUser(
+                LikeDivision.BOARD_LIKE, boardDto.getId(), user);
+        boardDto.setExistLike(existsLikeByDivisionAndContentId);
+
+        boardDtoList.add(boardDto);
+      }
+
+      return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
     }
   }
 
