@@ -17,7 +17,6 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.LikeDivision;
@@ -112,7 +111,7 @@ public class BoardService {
         Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
         boardDto.setLikeCount(likeCount);
         boardDto.setExistLike(false);
-        
+
         boardDtoList.add(boardDto);
       }
 
