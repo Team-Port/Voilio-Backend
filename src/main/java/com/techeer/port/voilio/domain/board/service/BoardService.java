@@ -151,7 +151,7 @@ public class BoardService {
 
   public BoardDto hideBoard(Long boardId, User user) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
-    if(user != board.getUser()){
+    if (user != board.getUser()) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
     board.changePublic();
