@@ -26,7 +26,7 @@ public class CommentDto {
 
   private List<CommentDto> childComments = new ArrayList<>();
 
-  private LocalDateTime createdAt;
+  private LocalDateTime createAt;
 
   public void updateIsLiked(Boolean isLiked) {
     this.isLiked = isLiked;
