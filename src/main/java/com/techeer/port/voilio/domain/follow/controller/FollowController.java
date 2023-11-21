@@ -30,7 +30,7 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Follow", description = "Follow API Document")
-@RequestMapping("/api/v1/Follows")
+@RequestMapping("/api/v1/follows")
 public class FollowController {
 
   private final FollowService followService;

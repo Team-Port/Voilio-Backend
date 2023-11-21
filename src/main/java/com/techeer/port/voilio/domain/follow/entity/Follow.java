@@ -1,10 +1,11 @@
 package com.techeer.port.voilio.domain.follow.entity;
 
 import com.techeer.port.voilio.domain.user.entity.User;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ import lombok.Setter;
 public class Follow {
 
   @Id
-  @Column(name = "subscribe_id")
+  @Column(name = "follow_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
