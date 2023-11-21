@@ -1,8 +1,6 @@
 package com.techeer.port.voilio.domain.board.controller;
 
 import static com.techeer.port.voilio.global.result.ResultCode.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
@@ -16,7 +14,6 @@ import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
-import com.techeer.port.voilio.global.result.ResultResponse;
 import com.techeer.port.voilio.global.result.ResultsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +23,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -89,13 +85,15 @@ public class BoardController {
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
 
-  @PatchMapping("{boardId}/hide")
+  @PatchMapping("/{boardId}/hide")
   @Operation(summary = "게시물 숨김", description = "게시물 숨기기 메서드입니다.")
-  public ResponseEntity<ResultResponse> hideBoard(@PathVariable Long boardId) {
-    boardService.hideBoard(boardId);
-    ResultResponse<?> resultResponse = new ResultResponse<>(BOARD_UPDATED_SUCCESS);
-    resultResponse.add(linkTo(methodOn(BoardController.class).hideBoard(boardId)).withSelfRel());
-    return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
+  public ResponseEntity<ResultsResponse> hideBoard(
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
+    if (user == null) {
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
+    BoardDto boardDto = boardService.hideBoard(boardId, user);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_UPDATED_SUCCESS, boardDto));
   }
 
   @PostMapping(value = "/create")

@@ -3,18 +3,19 @@ package com.techeer.port.voilio.domain.comment.service;
 import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.domain.board.exception.NotFoundBoard;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
-import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.comment.dto.CommentDto;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentRequest;
 import com.techeer.port.voilio.domain.comment.dto.request.CommentUpdateRequest;
 import com.techeer.port.voilio.domain.comment.entity.Comment;
 import com.techeer.port.voilio.domain.comment.mapper.CommentMapper;
 import com.techeer.port.voilio.domain.comment.repository.CommentRepository;
+import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.repository.UserRepository;
+import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.YnType;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentService {
 
-  private final UserRepository userRepository;
   private final CommentRepository commentRepository;
-
   private final BoardRepository boardRepository;
-
-  private final BoardService boardService;
+  private final LikeRepository likeRepository;
 
   @Transactional
   public CommentDto createComment(CommentRequest commentRequest, User user) {
@@ -81,13 +79,47 @@ public class CommentService {
     commentRepository.save(comment);
   }
 
-  public List<CommentDto> findCommentByBoardId(Long id) {
+  public List<CommentDto> findCommentByBoardId(Long id, User user) {
     if (!boardRepository.existsById(id)) {
       throw new NotFoundBoard();
     }
     List<Comment> commentList =
         commentRepository.findAllByBoardIdAndDelYnAndParentCommentIsNull(id, YnType.N);
-    List<CommentDto> commentDtoList = CommentMapper.INSTANCE.toDtos(commentList);
+
+    List<CommentDto> commentDtoList = new ArrayList<>();
+    for (Comment comment : commentList) {
+      CommentDto commentDto = CommentMapper.INSTANCE.toDto(comment);
+      if (user != null) {
+        boolean isLiked =
+            likeRepository.existsLikeByDivisionAndContentIdAndUser(
+                LikeDivision.COMMENT_LIKE, comment.getId(), user);
+        commentDto.updateIsLiked(isLiked);
+      }
+      Long count =
+          likeRepository.countByDivisionAndAndContentId(LikeDivision.COMMENT_LIKE, comment.getId());
+      commentDto.updateLikeCount(count);
+
+      if (!comment.getChildComments().isEmpty()) {
+        List<CommentDto> childCommentDtoList = new ArrayList<>();
+        for (Comment childComment : comment.getChildComments()) {
+          CommentDto childCommentDto = CommentMapper.INSTANCE.toDto(childComment);
+          if (user != null) {
+            Boolean isLiked =
+                likeRepository.existsLikeByDivisionAndContentIdAndUser(
+                    LikeDivision.COMMENT_LIKE, childComment.getId(), user);
+            childCommentDto.updateIsLiked(isLiked);
+          }
+          Long childCount =
+              likeRepository.countByDivisionAndAndContentId(
+                  LikeDivision.COMMENT_LIKE, childComment.getId());
+          childCommentDto.updateLikeCount(childCount);
+          childCommentDtoList.add(childCommentDto);
+        }
+        commentDto.setChildComments(childCommentDtoList);
+      }
+      commentDtoList.add(commentDto);
+    }
+
     return commentDtoList;
   }
 }

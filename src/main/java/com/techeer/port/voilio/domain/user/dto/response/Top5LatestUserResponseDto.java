@@ -10,5 +10,5 @@ public class Top5LatestUserResponseDto {
   private Long id;
   private String email;
   private String nickname;
-  private LocalDateTime createdAt;
+  private LocalDateTime createAt;
 }
