@@ -17,7 +17,6 @@ import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.like.likeService.LikeService;
 import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
-import com.techeer.port.voilio.domain.user.mapper.UserMapper;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.LikeDivision;
@@ -59,10 +58,8 @@ public class BoardService {
     List<BoardDto> boardDtoList = new ArrayList<>();
 
     for (Board board : boardPage) {
-      // user 정보 넣기
+
       BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
-      User user = board.getUser();
-      boardDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(user));
 
       // 좋아요 개수 넣기
       Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
@@ -84,17 +81,13 @@ public class BoardService {
       boolean existsLikeByDivisionAndContentId =
           likeRepository.existsLikeByDivisionAndContentIdAndUser(
               LikeDivision.BOARD_LIKE, boardSimpleDto.getId(), user);
-      boardSimpleDto.setExistLike(existsLikeByDivisionAndContentId);
+      boardSimpleDto.updateIsLiked(existsLikeByDivisionAndContentId);
     } else {
-      boardSimpleDto.setExistLike(false);
+      boardSimpleDto.updateIsLiked(false);
     }
     // 좋아요 개수 넣기
     Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
-    boardSimpleDto.setLikeCount(likeCount);
-
-    // 유저 정보 넣기
-    User boardUser = board.getUser();
-    boardSimpleDto.setUserSimpleDto(UserMapper.INSTANCE.toSimpleDto1(boardUser));
+    boardSimpleDto.updateLikeCount(likeCount);
 
     // 조회수 증가
     board.addView();
@@ -104,24 +97,48 @@ public class BoardService {
 
   public Page<BoardDto> findBoardByUser(User user, Long userId, Pageable pageable) {
 
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
     if (user == null || user.getId() != userId) {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
-      Page<Board> boards =
+      Page<Board> boardPage =
           boardRepository.findBoardsByDelYnAndIsPublicAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, YnType.Y, foundUser);
 
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-      return boardDtoPage;
+      for (Board board : boardPage) {
+        BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+        Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+        boardDto.updateLikeCount(likeCount);
+        boardDto.updateIsLiked(false);
+
+        boardDtoList.add(boardDto);
+      }
+
+      return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
 
     } else {
       User foundUser = userRepository.findById(userId).orElseThrow(NotFoundUser::new);
 
-      Page<Board> boards =
+      Page<Board> boardPage =
           boardRepository.findBoardsByDelYnAndUserOrderByUpdateAtDesc(
               pageable, YnType.N, foundUser);
-      Page<BoardDto> boardDtoPage = BoardMapper.INSTANCE.toPageList(boards);
-      return boardDtoPage;
+
+      for (Board board : boardPage) {
+
+        BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+        Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+        boardDto.setLikeCount(likeCount);
+
+        boolean existsLikeByDivisionAndContentId =
+            likeRepository.existsLikeByDivisionAndContentIdAndUser(
+                LikeDivision.BOARD_LIKE, boardDto.getId(), user);
+        boardDto.setIsLiked(existsLikeByDivisionAndContentId);
+
+        boardDtoList.add(boardDto);
+      }
+
+      return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
     }
   }
 

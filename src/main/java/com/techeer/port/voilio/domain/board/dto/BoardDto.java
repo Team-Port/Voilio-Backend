@@ -30,6 +30,8 @@ public class BoardDto {
 
   private Long likeCount;
 
+  private Boolean isLiked;
+
   private BoardDivision division;
 
   private YnType isPublic;
@@ -40,5 +42,13 @@ public class BoardDto {
 
   private LocalDateTime updateAt;
 
-  private UserSimpleDto userSimpleDto;
+  private UserSimpleDto user;
+
+  public void updateIsLiked(Boolean isLiked) {
+    this.isLiked = isLiked;
+  }
+
+  public void updateLikeCount(Long likeCount) {
+    this.likeCount = likeCount;
+  }
 }
