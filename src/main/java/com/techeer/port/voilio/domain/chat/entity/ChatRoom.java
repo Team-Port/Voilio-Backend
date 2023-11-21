@@ -1,26 +1,31 @@
 package com.techeer.port.voilio.domain.chat.entity;
 
 import com.techeer.port.voilio.domain.user.entity.User;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import lombok.*;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@IdClass(ChatRoomId.class)
+//@IdClass(ChatRoomId.class)
 public class ChatRoom {
-  @Id
-  @ManyToOne
-  @JoinColumn(name = "user_id1")
-  private User user1;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  @Id
   @ManyToOne
-  @JoinColumn(name = "user_id2")
-  private User user2;
+  @JoinColumn(name = "from_user_id")
+  private User fromUser;
+
+  @ManyToOne
+  @JoinColumn(name = "to_user_id")
+  private User toUser;
 
   @Column @Builder.Default private UUID roomUuid = UUID.randomUUID();
 
