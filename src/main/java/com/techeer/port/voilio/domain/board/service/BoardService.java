@@ -149,10 +149,15 @@ public class BoardService {
     return BoardMapper.INSTANCE.toDto(savedBoard);
   }
 
-  public void hideBoard(Long board_id) {
-    Board board = boardRepository.findById(board_id).orElseThrow(NotFoundBoard::new);
+  public BoardDto hideBoard(Long boardId, User user) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoard::new);
+    if(user != board.getUser()){
+      throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+    }
     board.changePublic();
-    boardRepository.save(board);
+    Board savedBoard = boardRepository.save(board);
+    BoardDto boardDto = BoardMapper.INSTANCE.toDto(savedBoard);
+    return boardDto;
   }
 
   public Page<BoardDto> findBoardByKeyword(Pageable pageable, String keyword) {
