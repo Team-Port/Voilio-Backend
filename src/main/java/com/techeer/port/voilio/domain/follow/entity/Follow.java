@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Follow {
 
   @Id
-  @Column(name = "subscribe_id")
+  @Column(name = "follow_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

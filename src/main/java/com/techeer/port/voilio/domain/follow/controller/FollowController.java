@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Follow", description = "Follow API Document")
-@RequestMapping("/api/v1/Follows")
+@RequestMapping("/api/v1/follows")
 public class FollowController {
 
   private final FollowService followService;
