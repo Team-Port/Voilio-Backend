@@ -71,9 +71,7 @@ public class CommentController {
   @Operation(summary = "게시글 별 댓글 및 대댓글 조회")
   @GetMapping("/{boardId}/list")
   public ResponseEntity<ResultResponse> getCommentList(
-          @PathVariable Long boardId
-          , @AuthenticationPrincipal User user
-  ) {
+      @PathVariable Long boardId, @AuthenticationPrincipal User user) {
     List<CommentDto> commentList = commentService.findCommentByBoardId(boardId, user);
     ResultResponse<Comment> resultResponse = new ResultResponse<>(GET_COMMENT_SUCCESS, commentList);
     return ResponseEntity.status(HttpStatus.OK).body(resultResponse);
