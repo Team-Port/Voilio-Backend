@@ -20,7 +20,19 @@ public class CommentDto {
 
   private UserSimpleDto user;
 
+  private Boolean isLiked;
+
+  private Long likeCount;
+
   private List<CommentDto> childComments = new ArrayList<>();
 
   private LocalDateTime createdAt;
+
+  public void updateIsLiked(Boolean isLiked) {
+    this.isLiked = isLiked;
+  }
+
+  public void updateLikeCount(Long likeCount) {
+    this.likeCount = likeCount;
+  }
 }
