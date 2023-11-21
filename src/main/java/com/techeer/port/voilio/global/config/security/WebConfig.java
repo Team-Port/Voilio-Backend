@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
             HttpMethod.POST.name(),
             HttpMethod.PUT.name(),
             HttpMethod.DELETE.name(),
-                HttpMethod.PATCH.name())
+            HttpMethod.PATCH.name())
         .allowedHeaders("Content-Type", "Authorization");
   }
 }
