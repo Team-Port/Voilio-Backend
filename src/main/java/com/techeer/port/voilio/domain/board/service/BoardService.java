@@ -81,13 +81,13 @@ public class BoardService {
       boolean existsLikeByDivisionAndContentId =
           likeRepository.existsLikeByDivisionAndContentIdAndUser(
               LikeDivision.BOARD_LIKE, boardSimpleDto.getId(), user);
-      boardSimpleDto.setExistLike(existsLikeByDivisionAndContentId);
+      boardSimpleDto.updateIsLiked(existsLikeByDivisionAndContentId);
     } else {
-      boardSimpleDto.setExistLike(false);
+      boardSimpleDto.updateIsLiked(false);
     }
     // 좋아요 개수 넣기
     Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardSimpleDto.getId());
-    boardSimpleDto.setLikeCount(likeCount);
+    boardSimpleDto.updateLikeCount(likeCount);
 
     // 조회수 증가
     board.addView();
@@ -109,8 +109,8 @@ public class BoardService {
       for (Board board : boardPage) {
         BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
         Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
-        boardDto.setLikeCount(likeCount);
-        boardDto.setExistLike(false);
+        boardDto.updateLikeCount(likeCount);
+        boardDto.updateIsLiked(false);
 
         boardDtoList.add(boardDto);
       }
@@ -133,7 +133,7 @@ public class BoardService {
         boolean existsLikeByDivisionAndContentId =
             likeRepository.existsLikeByDivisionAndContentIdAndUser(
                 LikeDivision.BOARD_LIKE, boardDto.getId(), user);
-        boardDto.setExistLike(existsLikeByDivisionAndContentId);
+        boardDto.setIsLiked(existsLikeByDivisionAndContentId);
 
         boardDtoList.add(boardDto);
       }
