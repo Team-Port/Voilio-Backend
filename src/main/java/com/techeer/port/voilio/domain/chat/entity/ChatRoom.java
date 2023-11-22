@@ -27,7 +27,7 @@ public class ChatRoom {
   @JoinColumn(name = "to_user_id")
   private User toUser;
 
-  @Column @Builder.Default private UUID roomUuid = UUID.randomUUID();
+  @Column @Builder.Default private UUID roomUuid = UUID.randomUUID();;
 
   @Column private String roomName;
 }
