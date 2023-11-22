@@ -142,10 +142,12 @@ public class BoardService {
     }
   }
 
-  public Page<BoardDto> findBoardByCategoryAndKeyword(Category category, String keyword, Pageable pageable) {
+  public Page<BoardDto> findBoardByCategoryAndKeyword(
+      Category category, String keyword, Pageable pageable) {
 
-    Page<Board> boardPage = boardCustomRepository.findBoardByCategoryAndKeyword(
-        category, keyword, YnType.N, YnType.Y, pageable);
+    Page<Board> boardPage =
+        boardCustomRepository.findBoardByCategoryAndKeyword(
+            category, keyword, YnType.N, YnType.Y, pageable);
 
     List<BoardDto> boardDtoList = new ArrayList<>();
 

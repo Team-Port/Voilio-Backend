@@ -87,9 +87,12 @@ public class BoardController {
 
   @GetMapping("/lists/keyword")
   @Operation(summary = "카테고리와 키워드가 있는 게시물 출력", description = "키워드, 카테고리가 있는 게시물 출력 입니다.")
-  public ResponseEntity<ResultsResponse> findBoardByCategoryAndKeyWord(@RequestParam Category category,
-      @RequestParam String search, @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
-    Page<BoardDto> boardDtos = boardService.findBoardByCategoryAndKeyword(category, search, pageable);
+  public ResponseEntity<ResultsResponse> findBoardByCategoryAndKeyWord(
+      @RequestParam Category category,
+      @RequestParam String search,
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+    Page<BoardDto> boardDtos =
+        boardService.findBoardByCategoryAndKeyword(category, search, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
 

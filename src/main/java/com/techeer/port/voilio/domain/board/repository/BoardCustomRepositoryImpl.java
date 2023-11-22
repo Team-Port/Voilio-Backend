@@ -44,29 +44,32 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
   }
 
   @Override
-  public Page<Board> findBoardByCategoryAndKeyword(Category category, String keyword, YnType delYn,
-      YnType isPublic, Pageable pageable) {
-    List<Board> boardList = jpaQueryFactory
-        .selectFrom(board)
-        .where(
-            board.title.contains(keyword),
-            board.category1.eq(category).or(board.category2.eq(category)), board.delYn.eq(delYn),
-            board.isPublic.eq(isPublic))
-        .orderBy(board.createAt.desc())
-        .limit(pageable.getPageSize())
-        .offset(pageable.getOffset())
-        .fetch();
+  public Page<Board> findBoardByCategoryAndKeyword(
+      Category category, String keyword, YnType delYn, YnType isPublic, Pageable pageable) {
+    List<Board> boardList =
+        jpaQueryFactory
+            .selectFrom(board)
+            .where(
+                board.title.contains(keyword),
+                board.category1.eq(category).or(board.category2.eq(category)),
+                board.delYn.eq(delYn),
+                board.isPublic.eq(isPublic))
+            .orderBy(board.createAt.desc())
+            .limit(pageable.getPageSize())
+            .offset(pageable.getOffset())
+            .fetch();
 
     Long count =
         jpaQueryFactory
             .select(board.count())
             .from(board)
             .where(
-                board.title.contains(keyword), board.category1.eq(category).or(board.category2.eq(category)), board.delYn.eq(delYn), board.isPublic.eq(isPublic))
+                board.title.contains(keyword),
+                board.category1.eq(category).or(board.category2.eq(category)),
+                board.delYn.eq(delYn),
+                board.isPublic.eq(isPublic))
             .fetchFirst();
 
     return new PageImpl<>(boardList, pageable, count);
   }
-
-
 }

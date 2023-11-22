@@ -10,6 +10,6 @@ public interface BoardCustomRepository {
 
   Page<Board> findBoardByKeyword(String keyword, YnType delYn, YnType isPublic, Pageable pageable);
 
-  Page<Board> findBoardByCategoryAndKeyword(Category category, String keyword, YnType delYn, YnType isPublic,
-      Pageable pageable);
+  Page<Board> findBoardByCategoryAndKeyword(
+      Category category, String keyword, YnType delYn, YnType isPublic, Pageable pageable);
 }
