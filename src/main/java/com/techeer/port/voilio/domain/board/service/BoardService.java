@@ -142,6 +142,27 @@ public class BoardService {
     }
   }
 
+  public Page<BoardDto> findBoardByCategoryAndKeyword(Category category, String keyword, Pageable pageable) {
+
+    Page<Board> boardPage = boardCustomRepository.findBoardByCategoryAndKeyword(
+        category, keyword, YnType.N, YnType.Y, pageable);
+
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
+    for (Board board : boardPage) {
+
+      BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+
+      // 좋아요 개수 넣기
+      Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+      boardDto.setLikeCount(likeCount);
+
+      boardDtoList.add(boardDto);
+    }
+
+    return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
+  }
+
   public BoardDto findBoardByIdExceptHide(Long board_id) {
     Board board = boardRepository.findBoardByIdExceptHide(board_id).orElseThrow(NotFoundBoard::new);
     return BoardMapper.INSTANCE.toDto(board);
