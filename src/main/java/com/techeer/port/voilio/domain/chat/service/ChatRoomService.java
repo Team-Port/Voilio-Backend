@@ -1,15 +1,17 @@
  package com.techeer.port.voilio.domain.chat.service;
 
  import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
+ import com.techeer.port.voilio.domain.chat.dto.ChatRoomDto;
  import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
  import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
+ import com.techeer.port.voilio.domain.chat.mapper.ChatRoomMapper;
  import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
  import com.techeer.port.voilio.domain.user.entity.User;
  import com.techeer.port.voilio.domain.user.repository.UserRepository;
  import lombok.RequiredArgsConstructor;
  import org.springframework.stereotype.Service;
 
- import java.util.UUID;
+ import java.util.List;
 
  @RequiredArgsConstructor
  @Service
@@ -28,5 +30,10 @@
                  .build();
 
          chatRoomRepository.save(chatRoom);
+     }
+
+     public List<ChatRoomDto> getChatRooms(){
+         List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
+         return ChatRoomMapper.INSTANCE.toDtos(chatRoomList);
      }
  }
