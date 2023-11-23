@@ -3,11 +3,12 @@
  import com.techeer.port.voilio.domain.chat.dto.ChatRoomDto;
  import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
  import com.techeer.port.voilio.domain.chat.service.ChatRoomService;
+ import com.techeer.port.voilio.domain.user.entity.User;
+ import com.techeer.port.voilio.global.error.ErrorCode;
+ import com.techeer.port.voilio.global.error.exception.BusinessException;
  import lombok.RequiredArgsConstructor;
- import org.springframework.web.bind.annotation.GetMapping;
- import org.springframework.web.bind.annotation.PostMapping;
- import org.springframework.web.bind.annotation.RequestMapping;
- import org.springframework.web.bind.annotation.RestController;
+ import org.springframework.security.core.annotation.AuthenticationPrincipal;
+ import org.springframework.web.bind.annotation.*;
 
  import java.util.List;
 
@@ -19,7 +20,7 @@
   private final ChatRoomService chatRoomService;
 
   @PostMapping("/")
-  public void createChatRomm(CreateChatRoomRequest request){
+  public void createChatRoom(CreateChatRoomRequest request){
    chatRoomService.createChatRoom(request);
   }
 
@@ -27,4 +28,13 @@
   public List<ChatRoomDto> getChatRooms(){
    return chatRoomService.getChatRooms();
   }
+
+  @GetMapping("/{chatRoomId}")
+  public boolean enterRoom(@PathVariable Long chatRoomId, @AuthenticationPrincipal User user){
+   if (user == null) {
+    throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
+   }
+   return chatRoomService.checkUser(chatRoomId, user);
+  }
+
 }

@@ -32,6 +32,4 @@ public class ChatController {
     message.setMessage(enter);
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
   }
-
-
 }

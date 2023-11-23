@@ -4,6 +4,7 @@
  import com.techeer.port.voilio.domain.chat.dto.ChatRoomDto;
  import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
  import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
+ import com.techeer.port.voilio.domain.chat.exception.NotFoundChatRoom;
  import com.techeer.port.voilio.domain.chat.mapper.ChatRoomMapper;
  import com.techeer.port.voilio.domain.chat.repository.ChatRoomRepository;
  import com.techeer.port.voilio.domain.user.entity.User;
@@ -35,5 +36,12 @@
      public List<ChatRoomDto> getChatRooms(){
          List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
          return ChatRoomMapper.INSTANCE.toDtos(chatRoomList);
+     }
+
+     public boolean checkUser(Long chatRoomId, User user){
+         ChatRoom chatRoom1 = chatRoomRepository.findById(chatRoomId).orElseThrow(NotFoundChatRoom::new);
+         ChatRoom chatRoom2 = chatRoomRepository.findByFromUserOrToUser(user, user).orElseThrow(NotFoundChatRoom::new);
+
+         return chatRoom1.equals(chatRoom2);
      }
  }
