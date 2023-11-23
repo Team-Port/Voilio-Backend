@@ -1,7 +1,7 @@
 package com.techeer.port.voilio.domain.chat.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.techeer.port.voilio.domain.chat.model.ChatMessage;
+import com.techeer.port.voilio.domain.chat.entity.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

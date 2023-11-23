@@ -13,8 +13,8 @@
 
  import java.util.List;
 
- @RequiredArgsConstructor
  @Service
+ @RequiredArgsConstructor
  public class ChatRoomService {
 
      private final ChatRoomRepository chatRoomRepository;

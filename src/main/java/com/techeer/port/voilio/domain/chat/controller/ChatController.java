@@ -1,6 +1,6 @@
 package com.techeer.port.voilio.domain.chat.controller;
 
-import com.techeer.port.voilio.domain.chat.model.ChatMessage;
+import com.techeer.port.voilio.domain.chat.entity.ChatMessage;
 import com.techeer.port.voilio.domain.chat.pubsub.RedisPublisher;
 import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepositoryN;
 import lombok.RequiredArgsConstructor;
@@ -25,4 +25,15 @@ public class ChatController {
     System.out.println(message.getMessage());
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
   }
+
+  @MessageMapping("chat/{chatRoomId}/enter")
+  public void enterRoom(ChatMessage message, @DestinationVariable Long chatRoomId) {
+    String sender = message.getSender();
+    String enter = sender + "님이 입장하셨습니다.";
+
+    message.setMessage(enter);
+    template.convertAndSend("/sub/" + chatRoomId.toString(), message);
+  }
+
+
 }
