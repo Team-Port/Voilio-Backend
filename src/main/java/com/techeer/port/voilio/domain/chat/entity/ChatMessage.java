@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -19,16 +16,15 @@ public class ChatMessage {
   public enum MessageType {
     ENTER,
     TALK,
-    WEBCAM,
-    OFFER,
-    ANSWER,
-    ICE,
   }
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Enumerated(value = EnumType.STRING)
   private MessageType type; // 메시지 타입
-  private String roomId; // 방번호
+
+  private Long chatRoomId; // 방번호
   private String sender; // 메시지 보낸사람
   private String message; // 메시지
 }

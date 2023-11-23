@@ -5,7 +5,7 @@
  import com.techeer.port.voilio.domain.chat.dto.request.CreateChatRoomRequest;
  import com.techeer.port.voilio.domain.chat.entity.ChatRoom;
  import com.techeer.port.voilio.domain.chat.mapper.ChatRoomMapper;
- import com.techeer.port.voilio.domain.chat.repo.ChatRoomRepository;
+ import com.techeer.port.voilio.domain.chat.repository.ChatRoomRepository;
  import com.techeer.port.voilio.domain.user.entity.User;
  import com.techeer.port.voilio.domain.user.repository.UserRepository;
  import lombok.RequiredArgsConstructor;
