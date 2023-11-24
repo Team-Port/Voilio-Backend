@@ -40,9 +40,9 @@
    return ResponseEntity.ok(ResultsResponse.of(API_SUCCESS_GET_ALL_CHATROOM, chatRooms));
   }
 
-  @GetMapping("/room")
+  @GetMapping("/room/{chatRoomId}")
   @Operation(summary = "채팅방 입장", description = "채팅방에 입장하는 메서드입니다.")
-  public ResponseEntity<ResultsResponse> enterRoom(@RequestParam Long chatRoomId, @AuthenticationPrincipal User user){
+  public ResponseEntity<ResultsResponse> enterRoom(@PathVariable(value = "chatRoomId") Long chatRoomId, @AuthenticationPrincipal User user){
    if (user == null) {
     throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
    }

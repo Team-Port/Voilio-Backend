@@ -27,4 +27,8 @@ public class ChatMessage {
   private Long chatRoomId; // 방번호
   private String sender; // 메시지 보낸사람
   private String message; // 메시지
+
+  public void changeMessage(String message) {
+    this.message = message;
+  }
 }

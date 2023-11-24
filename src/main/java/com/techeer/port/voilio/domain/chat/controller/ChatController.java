@@ -17,10 +17,13 @@ public class ChatController {
   private final SimpMessageSendingOperations template;
   private final ChatMessageService chatMessageService;
 
+  // pub/chat/1/message => 1번 방으로 publish한 메세지 처리
   @MessageMapping("/chat/{chatRoomId}/message")
   public void message(ChatMessage message, @DestinationVariable Long chatRoomId) {
     System.out.println(message.getMessage());
     chatMessageService.saveChatMessage(message);
+
+    // sub/1을 subscibe한 유저에게 메세지 전송
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
   }
 
@@ -29,7 +32,7 @@ public class ChatController {
     String sender = message.getSender();
     String enter = sender + "님이 입장하셨습니다.";
 
-    message.setMessage(enter);
+    message.changeMessage(enter);
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
   }
 }
