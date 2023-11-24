@@ -19,6 +19,7 @@ import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.DateType;
 import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.common.YnType;
@@ -143,16 +144,16 @@ public class BoardService {
   }
 
   public Page<BoardDto> findBoardByCategoryAndKeyword(
-      Category category, String keyword, Pageable pageable) {
+      Category category, DateType dateType, String keyword, Pageable pageable) {
 
     Page<Board> boardPage;
 
-    if (category.toString().equals("ALL")) {
+    if (category.equals(Category.ALL)) {
       boardPage = boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y, pageable);
     } else {
       boardPage =
           boardCustomRepository.findBoardByCategoryAndKeyword(
-              category, keyword, YnType.N, YnType.Y, pageable);
+              category, dateType, keyword, YnType.N, YnType.Y, pageable);
     }
 
     List<BoardDto> boardDtoList = new ArrayList<>();
