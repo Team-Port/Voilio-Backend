@@ -7,11 +7,9 @@ import com.techeer.port.voilio.domain.board.entity.Board;
 import com.techeer.port.voilio.global.common.Category;
 import com.techeer.port.voilio.global.common.DateType;
 import com.techeer.port.voilio.global.common.YnType;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.asm.Advice.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +47,11 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
   @Override
   public Page<Board> findBoardByCategoryAndKeyword(
-      Category category, DateType dateType, String keyword, YnType delYn, YnType isPublic,
+      Category category,
+      DateType dateType,
+      String keyword,
+      YnType delYn,
+      YnType isPublic,
       Pageable pageable) {
 
     LocalDateTime currentDate = LocalDateTime.now();
