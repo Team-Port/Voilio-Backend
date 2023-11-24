@@ -44,4 +44,9 @@
 
          return chatRoom1.equals(chatRoom2);
      }
+
+     public ChatRoomDto findChatRoom(String chatRoomName){
+         ChatRoom chatRoom = chatRoomRepository.findByRoomName(chatRoomName).orElseThrow(NotFoundChatRoom::new);
+         return ChatRoomMapper.INSTANCE.toDto(chatRoom);
+     }
  }

@@ -16,4 +16,6 @@ public interface ChatRoomMapper {
     ChatRoom toEntity(CreateChatRoomRequest request);
 
     List<ChatRoomDto> toDtos(List<ChatRoom> chatRooms);
+
+    ChatRoomDto toDto(ChatRoom chatRoom);
 }

@@ -29,12 +29,16 @@
    return chatRoomService.getChatRooms();
   }
 
-  @GetMapping("/{chatRoomId}")
-  public boolean enterRoom(@PathVariable Long chatRoomId, @AuthenticationPrincipal User user){
+  @GetMapping("/id/{chatRoomId}")
+  public boolean enterRoom(@PathVariable(value = "chatRoomId") Long chatRoomId, @AuthenticationPrincipal User user){
    if (user == null) {
     throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
    }
    return chatRoomService.checkUser(chatRoomId, user);
   }
 
+  @GetMapping("/name/{chatRoomName}")
+  public ChatRoomDto findChatRoom(@PathVariable(value = "chatRoomName") String chatRoomName){
+   return chatRoomService.findChatRoom(chatRoomName);
+  }
 }
