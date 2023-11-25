@@ -1,8 +1,5 @@
 package com.techeer.port.voilio.domain.user.service;
 
-import static com.techeer.port.voilio.global.common.YnType.N;
-import static com.techeer.port.voilio.global.common.YnType.Y;
-
 import com.techeer.port.voilio.domain.board.exception.NotFoundUser;
 import com.techeer.port.voilio.domain.board.repository.BoardRepository;
 import com.techeer.port.voilio.domain.follow.repository.FollowRepository;
@@ -16,13 +13,17 @@ import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.BoardDivision;
 import com.techeer.port.voilio.global.config.security.JwtProvider;
 import com.techeer.port.voilio.s3.util.S3Manager;
-import java.time.LocalDateTime;
-import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static com.techeer.port.voilio.global.common.YnType.N;
+import static com.techeer.port.voilio.global.common.YnType.Y;
 
 @Service
 @Transactional(readOnly = true)
@@ -100,8 +101,8 @@ public class UserService {
   }
 
   public String createRandomNickname() {
-    String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는", "귀여윤"};
-    String[] nounList = {"강아지", "고양이", "코알라", "꺼차", "뻐꾸기", "판다", "여우"};
+    String[] adjectiveList = {"멋있는", "친절한", "개성 있는", "실력 있는", "자신감 넘치는", "귀여운"};
+    String[] nounList = {"강아지", "고양이", "코알라", "까치", "뻐꾸기", "판다", "여우"};
 
     Random random = new Random();
 
