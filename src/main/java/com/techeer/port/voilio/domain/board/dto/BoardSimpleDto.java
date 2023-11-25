@@ -18,6 +18,8 @@ public class BoardSimpleDto {
 
   private String content;
 
+  private String summary;
+
   private Category category1;
 
   private Category category2;
