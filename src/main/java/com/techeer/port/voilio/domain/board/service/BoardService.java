@@ -209,22 +209,23 @@ public class BoardService {
     return result;
   }
 
-  public BoardVideoDto uploadVideo(MultipartFile videoFile) {
+  public String uploadVideo(MultipartFile videoFile) {
     try {
-      return BoardMapper.INSTANCE.toVideo(s3Manager.upload(videoFile, "video"));
+      String videoUrl = s3Manager.upload(videoFile, "video");
+      return videoUrl;
     } catch (IOException e) {
       throw new ConvertException();
     }
   }
 
-  public BoardThumbnailDto createImageUrl(MultipartFile imageFile, UploadDivision uploadDivision) {
+  public String createImageUrl(MultipartFile imageFile, UploadDivision uploadDivision) {
     try {
       if (uploadDivision.equals(UploadDivision.THUMBNAIL)) {
-        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/thumbnail"));
+        return s3Manager.upload(imageFile, "image/thumbnail");
       } else if (uploadDivision.equals(UploadDivision.BOARD)) {
-        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/board"));
+        return s3Manager.upload(imageFile, "image/board");
       } else if (uploadDivision.equals(UploadDivision.PROFILE)) {
-        return BoardMapper.INSTANCE.toThumbnail(s3Manager.upload(imageFile, "image/profile"));
+        return s3Manager.upload(imageFile, "image/profile");
       }
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
 

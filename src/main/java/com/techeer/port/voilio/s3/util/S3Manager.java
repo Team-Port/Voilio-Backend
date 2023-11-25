@@ -25,8 +25,17 @@ public class S3Manager {
   private String bucket;
 
   public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-    File uploadFile = convert(multipartFile).orElseThrow(NotFoundFile::new);
-    return upload(uploadFile, dirName);
+    File convertFile = new File(multipartFile.getOriginalFilename());
+
+    if(convertFile.createNewFile()) {
+      try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+        fos.write(multipartFile.getBytes());
+      }
+      multipartFile.transferTo(convertFile);
+      String uploadUrl = upload(convertFile, dirName);
+      return uploadUrl;
+    }
+    return null;
   }
 
   private String upload(File uploadFile, String dirName) {

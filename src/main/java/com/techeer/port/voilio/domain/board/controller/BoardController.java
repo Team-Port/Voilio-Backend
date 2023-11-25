@@ -117,8 +117,8 @@ public class BoardController {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    BoardVideoDto boardVideoDto = boardService.uploadVideo(videoFile);
-    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardVideoDto));
+    String videoUrl = boardService.uploadVideo(videoFile);
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, videoUrl));
   }
 
   @PostMapping(
@@ -132,9 +132,9 @@ public class BoardController {
     if (user == null) {
       throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
     }
-    BoardThumbnailDto boardThumbnailDto = boardService.createImageUrl(imageFile, uploadDivision);
+    String thumbNailUrl = boardService.createImageUrl(imageFile, uploadDivision);
 
-    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, boardThumbnailDto));
+    return ResponseEntity.ok(ResultsResponse.of(FILE_UPLOAD_SUCCESS, thumbNailUrl));
   }
 
   @PutMapping("/update/{boardId}")
