@@ -4,8 +4,6 @@ import static com.techeer.port.voilio.global.result.ResultCode.*;
 
 import com.techeer.port.voilio.domain.board.dto.BoardDto;
 import com.techeer.port.voilio.domain.board.dto.BoardSimpleDto;
-import com.techeer.port.voilio.domain.board.dto.BoardThumbnailDto;
-import com.techeer.port.voilio.domain.board.dto.BoardVideoDto;
 import com.techeer.port.voilio.domain.board.dto.request.BoardCreateRequest;
 import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;

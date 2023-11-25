@@ -3,7 +3,6 @@ package com.techeer.port.voilio.s3.util;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.techeer.port.voilio.domain.board.exception.NotFoundFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class S3Manager {
   public String upload(MultipartFile multipartFile, String dirName) throws IOException {
     File convertFile = new File(multipartFile.getOriginalFilename());
 
-    if(convertFile.createNewFile()) {
+    if (convertFile.createNewFile()) {
       try (FileOutputStream fos = new FileOutputStream(convertFile)) {
         fos.write(multipartFile.getBytes());
       }
