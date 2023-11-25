@@ -66,8 +66,10 @@ springdoc:
 
 logging:
   level:
-    org.springframework: info
-    com.techeer.port.voilio : debug
+    org:
+      hibernate:
+        SQL: ERROR
+        type: error # bind
 
 jwt:
   secret: masdfafqawf65wdsadadcdwgzqpfoqmdyrkvuapfcjTTOwkfpOEsdcafafafaFEFFA1dfefaefGeAOgegIge3edw2ewfaffefa
