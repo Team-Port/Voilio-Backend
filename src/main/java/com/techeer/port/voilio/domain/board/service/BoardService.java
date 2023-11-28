@@ -17,6 +17,7 @@ import com.techeer.port.voilio.domain.like.repository.LikeRepository;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.domain.user.repository.UserRepository;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.DateType;
 import com.techeer.port.voilio.global.common.LikeDivision;
 import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.common.YnType;
@@ -138,6 +139,35 @@ public class BoardService {
 
       return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
     }
+  }
+
+  public Page<BoardDto> findBoardByCategoryAndKeyword(
+      Category category, DateType dateType, String keyword, Pageable pageable) {
+
+    Page<Board> boardPage;
+
+    if (category.equals(Category.ALL)) {
+      boardPage = boardCustomRepository.findBoardByKeyword(keyword, YnType.N, YnType.Y, pageable);
+    } else {
+      boardPage =
+          boardCustomRepository.findBoardByCategoryAndKeyword(
+              category, dateType, keyword, YnType.N, YnType.Y, pageable);
+    }
+
+    List<BoardDto> boardDtoList = new ArrayList<>();
+
+    for (Board board : boardPage) {
+
+      BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+
+      // 좋아요 개수 넣기
+      Long likeCount = likeService.getLikeCount(LikeDivision.BOARD_LIKE, boardDto.getId());
+      boardDto.setLikeCount(likeCount);
+
+      boardDtoList.add(boardDto);
+    }
+
+    return new PageImpl<>(boardDtoList, pageable, boardPage.getTotalElements());
   }
 
   public BoardDto findBoardByIdExceptHide(Long board_id) {

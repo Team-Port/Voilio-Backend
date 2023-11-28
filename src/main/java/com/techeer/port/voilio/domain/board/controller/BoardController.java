@@ -9,6 +9,7 @@ import com.techeer.port.voilio.domain.board.dto.request.BoardUpdateRequest;
 import com.techeer.port.voilio.domain.board.service.BoardService;
 import com.techeer.port.voilio.domain.user.entity.User;
 import com.techeer.port.voilio.global.common.Category;
+import com.techeer.port.voilio.global.common.DateType;
 import com.techeer.port.voilio.global.common.UploadDivision;
 import com.techeer.port.voilio.global.error.ErrorCode;
 import com.techeer.port.voilio.global.error.exception.BusinessException;
@@ -80,6 +81,18 @@ public class BoardController {
   public ResponseEntity<ResultsResponse> findBoardByKeyWord(
       @PathVariable String search, @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
     Page<BoardDto> boardDtos = boardService.findBoardByKeyword(pageable, search);
+    return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
+  }
+
+  @GetMapping("/lists/keyword")
+  @Operation(summary = "카테고리와 키워드가 있는 게시물 출력", description = "키워드, 카테고리가 있는 게시물 출력 입니다.")
+  public ResponseEntity<ResultsResponse> findBoardByCategoryAndKeyWord(
+      @RequestParam Category category,
+      @RequestParam DateType dateType,
+      @RequestParam String search,
+      @ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+    Page<BoardDto> boardDtos =
+        boardService.findBoardByCategoryAndKeyword(category, dateType, search, pageable);
     return ResponseEntity.ok(ResultsResponse.of(BOARD_FIND_SUCCESS, boardDtos));
   }
 
