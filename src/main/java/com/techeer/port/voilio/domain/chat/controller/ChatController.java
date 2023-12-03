@@ -24,11 +24,11 @@ public class ChatController {
   @MessageMapping("/chat/{chatRoomId}/message")
   public void message(@Payload ChatMessage message, @DestinationVariable Long chatRoomId) {
     System.out.println(message.getMessage());
-//    chatMessageService.saveChatMessage(message);
+    //    chatMessageService.saveChatMessage(message);
 
     // sub/1을 subscibe한 유저에게 메세지 전송
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
-//    rabbitTemplate.convertAndSend(exchageName,"chat.messages", message);
+    //    rabbitTemplate.convertAndSend(exchageName,"chat.messages", message);
   }
 
   @MessageMapping("chat/{chatRoomId}/enter")

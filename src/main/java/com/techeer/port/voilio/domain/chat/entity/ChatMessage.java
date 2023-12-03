@@ -1,10 +1,9 @@
 package com.techeer.port.voilio.domain.chat.entity;
 
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -17,6 +16,7 @@ public class ChatMessage {
     ENTER,
     TALK,
   }
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

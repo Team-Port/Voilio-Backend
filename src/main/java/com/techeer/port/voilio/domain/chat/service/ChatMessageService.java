@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatMessageService {
 
-    private final ChatMessageRepository chatMessageRepository;
+  private final ChatMessageRepository chatMessageRepository;
 
-    @Async
-    @RabbitListener(queues = "chat.messages")
-    public void saveChatMessage(ChatMessage message){
-        chatMessageRepository.save(message);
-    }
+  @Async
+  @RabbitListener(queues = "chat.messages")
+  public void saveChatMessage(ChatMessage message) {
+    chatMessageRepository.save(message);
+  }
 }
