@@ -28,7 +28,7 @@ public class ChatController {
 
     // sub/1을 subscibe한 유저에게 메세지 전송
     template.convertAndSend("/sub/" + chatRoomId.toString(), message);
-    rabbitTemplate.convertAndSend("chat.messages", message);
+//    rabbitTemplate.convertAndSend(exchageName,"chat.messages", message);
   }
 
   @MessageMapping("chat/{chatRoomId}/enter")
